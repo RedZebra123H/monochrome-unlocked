@@ -2,11 +2,35 @@
 import { getTrackArtists } from './utils.js';
 import { loadProfile } from './profile.js';
 
+// Detect base path from <base href> for subdirectory hosting (e.g. GitHub Pages)
+function getBasePath() {
+    const base = document.querySelector('base')?.getAttribute('href') || '/';
+    try {
+        const url = new URL(base, window.location.origin);
+        return url.pathname.replace(/\/$/, '');
+    } catch {
+        return '';
+    }
+}
+
+const BASE_PATH = getBasePath();
+
+// Returns the app-relative pathname (without the base path prefix)
+export function getAppPath() {
+    let path = window.location.pathname;
+    if (BASE_PATH && path.startsWith(BASE_PATH)) {
+        path = path.substring(BASE_PATH.length);
+    }
+    if (!path.startsWith('/')) path = '/' + path;
+    return path;
+}
+
 export function navigate(path) {
-    if (path === window.location.pathname) {
+    const fullPath = BASE_PATH + path;
+    if (fullPath === window.location.pathname) {
         return;
     }
-    window.history.pushState({}, '', path);
+    window.history.pushState({}, '', fullPath);
     window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
@@ -20,7 +44,7 @@ export function createRouter(ui) {
             }
         }
 
-        let path = window.location.pathname;
+        let path = getAppPath();
 
         if (path.startsWith('/')) path = path.substring(1);
         if (path.endsWith('/')) path = path.substring(0, path.length - 1);
@@ -139,7 +163,7 @@ export function updateTabTitle(player) {
         const track = player.currentTrack;
         document.title = `${track.title} • ${getTrackArtists(track)}`;
     } else {
-        const path = window.location.pathname;
+        const path = getAppPath();
         if (path.startsWith('/album/') || path.startsWith('/playlist/') || path.startsWith('/track/')) {
             return;
         }

@@ -20,7 +20,7 @@ import { UIRenderer } from './ui.js';
 import { Player } from './player.js';
 import { MultiScrobbler } from './multi-scrobbler.js';
 import { LyricsManager, openLyricsPanel, clearLyricsPanelSync } from './lyrics.js';
-import { createRouter, updateTabTitle, navigate } from './router.js';
+import { createRouter, updateTabTitle, navigate, getAppPath } from './router.js';
 import { initializePlayerEvents, initializeTrackInteractions, handleTrackAction } from './events.js';
 import { initializeUIInteractions } from './ui-interactions.js';
 import { debounce, getShareUrl, sanitizeForFilename } from './utils.js';
@@ -1053,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#play-album-btn');
             if (btn.disabled) return;
 
-            const pathParts = window.location.pathname.split('/');
+            const pathParts = getAppPath().split('/');
             const albumIndex = pathParts.indexOf('album');
             let albumId = albumIndex !== -1 ? pathParts[albumIndex + 1] : null;
             // Handle /album/t/ID format
@@ -1091,7 +1091,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#shuffle-album-btn');
             if (btn.disabled) return;
 
-            const pathParts = window.location.pathname.split('/');
+            const pathParts = getAppPath().split('/');
             const albumIndex = pathParts.indexOf('album');
             let albumId = albumIndex !== -1 ? pathParts[albumIndex + 1] : null;
             // Handle /album/t/ID format
@@ -1124,7 +1124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.closest('#shuffle-artist-btn')) {
             const btn = e.target.closest('#shuffle-artist-btn');
             if (btn.disabled) return;
-            const artistId = window.location.pathname.split('/')[2];
+            const artistId = getAppPath().split('/')[2];
             if (!artistId) return;
 
             btn.disabled = true;
@@ -1196,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#download-mix-btn');
             if (btn.disabled) return;
 
-            const mixId = window.location.pathname.split('/')[2];
+            const mixId = getAppPath().split('/')[2];
             if (!mixId) return;
 
             btn.disabled = true;
@@ -1226,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#download-playlist-btn');
             if (btn.disabled) return;
 
-            const playlistId = window.location.pathname.split('/')[2];
+            const playlistId = getAppPath().split('/')[2];
             if (!playlistId) return;
 
             btn.disabled = true;
@@ -1352,19 +1352,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (e.target.closest('#library-liked-tracks-view-list')) {
             localStorage.setItem('libraryLikedTracksView', 'list');
-            if (window.location.pathname.split('/').filter(Boolean)[0] === 'library') {
+            if (getAppPath().split('/').filter(Boolean)[0] === 'library') {
                 await UIRenderer.instance.renderLibraryPage();
             }
         }
         if (e.target.closest('#library-liked-tracks-view-grid')) {
             localStorage.setItem('libraryLikedTracksView', 'grid');
-            if (window.location.pathname.split('/').filter(Boolean)[0] === 'library') {
+            if (getAppPath().split('/').filter(Boolean)[0] === 'library') {
                 await UIRenderer.instance.renderLibraryPage();
             }
         }
 
         if (e.target.closest('#delete-folder-btn')) {
-            const folderId = window.location.pathname.split('/')[2];
+            const folderId = getAppPath().split('/')[2];
             if (folderId && confirm('Are you sure you want to delete this folder?')) {
                 await db.deleteFolder(folderId);
                 // Sync deletion to cloud
@@ -1415,7 +1415,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             await syncManager.syncUserPlaylist(playlist, 'update');
                             UIRenderer.instance.renderLibraryPage();
                             // Also update current page if we are on it
-                            if (window.location.pathname === `/userplaylist/${editingId}`) {
+                            if (getAppPath() === `/userplaylist/${editingId}`) {
                                 UIRenderer.instance.renderPlaylistPage(editingId, 'user');
                             }
                             modal.classList.remove('active');
@@ -2019,7 +2019,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (e.target.closest('#edit-playlist-btn')) {
-            const playlistId = window.location.pathname.split('/')[2];
+            const playlistId = getAppPath().split('/')[2];
             await db
                 .getPlaylist(playlistId)
                 .then((playlist) => {
@@ -2078,7 +2078,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (e.target.closest('#delete-playlist-btn')) {
-            const playlistId = window.location.pathname.split('/')[2];
+            const playlistId = getAppPath().split('/')[2];
             if (confirm('Are you sure you want to delete this playlist?')) {
                 await db.deletePlaylist(playlistId);
                 await syncManager.syncUserPlaylist({ id: playlistId }, 'delete');
@@ -2089,7 +2089,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const detailExportBtn = e.target.closest('#export-playlist-btn');
         if (detailExportBtn) {
             e.stopPropagation();
-            const playlistId = detailExportBtn.dataset.userPlaylistId || window.location.pathname.split('/')[2];
+            const playlistId = detailExportBtn.dataset.userPlaylistId || getAppPath().split('/')[2];
             if (playlistId) {
                 showExportPlaylistMenu(detailExportBtn, playlistId);
             }
@@ -2098,7 +2098,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.closest('.remove-from-playlist-btn')) {
             e.stopPropagation();
             const btn = e.target.closest('.remove-from-playlist-btn');
-            const playlistId = window.location.pathname.split('/')[2];
+            const playlistId = getAppPath().split('/')[2];
 
             await db.getPlaylist(playlistId).then(async (playlist) => {
                 let trackId = null;
@@ -2131,7 +2131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#play-playlist-btn');
             if (btn.disabled) return;
 
-            const playlistId = window.location.pathname.split('/')[2];
+            const playlistId = getAppPath().split('/')[2];
             if (!playlistId) return;
 
             try {
@@ -2168,7 +2168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#download-album-btn');
             if (btn.disabled) return;
 
-            const albumId = window.location.pathname.split('/')[2];
+            const albumId = getAppPath().split('/')[2];
             if (!albumId) return;
 
             btn.disabled = true;
@@ -2198,7 +2198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#add-album-to-playlist-btn');
             if (btn.disabled) return;
 
-            const albumId = window.location.pathname.split('/')[2];
+            const albumId = getAppPath().split('/')[2];
             if (!albumId) return;
 
             try {
@@ -2297,7 +2297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#play-artist-radio-btn');
             if (btn.disabled) return;
 
-            const artistId = window.location.pathname.split('/')[2];
+            const artistId = getAppPath().split('/')[2];
             if (!artistId) return;
 
             btn.disabled = true;
@@ -2418,7 +2418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('#download-discography-btn');
             if (btn.disabled) return;
 
-            const artistId = window.location.pathname.split('/')[2];
+            const artistId = getAppPath().split('/')[2];
             if (!artistId) return;
 
             try {
@@ -2680,7 +2680,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Listener for Pocketbase Sync updates
     window.addEventListener('library-changed', () => {
-        const path = window.location.pathname;
+        const path = getAppPath();
         if (path === '/library') {
             UIRenderer.instance.renderLibraryPage();
         } else if (path === '/' || path === '/home') {
@@ -2695,7 +2695,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
     window.addEventListener('history-changed', () => {
-        const path = window.location.pathname;
+        const path = getAppPath();
         if (path === '/recent') {
             UIRenderer.instance.renderRecentPage();
         }

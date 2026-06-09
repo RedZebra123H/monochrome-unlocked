@@ -22,6 +22,7 @@ import {
     SVG_TRASH,
     SVG_EQUAL,
 } from './icons.js';
+import { getAppPath } from './router.js';
 import { hapticSuccess } from './haptics.js';
 
 export function initializeUIInteractions(player, api, ui) {
@@ -514,7 +515,7 @@ export function initializeUIInteractions(player, api, ui) {
             e.preventDefault();
             folderPage.classList.remove('drag-over-folder-page');
             const playlistId = e.dataTransfer.getData('text/playlist-id');
-            const folderId = window.location.pathname.split('/')[2];
+            const folderId = getAppPath().split('/')[2];
             if (playlistId && folderId) {
                 try {
                     const updatedFolder = await db.addPlaylistToFolder(folderId, playlistId);

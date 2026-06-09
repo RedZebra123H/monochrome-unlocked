@@ -1,6 +1,7 @@
 // js/analytics.js - Plausible Analytics custom event tracking
 
 import { analyticsSettings } from './storage.js';
+import { getAppPath } from './router.js';
 
 /**
  * Check if analytics is enabled
@@ -39,5 +40,5 @@ export function initAnalytics() {
     if (!isAnalyticsEnabled()) return;
 
     // Track initial page view
-    trackPageView(window.location.pathname);
+    trackPageView(getAppPath());
 }

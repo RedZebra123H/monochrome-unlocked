@@ -17,7 +17,7 @@ import {
 } from './storage.js';
 import { showNotification, downloadTrackWithMetadata, downloadAlbum, downloadPlaylist } from './downloads.js';
 import { downloadQualitySettings } from './storage.js';
-import { updateTabTitle, navigate } from './router.js';
+import { updateTabTitle, navigate, getAppPath } from './router.js';
 import { db } from './db.js';
 import { syncManager } from './accounts/pocketbase.js';
 import { waveformGenerator } from './waveform.js';
@@ -1413,7 +1413,7 @@ export async function handleTrackAction(
         });
 
         // Handle Library Page Update
-        if (window.location.pathname.split('/').filter(Boolean)[0] === 'library') {
+        if (getAppPath().split('/').filter(Boolean)[0] === 'library') {
             const itemSelector =
                 type === 'track'
                     ? `.track-item[data-track-id="${id}"], .card[data-track-id="${id}"]`
@@ -2016,7 +2016,7 @@ export function initializeTrackInteractions(player, api, mainContent, contextMen
 
             // If no item from element (e.g. header buttons), try to get from hash
             if (!item && action === 'toggle-like') {
-                const id = window.location.pathname.split('/')[2];
+                const id = getAppPath().split('/')[2];
                 if (id) {
                     try {
                         if (type === 'album') {
@@ -2154,7 +2154,7 @@ export function initializeTrackInteractions(player, api, mainContent, contextMen
             !e.target.closest('.like-btn')
         ) {
             const clickedTrackId = trackItem.dataset.trackId;
-            const isSearch = window.location.pathname.startsWith('/search/');
+            const isSearch = getAppPath().startsWith('/search/');
 
             if (isMultiSelectToggle(e)) {
                 e.preventDefault();

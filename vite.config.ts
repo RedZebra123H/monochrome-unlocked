@@ -38,7 +38,7 @@ export default defineConfig((_options) => {
                 instances: [{ browser: 'chromium' }],
             },
         },
-        base: './',
+        base: '/monochrome-unlocked/',
         define: {
             __COMMIT_HASH__: JSON.stringify(commitHash),
             __VITEST__: !!process.env.VITEST,

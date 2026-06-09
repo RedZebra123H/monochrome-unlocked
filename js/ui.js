@@ -39,7 +39,7 @@ import { AUTH_BASE_URL } from './accounts/config.js';
 import { areListeningPartiesDisabled, partyManager } from './listening-party.js';
 import { Visualizer } from './visualizer.js';
 import { audioContextManager } from './audio-context.js';
-import { navigate } from './router.js';
+import { navigate, getAppPath } from './router.js';
 import { sidePanelManager } from './side-panel.js';
 import {
     renderUnreleasedPage as renderUnreleasedTrackerPage,
@@ -4995,7 +4995,7 @@ export class UIRenderer {
                             const trackData = trackDataStore.get(item);
                             if (trackData) {
                                 try {
-                                    const path = window.location.pathname;
+                                    const path = getAppPath();
                                     const playlistMatch = path.match(/\/userplaylist\/([^/]+)/);
                                     if (playlistMatch) {
                                         const playlistId = playlistMatch[1];

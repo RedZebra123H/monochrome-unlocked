@@ -11,7 +11,7 @@
         "test:watch:headless": "HEADLESS=true vitest --config=vite.config.ts",
         "install:playwright": "playwright install chromium",
         "build": "vite build && vite-bundle-visualizer -o docs/assets/bundle-stats.html --open false",
-        "postbuild": "node -e \"const fs = require('fs'); const path = require('path'); const src = 'extensions'; const dest = path.join('docs', 'Monochrome', 'extensions'); if (fs.existsSync(src)) { fs.mkdirSync(dest, { recursive: true }); fs.cpSync(src, dest, { recursive: true }); console.log('Extensions manually copied to ' + dest); }\"",
+        "postbuild": "node -e \"const fs = require('fs'); const path = require('path'); fs.copyFileSync(path.join('docs','index.html'), path.join('docs','404.html')); console.log('404.html created for SPA routing'); const src = 'extensions'; const dest = path.join('docs', 'Monochrome', 'extensions'); if (fs.existsSync(src)) { fs.mkdirSync(dest, { recursive: true }); fs.cpSync(src, dest, { recursive: true }); console.log('Extensions manually copied to ' + dest); }\"",
         "preview": "vite preview",
         "lint:js": "eslint .",
         "lint:css": "stylelint \"**/*.css\"",

@@ -1,6 +1,6 @@
 import { syncManager } from './accounts/pocketbase.js';
 import { authManager } from './accounts/auth.js';
-import { navigate } from './router.js';
+import { navigate, getAppPath } from './router.js';
 import { MusicAPI } from './music-api.js';
 import { apiSettings } from './storage.js';
 import { debounce, escapeHtml } from './utils.js';
@@ -601,7 +601,7 @@ async function saveProfile() {
         editProfileModal.classList.remove('active');
         await loadProfile(newUsername);
 
-        if (window.location.pathname.includes('/user/@')) {
+        if (getAppPath().includes('/user/@')) {
             window.history.replaceState(null, '', `/user/@${newUsername}`);
         }
     } catch (e) {
