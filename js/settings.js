@@ -6192,7 +6192,7 @@ export async function initializeSettings(scrobbler, player, api, ui) {
     if (editorsPicksSourceSelect) {
         async function populateEditorsPicksSource() {
             try {
-                const response = await fetch('/editors-picks-old/index.json');
+                const response = await fetch(`${import.meta.env.BASE_URL || '/'}editors-picks-old/index.json`);
                 if (response.ok) {
                     const oldPicks = await response.json();
                     oldPicks.forEach((pick) => {

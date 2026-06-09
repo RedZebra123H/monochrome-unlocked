@@ -9,6 +9,30 @@ npm run build
 
 This generates a self-contained website in the `docs/` folder with `index.html` and all assets. Re-run `npm run build` any time the project is updated to regenerate the files.
 
+### Hosting Locally
+
+After building, you can serve the site locally using `npx serve`:
+
+```bash
+npx serve docs
+```
+
+Then open `http://localhost:3000` in your browser.
+
+If you don't have `npx` installed, install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`). Alternatively, you can install `serve` globally:
+
+```bash
+npm install -g serve
+serve docs
+```
+
+Or use Python's built-in server:
+
+```bash
+cd docs
+python3 -m http.server 8000
+```
+
 ### Hosting with GitHub Pages
 
 1. Run `npm run build` and commit the `docs/` folder

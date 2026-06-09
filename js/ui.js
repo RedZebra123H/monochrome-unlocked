@@ -3889,7 +3889,8 @@ export class UIRenderer {
 
             try {
                 const source = homePageSettings.getEditorsPicksSource();
-                const picksPath = source === 'current' ? '/editors-picks.json' : `/editors-picks-old/${source}`;
+                const base = import.meta.env.BASE_URL || '/';
+                const picksPath = source === 'current' ? `${base}editors-picks.json` : `${base}editors-picks-old/${source}`;
                 const response = await fetch(picksPath);
                 if (!response.ok) throw new Error("Failed to load editor's picks");
 
