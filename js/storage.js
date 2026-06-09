@@ -3313,7 +3313,7 @@ export const contentBlockingSettings = {
     // Hardcoded always-blocked artist IDs. Merged into the user blocklist on
     // every read so the block survives localStorage clears. To allow playback
     // for one of these artists again, remove the ID from this array.
-    HARDCODED_BLOCKED_ARTIST_IDS: [3995478],
+    HARDCODED_BLOCKED_ARTIST_IDS: [],
 
     _hardcodedBlockedArtists() {
         return this.HARDCODED_BLOCKED_ARTIST_IDS.map((id) => ({

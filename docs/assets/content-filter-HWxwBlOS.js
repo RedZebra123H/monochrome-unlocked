@@ -1,0 +1,1 @@
+const s=["emVl","em1j","emluZyBtdXNpYw==","ZXRjIGJvbGx5d29vZA==","Ym9sbHl3b29kIG11c2lj","ZXNzZWw=","emluZGFnaQ=="].map(atob),l=t=>{const e=typeof t=="string"?t:t?.text;return!!e&&s.some(o=>e.toLowerCase().includes(o))};export{l as isBlockedCopyright};

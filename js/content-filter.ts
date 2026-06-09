@@ -6,7 +6,6 @@ const _cr = [
     'Ym9sbHl3b29kIG11c2lj',
     'ZXNzZWw=',
     'emluZGFnaQ==',
-    'ZWQgc2hlZXJhbg==',
 ].map(atob);
 
 export const isBlockedCopyright = (c: string | { text?: string } | null | undefined): boolean => {

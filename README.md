@@ -1,3 +1,24 @@
+## Building the Static Site
+
+To build the project into a static HTML site (output goes to `docs/`):
+
+```bash
+npm install
+npm run build
+```
+
+This generates a self-contained website in the `docs/` folder with `index.html` and all assets. Re-run `npm run build` any time the project is updated to regenerate the files.
+
+### Hosting with GitHub Pages
+
+1. Run `npm run build` and commit the `docs/` folder
+2. Go to your repo **Settings > Pages**
+3. Under **Source**, select **Deploy from a branch**
+4. Set the branch to `main` and the folder to `/docs`
+5. Save — your site will be live at `https://<username>.github.io/<repo>/`
+
+---
+
  <p align="center">
   <a href="https://monochrome.tf">
     <img src="https://github.com/monochrome-music/monochrome/blob/main/public/assets/512.png?raw=true" alt="Monochrome Logo" width="150px">
