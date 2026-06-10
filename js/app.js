@@ -2612,8 +2612,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateTabTitle(Player.instance);
     };
 
-    await handleRouteChange();
-
     window.addEventListener('popstate', handleRouteChange);
 
     document.body.addEventListener('click', (e) => {
@@ -2629,6 +2627,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             navigate(link.pathname);
         }
     });
+
+    await handleRouteChange();
 
     audioPlayer.addEventListener('play', () => {
         updateTabTitle(Player.instance);
