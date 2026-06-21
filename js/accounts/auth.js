@@ -49,6 +49,9 @@ export class AuthManager {
     async init() {
         const params = new URLSearchParams(window.location.search);
         if (params.has('oauth') || params.has('userId') || params.has('secret')) {
+            if (params.has('secret')) {
+                storeAuthToken(params.get('secret'));
+            }
             window.history.replaceState({}, '', window.location.pathname);
         }
 
@@ -81,10 +84,37 @@ export class AuthManager {
 
     async _signInSocial(provider) {
         try {
+            const callbackURL = window.location.origin + '/index.html';
+            const errorCallbackURL = window.location.origin + '/index.html';
+
+            const isCapacitorNative = !!(
+                window.Capacitor &&
+                window.Capacitor.getPlatform &&
+                window.Capacitor.getPlatform() !== 'web'
+            );
+
+            if (isCapacitorNative) {
+                const res = await fetch(`${AUTH_BASE_URL}/api/auth/sign-in/social`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider, callbackURL, errorCallbackURL }),
+                    credentials: 'include',
+                });
+                const data = await res.json();
+                if (data.url && data.redirect) {
+                    window.open(data.url, '_system');
+                    return;
+                }
+                if (data.error) {
+                    throw new Error(data.error.message || 'OAuth URL fetch failed');
+                }
+                throw new Error('Unexpected response from auth server');
+            }
+
             await authClient.signIn.social({
                 provider,
                 callbackURL: window.location.origin + '/index.html',
-                errorCallbackURL: window.location.origin + '/login.html',
+                errorCallbackURL: window.location.origin + '/index.html',
             });
         } catch (error) {
             console.error('Login failed:', error);

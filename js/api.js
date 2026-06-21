@@ -10,7 +10,13 @@ import {
     getTrackCoverId,
     getCoverBlob,
 } from './utils.js';
-import { preferDolbyAtmosSettings, trackDateSettings, devModeSettings, amazonMusicSettings } from './storage.js';
+import {
+    preferDolbyAtmosSettings,
+    trackDateSettings,
+    devModeSettings,
+    amazonMusicSettings,
+    deezerFallbackSettings,
+} from './storage.js';
 import { APICache } from './cache.js';
 import { DashDownloader } from './dash-downloader.ts';
 import { HlsDownloader } from './hls-downloader.js';
@@ -620,7 +626,9 @@ export class LosslessAPI {
 
             const [enrichedTracks, enrichedArtists] = await Promise.all([
                 this.enrichTracksWithAlbumCover(preparedTracks),
-                this.enrichArtistsWithPicture(preparedArtists),
+                options.enrichArtists === false
+                    ? Promise.resolve(preparedArtists)
+                    : this.enrichArtistsWithPicture(preparedArtists),
             ]);
 
             const results = {
@@ -1853,6 +1861,37 @@ export class LosslessAPI {
         return null;
     }
 
+    getDeezerStreamFormat(quality = 'LOSSLESS') {
+        const map = {
+            HI_RES_LOSSLESS: 'FLAC',
+            LOSSLESS: 'FLAC',
+            DOLBY_ATMOS: 'FLAC',
+            HIGH: 'MP3_320',
+            LOW: 'MP3_128',
+            NORMAL: 'MP3_128',
+        };
+        return map[quality] || map[normalizeQualityToken(quality)] || 'FLAC';
+    }
+
+    async getDeezerStreamUrl(isrc, quality = 'LOSSLESS') {
+        if (!isrc || !deezerFallbackSettings.isEnabled()) return null;
+        const baseUrl = deezerFallbackSettings.getApiBaseUrl().replace(/\/+$/, '');
+        if (!baseUrl) return null;
+        const format = this.getDeezerStreamFormat(quality);
+        const url = `${baseUrl}/stream/?isrc=${encodeURIComponent(isrc)}&format=${encodeURIComponent(format)}`;
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
+            const res = await fetch(url, { method: 'HEAD', signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!res.ok && res.status !== 405 && res.status !== 501) return null;
+        } catch (e) {
+            console.warn(`Deezer fallback failed for ISRC ${isrc}:`, e);
+            return null;
+        }
+        return { url, format, provider: 'deezer', rgInfo: null };
+    }
+
     getAmazonMusicQuality(quality = 'LOSSLESS', { preferAdaptiveAuto = false } = {}) {
         let adaptiveQuality = null;
         try {
@@ -2668,55 +2707,6 @@ export class LosslessAPI {
         }
     }
 
-    async hasHiFiStreamingFallbackInstances() {
-        try {
-            const streamingInstances = await this.settings.getInstances('streaming');
-            return Array.isArray(streamingInstances) && streamingInstances.length > 0;
-        } catch (error) {
-            console.warn('Failed to load HiFi streaming fallback instances:', error);
-            return false;
-        }
-    }
-
-    resolveStreamUrlFromLookup(lookup) {
-        if (!lookup) return null;
-        if (lookup.originalTrackUrl) return lookup.originalTrackUrl;
-        return lookup.info?.manifest ? this.extractStreamUrlFromManifest(lookup.info.manifest) : null;
-    }
-
-    getReplayGainInfoFromLookup(lookup) {
-        const info = lookup?.info || {};
-        return {
-            trackReplayGain: info.trackReplayGain ?? info.replayGain ?? 0,
-            trackPeakAmplitude: info.trackPeakAmplitude ?? info.peakAmplitude ?? 1,
-            albumReplayGain: info.albumReplayGain ?? 0,
-            albumPeakAmplitude: info.albumPeakAmplitude ?? 1,
-        };
-    }
-
-    async getHiFiStreamingFallback(id, quality = 'LOSSLESS') {
-        if (!(await this.hasHiFiStreamingFallbackInstances())) {
-            return null;
-        }
-
-        try {
-            const lookup = await this.getTrack(id, quality, { adaptive: this.shouldUseAdaptiveTrackManifest(false) });
-            const url = this.resolveStreamUrlFromLookup(lookup);
-            if (!url) {
-                throw new Error('Could not resolve stream URL from HiFi streaming manifest');
-            }
-
-            return {
-                url,
-                lookup,
-                rgInfo: this.getReplayGainInfoFromLookup(lookup),
-            };
-        } catch (error) {
-            console.warn(`HiFi streaming fallback failed for track ${id}:`, error);
-            return null;
-        }
-    }
-
     async getStreamUrl(id, quality = 'LOSSLESS') {
         const cacheKey = `stream_info_${id}_${quality}`;
 
@@ -2814,21 +2804,31 @@ export class LosslessAPI {
             return result;
         }
 
-        const fallbackResult = await this.getHiFiStreamingFallback(id, quality);
-        if (fallbackResult?.url) {
-            const result = {
-                url: fallbackResult.url,
-                rgInfo: fallbackResult.rgInfo,
-            };
-            this.streamCache.set(cacheKey, result);
-            return result;
+        if (track?.isrc) {
+            const deezerResult = await this.getDeezerStreamUrl(track.isrc, quality);
+            if (deezerResult?.url) {
+                const result = {
+                    url: deezerResult.url,
+                    rgInfo: {
+                        trackReplayGain: 0,
+                        trackPeakAmplitude: 1,
+                        albumReplayGain: 0,
+                        albumPeakAmplitude: 1,
+                    },
+                    provider: 'deezer',
+                    deezerFormat: deezerResult.format,
+                    deezerHiRes: deriveTrackQuality(track) === 'HI_RES_LOSSLESS',
+                };
+                this.streamCache.set(cacheKey, result);
+                return result;
+            }
         }
 
         notifyAudioSourceMissing();
         throw new Error(
             track?.isrc
-                ? 'Could not resolve stream URL from Amazon Music, Qobuz, or HiFi streaming APIs'
-                : 'Could not resolve stream URL: Amazon Music failed, track has no ISRC for Qobuz lookup, and HiFi streaming fallback failed'
+                ? 'Could not resolve stream URL from Amazon Music, Qobuz, or Deezer'
+                : 'Could not resolve stream URL: Amazon Music failed and track has no ISRC for Qobuz/Deezer lookup'
         );
     }
 
@@ -2944,22 +2944,28 @@ export class LosslessAPI {
                     },
                 };
             } else {
-                const fallbackResult = await this.getHiFiStreamingFallback(id, cleanQuality);
-                if (fallbackResult?.lookup) {
-                    lookup = fallbackResult.lookup;
+                const deezerResult = track?.isrc ? await this.getDeezerStreamUrl(track.isrc, 'LOSSLESS') : null;
+                if (deezerResult?.url) {
+                    externalProvider = 'deezer';
+                    externalStreamUrl = deezerResult.url;
+                    externalSourceUrl = deezerResult.url;
+                    lookup = {
+                        info: {
+                            audioQuality: cleanQuality,
+                            trackReplayGain: 0,
+                            trackPeakAmplitude: 1,
+                            albumReplayGain: 0,
+                            albumPeakAmplitude: 1,
+                        },
+                    };
                 } else {
                     notifyAudioSourceMissing();
                     throw new Error(
                         track?.isrc
-                            ? 'Could not resolve audio stream from Amazon Music, Qobuz, or HiFi streaming APIs'
-                            : 'Cannot resolve audio stream: Amazon Music failed, track has no ISRC for Qobuz lookup, and HiFi streaming fallback failed'
+                            ? 'Could not resolve audio stream from Amazon Music, Qobuz, or Deezer'
+                            : 'Cannot resolve audio stream: Amazon Music failed and track has no ISRC for Qobuz/Deezer lookup'
                     );
                 }
-            }
-
-            if (!lookup) {
-                notifyAudioSourceMissing();
-                throw new Error('Could not resolve audio stream');
             }
         }
 

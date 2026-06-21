@@ -33,6 +33,7 @@ import {
     contentBlockingSettings,
     musicProviderSettings,
     amazonMusicSettings,
+    deezerFallbackSettings,
     gaplessPlaybackSettings,
     analyticsSettings,
     modalSettings,
@@ -879,6 +880,22 @@ export async function initializeSettings(scrobbler, player, api, ui) {
         });
     }
 
+    const deezerFallbackToggle = document.getElementById('deezer-fallback-toggle');
+    if (deezerFallbackToggle) {
+        deezerFallbackToggle.checked = deezerFallbackSettings.isEnabled();
+        deezerFallbackToggle.addEventListener('change', (e) => {
+            deezerFallbackSettings.setEnabled(e.target.checked);
+        });
+    }
+
+    const deezerApiBaseUrlInput = document.getElementById('deezer-fallback-api-base-url');
+    if (deezerApiBaseUrlInput) {
+        deezerApiBaseUrlInput.value = deezerFallbackSettings.getApiBaseUrl();
+        deezerApiBaseUrlInput.addEventListener('change', (e) => {
+            deezerFallbackSettings.setApiBaseUrl(e.target.value.trim());
+        });
+    }
+
     // Streaming Quality setting
     const streamingQualitySetting = document.getElementById('streaming-quality-setting');
     if (streamingQualitySetting) {
@@ -942,7 +959,7 @@ export async function initializeSettings(scrobbler, player, api, ui) {
             const m = text.match(/(\d+)\s*kbps/i);
             return m ? parseInt(m[1], 10) : Infinity;
         };
-        const categoryOrder = ['Lossless', 'AAC', 'MP3', 'OGG'];
+        const categoryOrder = ['Lossless', 'AAC', 'MP3', 'OGG', 'Opus'];
         allOptions.sort((a, b) => {
             if (a.category == b.category && a.category === 'Lossless') return 0; // Preserve original order for lossless options
             const ai = categoryOrder.indexOf(a.category);
