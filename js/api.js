@@ -27,6 +27,13 @@ import { isCustomFormat } from './ffmpegFormats.ts';
 import { DownloadProgress } from './progressEvents.js';
 import { resolveDownloadTotalBytes } from './downloadProgressUtils.js';
 import { readableStreamIterator } from './readableStreamIterator.js';
+
+const CORS_PROXY_URL = 'https://monochrome-proxy.hudwoll-e.workers.dev';
+
+function proxiedFetch(url, options = {}) {
+    const proxyUrl = `${CORS_PROXY_URL}/?url=${encodeURIComponent(url)}`;
+    return fetch(proxyUrl, options);
+}
 import { HiFiClient, TidalResponse } from './HiFi.ts';
 import { isIos, isSafari, isChrome } from './platform-detection.js';
 import {
@@ -147,7 +154,7 @@ export class LosslessAPI {
                 const url = isTidal ? wrapTidalUrl(targetUrl) : targetUrl;
 
                 try {
-                    const response = await fetch(url, { signal: options.signal });
+                    const response = await proxiedFetch(url, { signal: options.signal });
 
                     if (response.status === 429) {
                         console.warn(`Rate limit hit on ${baseUrl}. Trying next instance...`);
@@ -1809,7 +1816,7 @@ export class LosslessAPI {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-                const trackRes = await fetch(`${baseUrl}/api/get-music?q=${encodeURIComponent(isrc)}&offset=0`, {
+                const trackRes = await proxiedFetch(`${baseUrl}/api/get-music?q=${encodeURIComponent(isrc)}&offset=0`, {
                     signal: controller.signal,
                 });
                 clearTimeout(timeoutId);
@@ -1832,7 +1839,7 @@ export class LosslessAPI {
                     const streamController = new AbortController();
                     const streamTimeoutId = setTimeout(() => streamController.abort(), 8000);
 
-                    const streamRes = await fetch(
+                    const streamRes = await proxiedFetch(
                         `${baseUrl}/api/download-music?track_id=${qobuzTrackId}&quality=${qobuzQuality}`,
                         { signal: streamController.signal }
                     );
@@ -1882,7 +1889,7 @@ export class LosslessAPI {
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 12000);
-            const res = await fetch(url, { method: 'HEAD', signal: controller.signal });
+            const res = await proxiedFetch(url, { method: 'HEAD', signal: controller.signal });
             clearTimeout(timeoutId);
             if (!res.ok && res.status !== 405 && res.status !== 501) return null;
         } catch (e) {
@@ -1994,7 +2001,7 @@ export class LosslessAPI {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
         try {
-            return await fetch(url, {
+            return await proxiedFetch(url, {
                 ...options,
                 signal: options.signal || controller.signal,
             });

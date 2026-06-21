@@ -62,7 +62,8 @@ export const apiSettings = {
 
             for (const url of urls) {
                 try {
-                    const response = await fetch(url);
+                    const CORS_PROXY_URL = 'https://monochrome-proxy.hudwoll-e.workers.dev';
+                    const response = await fetch(`${CORS_PROXY_URL}/?url=${encodeURIComponent(url)}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     data = await response.json();
                     break; // Success, exit loop
