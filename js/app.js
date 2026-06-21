@@ -2635,7 +2635,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             !link.hasAttribute('download')
         ) {
             e.preventDefault();
-            navigate(link.pathname);
+            // Strip base path if already present to avoid doubling
+            let linkPath = link.pathname;
+            const basePath = document.querySelector('base')?.getAttribute('href')?.replace(/\/$/, '') || '';
+            if (basePath && linkPath.startsWith(basePath)) {
+                linkPath = linkPath.substring(basePath.length);
+            }
+            if (!linkPath.startsWith('/')) linkPath = '/' + linkPath;
+            navigate(linkPath);
         }
     });
 
