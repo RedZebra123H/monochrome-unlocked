@@ -1,5 +1,202 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/butterchurn-BbdCfyv_.js","assets/_commonjsHelpers-Cpj98o6Y.js","assets/index-dKik-FhL.js","assets/index-3uZBGPli.css"])))=>i.map(i=>d[i]);
-import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t as fn,g as H1,h as rt,i as Ga,j as zi,k as Zo,n as Hi,o as j1,p as Q1,q as W1,r as K1,u as me,B as Gt,v as He,w as V1,x as Oa,y as Y1,z as W,A as Ct,C as J1,D as pn,E as F,F as X1,G as Z1,H as ei,I as Ua,J as za,K as ti,L as ni,M as ai,N as oi,O as si,P as ii,Q as li,R as ri,S as ci,T as Ce,U as Qe,V as K,W as ji,X as di,Y as ui,_ as Qi,Z as Re,$ as Ot}from"./index-dKik-FhL.js";import"https://esm.sh/better-auth/client";const mi=30,Wi=.6,hi=48e3,gi=Math.PI,Ki=10,Vi=40;function at(f,h,I=hi){if(!h.enabled||!h.type||h.type.length===0)return 0;const P=2*gi*h.freq/I,R=2*gi*f/I,L=h.type[0],M=h.q,$=Math.sin(P)/(2*M),y=Math.pow(Ki,h.gain/Vi),C=Math.cos(P);let N=0,S=0,z=0,J=0,T=0,G=0;if(L==="p")N=1+$*y,S=-2*C,z=1-$*y,J=1+$/y,T=-2*C,G=1-$/y;else if(L==="l"){const Me=2*Math.sqrt(y)*$;N=y*(y+1-(y-1)*C+Me),S=2*y*(y-1-(y+1)*C),z=y*(y+1-(y-1)*C-Me),J=y+1+(y-1)*C+Me,T=-2*(y-1+(y+1)*C),G=y+1+(y-1)*C-Me}else if(L==="h"){const Me=2*Math.sqrt(y)*$;N=y*(y+1+(y-1)*C+Me),S=-2*y*(y-1+(y+1)*C),z=y*(y+1+(y-1)*C-Me),J=y+1-(y-1)*C+Me,T=2*(y-1-(y+1)*C),G=y+1-(y-1)*C-Me}else return 0;const Z=1/J,ge=N*Z,Be=S*Z,De=z*Z,de=T*Z,B=G*Z,j=Math.cos(R),ve=Math.cos(2*R),Ae=ge*ge+Be*Be+De*De+2*(ge*Be+Be*De)*j+2*ge*De*ve,Ve=1+de*de+B*B+2*(de+de*B)*j+2*B*ve;return 10*Math.log10(Ae/Ve)}function kt(f,h){if(h.length===0)return 0;if(f<=h[0].freq)return h[0].gain;if(f>=h[h.length-1].freq)return h[h.length-1].gain;for(let I=0;I<h.length-1;I++)if(f>=h[I].freq&&f<=h[I+1].freq)return h[I].gain+(f-h[I].freq)/(h[I+1].freq-h[I].freq)*(h[I+1].gain-h[I].gain);return 0}function Ut(f,h){if(!h){let L=0,M=0;for(const $ of f)$.freq>=250&&$.freq<=2500&&(L+=$.gain,M++);return M>0?L/M:kt(1e3,f)}let I=0,P=0,R=0;for(const L of f)L.freq>=250&&L.freq<=2500&&(I+=kt(L.freq,h),P+=L.gain,R++);return R>0?I/R-P/R:kt(1e3,h)-kt(1e3,f)}function es(f,h,I,P=16e3,R=20,L=5,M=hi){if(R>P)return[];const $=Ut(f,h);let y=f.map(S=>({freq:S.freq,gain:S.gain+$-kt(S.freq,h)}));if(!y.some(S=>S.freq>=R&&S.freq<=P))return[];const N=[];for(let S=0;S<I;S++){let z=0,J=0,T=1e3,G=0;for(let ue=0;ue<y.length;ue++){const Ze=y[ue];if(Ze.freq<R||Ze.freq>P)continue;let ct=Ze.gain;ue>0&&ue<y.length-1&&(ct=(y[ue-1].gain+ct+y[ue+1].gain)/3);let dt=1;Ze.freq<300?dt=1.5:Ze.freq<4e3?dt=1:Ze.freq<8e3?dt=.5:dt=.25,Math.abs(ct*dt)>Math.abs(J)&&(J=Math.abs(ct*dt),z=ct,T=Ze.freq,G=ue)}let Z=-z,ge=mi;if(T>3e3&&(ge=6),T>6e3&&(ge=3),Z>ge&&(Z=ge),Z<-30&&(Z=-30),Math.abs(Z)<.2)break;let Be=T,De=T,de=!1,B=!1;const j=z/2;for(let ue=G;ue>=0;ue--)if(Math.abs(y[ue].gain)<Math.abs(j)){De=y[ue].freq,de=!0;break}for(let ue=G;ue<y.length;ue++)if(Math.abs(y[ue].gain)<Math.abs(j)){Be=y[ue].freq,B=!0;break}!de&&B?De=T*T/Be:!B&&de?Be=T*T/De:!de&&!B&&(De=T/Math.SQRT2,Be=T*Math.SQRT2);let ve=Math.log2(Be/Math.max(1,De));ve<.1&&(ve=.1);let Ae=Math.sqrt(Math.pow(2,ve))/(Math.pow(2,ve)-1);Ae=Math.max(Wi,Math.min(L,Ae)),T>5e3&&Ae>3&&(Ae=3),Z>0&&Ae>2&&(Ae=2);const Ve={id:S,type:"peaking",freq:T,gain:Z,q:Ae,enabled:!0,channel:"stereo"};let Me=Z;for(const ue of N)Me+=at(T,ue,M);const hn=mi;Me>hn&&(Ve.gain=Z-(Me-hn),Ve.gain<.2)||(N.push(Ve),y=y.map(ue=>({...ue,gain:ue.gain+at(ue.freq,Ve,M)})))}return N.sort((S,z)=>S.freq-z.freq).map((S,z)=>({...S,id:z}))}const Yi=`
+const __vite__mapDeps = (
+    i,
+    m = __vite__mapDeps,
+    d = m.f ||
+        (m.f = [
+            'assets/butterchurn-BbdCfyv_.js',
+            'assets/_commonjsHelpers-Cpj98o6Y.js',
+            'assets/index-dKik-FhL.js',
+            'assets/index-3uZBGPli.css',
+        ])
+) => i.map((i) => d[i]);
+import {
+    d as Xe,
+    s as pi,
+    a as mn,
+    b as _n,
+    c as z1,
+    l as Le,
+    e as Lt,
+    m as gn,
+    f as $n,
+    t as fn,
+    g as H1,
+    h as rt,
+    i as Ga,
+    j as zi,
+    k as Zo,
+    n as Hi,
+    o as j1,
+    p as Q1,
+    q as W1,
+    r as K1,
+    u as me,
+    B as Gt,
+    v as He,
+    w as V1,
+    x as Oa,
+    y as Y1,
+    z as W,
+    A as Ct,
+    C as J1,
+    D as pn,
+    E as F,
+    F as X1,
+    G as Z1,
+    H as ei,
+    I as Ua,
+    J as za,
+    K as ti,
+    L as ni,
+    M as ai,
+    N as oi,
+    O as si,
+    P as ii,
+    Q as li,
+    R as ri,
+    S as ci,
+    T as Ce,
+    U as Qe,
+    V as K,
+    W as ji,
+    X as di,
+    Y as ui,
+    _ as Qi,
+    Z as Re,
+    $ as Ot,
+} from './index-dKik-FhL.js';
+import 'https://esm.sh/better-auth/client';
+const mi = 30,
+    Wi = 0.6,
+    hi = 48e3,
+    gi = Math.PI,
+    Ki = 10,
+    Vi = 40;
+function at(f, h, I = hi) {
+    if (!h.enabled || !h.type || h.type.length === 0) return 0;
+    const P = (2 * gi * h.freq) / I,
+        R = (2 * gi * f) / I,
+        L = h.type[0],
+        M = h.q,
+        $ = Math.sin(P) / (2 * M),
+        y = Math.pow(Ki, h.gain / Vi),
+        C = Math.cos(P);
+    let N = 0,
+        S = 0,
+        z = 0,
+        J = 0,
+        T = 0,
+        G = 0;
+    if (L === 'p') ((N = 1 + $ * y), (S = -2 * C), (z = 1 - $ * y), (J = 1 + $ / y), (T = -2 * C), (G = 1 - $ / y));
+    else if (L === 'l') {
+        const Me = 2 * Math.sqrt(y) * $;
+        ((N = y * (y + 1 - (y - 1) * C + Me)),
+            (S = 2 * y * (y - 1 - (y + 1) * C)),
+            (z = y * (y + 1 - (y - 1) * C - Me)),
+            (J = y + 1 + (y - 1) * C + Me),
+            (T = -2 * (y - 1 + (y + 1) * C)),
+            (G = y + 1 + (y - 1) * C - Me));
+    } else if (L === 'h') {
+        const Me = 2 * Math.sqrt(y) * $;
+        ((N = y * (y + 1 + (y - 1) * C + Me)),
+            (S = -2 * y * (y - 1 + (y + 1) * C)),
+            (z = y * (y + 1 + (y - 1) * C - Me)),
+            (J = y + 1 - (y - 1) * C + Me),
+            (T = 2 * (y - 1 - (y + 1) * C)),
+            (G = y + 1 - (y - 1) * C - Me));
+    } else return 0;
+    const Z = 1 / J,
+        ge = N * Z,
+        Be = S * Z,
+        De = z * Z,
+        de = T * Z,
+        B = G * Z,
+        j = Math.cos(R),
+        ve = Math.cos(2 * R),
+        Ae = ge * ge + Be * Be + De * De + 2 * (ge * Be + Be * De) * j + 2 * ge * De * ve,
+        Ve = 1 + de * de + B * B + 2 * (de + de * B) * j + 2 * B * ve;
+    return 10 * Math.log10(Ae / Ve);
+}
+function kt(f, h) {
+    if (h.length === 0) return 0;
+    if (f <= h[0].freq) return h[0].gain;
+    if (f >= h[h.length - 1].freq) return h[h.length - 1].gain;
+    for (let I = 0; I < h.length - 1; I++)
+        if (f >= h[I].freq && f <= h[I + 1].freq)
+            return h[I].gain + ((f - h[I].freq) / (h[I + 1].freq - h[I].freq)) * (h[I + 1].gain - h[I].gain);
+    return 0;
+}
+function Ut(f, h) {
+    if (!h) {
+        let L = 0,
+            M = 0;
+        for (const $ of f) $.freq >= 250 && $.freq <= 2500 && ((L += $.gain), M++);
+        return M > 0 ? L / M : kt(1e3, f);
+    }
+    let I = 0,
+        P = 0,
+        R = 0;
+    for (const L of f) L.freq >= 250 && L.freq <= 2500 && ((I += kt(L.freq, h)), (P += L.gain), R++);
+    return R > 0 ? I / R - P / R : kt(1e3, h) - kt(1e3, f);
+}
+function es(f, h, I, P = 16e3, R = 20, L = 5, M = hi) {
+    if (R > P) return [];
+    const $ = Ut(f, h);
+    let y = f.map((S) => ({ freq: S.freq, gain: S.gain + $ - kt(S.freq, h) }));
+    if (!y.some((S) => S.freq >= R && S.freq <= P)) return [];
+    const N = [];
+    for (let S = 0; S < I; S++) {
+        let z = 0,
+            J = 0,
+            T = 1e3,
+            G = 0;
+        for (let ue = 0; ue < y.length; ue++) {
+            const Ze = y[ue];
+            if (Ze.freq < R || Ze.freq > P) continue;
+            let ct = Ze.gain;
+            ue > 0 && ue < y.length - 1 && (ct = (y[ue - 1].gain + ct + y[ue + 1].gain) / 3);
+            let dt = 1;
+            (Ze.freq < 300 ? (dt = 1.5) : Ze.freq < 4e3 ? (dt = 1) : Ze.freq < 8e3 ? (dt = 0.5) : (dt = 0.25),
+                Math.abs(ct * dt) > Math.abs(J) && ((J = Math.abs(ct * dt)), (z = ct), (T = Ze.freq), (G = ue)));
+        }
+        let Z = -z,
+            ge = mi;
+        if ((T > 3e3 && (ge = 6), T > 6e3 && (ge = 3), Z > ge && (Z = ge), Z < -30 && (Z = -30), Math.abs(Z) < 0.2))
+            break;
+        let Be = T,
+            De = T,
+            de = !1,
+            B = !1;
+        const j = z / 2;
+        for (let ue = G; ue >= 0; ue--)
+            if (Math.abs(y[ue].gain) < Math.abs(j)) {
+                ((De = y[ue].freq), (de = !0));
+                break;
+            }
+        for (let ue = G; ue < y.length; ue++)
+            if (Math.abs(y[ue].gain) < Math.abs(j)) {
+                ((Be = y[ue].freq), (B = !0));
+                break;
+            }
+        !de && B
+            ? (De = (T * T) / Be)
+            : !B && de
+              ? (Be = (T * T) / De)
+              : !de && !B && ((De = T / Math.SQRT2), (Be = T * Math.SQRT2));
+        let ve = Math.log2(Be / Math.max(1, De));
+        ve < 0.1 && (ve = 0.1);
+        let Ae = Math.sqrt(Math.pow(2, ve)) / (Math.pow(2, ve) - 1);
+        ((Ae = Math.max(Wi, Math.min(L, Ae))), T > 5e3 && Ae > 3 && (Ae = 3), Z > 0 && Ae > 2 && (Ae = 2));
+        const Ve = { id: S, type: 'peaking', freq: T, gain: Z, q: Ae, enabled: !0, channel: 'stereo' };
+        let Me = Z;
+        for (const ue of N) Me += at(T, ue, M);
+        const hn = mi;
+        (Me > hn && ((Ve.gain = Z - (Me - hn)), Ve.gain < 0.2)) ||
+            (N.push(Ve), (y = y.map((ue) => ({ ...ue, gain: ue.gain + at(ue.freq, Ve, M) }))));
+    }
+    return N.sort((S, z) => S.freq - z.freq).map((S, z) => ({ ...S, id: z }));
+}
+const Yi = `
 20.00 78.964
 20.36 78.969
 20.73 78.975
@@ -384,7 +581,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 70.219
 19642.52 69.959
 20000.00 69.695
-`,Ji=`
+`,
+    Ji = `
 20.00 82.649
 20.36 82.656
 20.73 82.664
@@ -769,7 +967,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 41.677
 19642.52 34.385
 20000.00 26.435
-`,Xi=`
+`,
+    Xi = `
 20.00 71.058
 20.36 71.058
 20.73 71.058
@@ -1154,7 +1353,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 69.390
 19642.52 69.141
 20000.00 68.891
-`,Zi=`
+`,
+    Zi = `
 20.00 82.754
 20.36 82.754
 20.73 82.755
@@ -1539,7 +1739,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 65.085
 19642.52 63.676
 20000.00 62.254
-`,e8=`
+`,
+    e8 = `
 20.00 77.103
 20.36 77.093
 20.73 77.083
@@ -1924,7 +2125,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 54.366
 19642.52 50.866
 20000.00 46.930
-`,t8=`
+`,
+    t8 = `
 20.00 84.736
 20.36 84.724
 20.73 84.712
@@ -2309,7 +2511,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 74.275
 19642.52 74.036
 20000.00 73.830
-`,n8=`
+`,
+    n8 = `
 20.00 84.284
 20.36 84.272
 20.73 84.260
@@ -2694,7 +2897,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 72.828
 19642.52 72.587
 20000.00 72.378
-`,a8=`
+`,
+    a8 = `
 20.00 83.153
 20.36 83.149
 20.73 83.144
@@ -3079,7 +3283,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 72.294
 19642.52 72.034
 20000.00 71.771
-`,o8=`
+`,
+    o8 = `
 20.00 82.982
 20.36 82.975
 20.73 82.968
@@ -3464,7 +3669,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 72.524
 19642.52 72.276
 20000.00 72.028
-`,s8=`
+`,
+    s8 = `
 20.00 82.982
 20.36 82.975
 20.73 82.969
@@ -3849,7 +4055,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 70.221
 19642.52 69.961
 20000.00 69.695
-`,yi=`
+`,
+    yi = `
 20.00 84.785
 20.36 84.777
 20.73 84.768
@@ -4234,7 +4441,8 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 19291.42 70.219
 19642.52 69.959
 20000.00 69.695
-`,i8=`
+`,
+    i8 = `
 20.00 81.000
 25.00 81.000
 31.50 81.000
@@ -4266,30 +4474,2298 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
 12500.00 67.000
 16000.00 66.000
 20000.00 65.000
-`,vi=`
+`,
+    vi = `
 20.00 75.000
 20000.00 75.000
-`;function xe(f){if(!f)return[];const h=f.trim().split(`
-`);if(h.length===0)return[];const I=[],P=h[0].trim();let R=/\s+/;P.indexOf(";")>-1?R=";":P.indexOf(",")>-1?R=",":P.indexOf("	")>-1&&(R="	");let L=0,M=1;if(/[a-zA-Z]/.test(P)){const y=P.split(R).map(S=>S.trim().toLowerCase().replace(/['"]+/g,"")),C=y.findIndex(S=>S.includes("freq")||S==="f");C>-1&&(L=C);const N=y.findIndex(S=>S==="raw");if(N>-1)M=N;else{const S=y.findIndex(z=>z.includes("spl")||z.includes("gain")||z.includes("db")||z.includes("mag"));S>-1&&S!==L&&(M=S)}}for(const y of h){const C=y.trim();if(!C||!/^[\d\-.]/u.test(C))continue;const N=C.split(R);if(N.length<=Math.max(L,M))continue;let S=N[L].trim(),z=N[M].trim();R!==","&&(S.includes(",")&&(S=S.replace(",",".")),z.includes(",")&&(z=z.replace(",",".")));const J=parseFloat(S),T=parseFloat(z);!isNaN(J)&&!isNaN(T)&&I.push({freq:J,gain:T})}return I.sort((y,C)=>y.freq-C.freq)}const xt=[{id:"harman_oe_2018",label:"Harman Over-Ear 2018",data:xe(Yi)},{id:"harman_ie_2019",label:"Harman In-Ear 2019",data:xe(Ji)},{id:"diffuse_field",label:"Diffuse Field",data:xe(Xi)},{id:"knowles",label:"Knowles",data:xe(Zi)},{id:"moondrop",label:"Moondrop VDSF",data:xe(e8)},{id:"hifi_endgame",label:"HiFi Endgame 2026",data:xe(t8)},{id:"hifi_endgame_mkii",label:"HiFi Endgame 2026 MKII",data:xe(n8)},{id:"peqdb_ultra",label:"PEQdB Ultra",data:xe(a8)},{id:"peqdb_diamond_beta",label:"PEQdB Diamond β",data:xe(o8)},{id:"seap",label:"SEAP",data:xe(s8)},{id:"seap_bass",label:"SEAP Bass",data:xe(yi)},{id:"flat",label:"Flat (Calibration)",data:xe(vi)}],bt=[{id:"harman_room",label:"Harman In-Room (2013)",data:xe(i8)},{id:"seap_bass",label:"SEAP Bass (Room)",data:xe(yi)},{id:"flat",label:"Flat",data:xe(vi)}],Ha="autoeq_index_v4",l8="monochrome_autoeq_index_v4",r8=1440*60*1e3,On=[{name:"Sony WH-1000XM5 (Rtings)",type:"over-ear",path:"Rtings/Bruel & Kjaer 5128 over-ear/Sony WH-1000XM5",fileName:"Sony WH-1000XM5.csv"},{name:"Apple AirPods Pro2 (Rtings)",type:"in-ear",path:"Rtings/Bruel & Kjaer 5128 in-ear/Apple AirPods Pro2",fileName:"Apple AirPods Pro2.csv"},{name:"Sony WF-1000XM5 (Rtings)",type:"in-ear",path:"Rtings/Bruel & Kjaer 5128 in-ear/Sony WF-1000XM5",fileName:"Sony WF-1000XM5.csv"},{name:"Samsung Galaxy Buds3 Pro (Rtings)",type:"in-ear",path:"Rtings/Bruel & Kjaer 5128 in-ear/Samsung Galaxy Buds3 Pro",fileName:"Samsung Galaxy Buds3 Pro.csv"},{name:"Sennheiser HD 600 (Rtings)",type:"over-ear",path:"Rtings/Bruel & Kjaer 5128 over-ear/Sennheiser HD 600",fileName:"Sennheiser HD 600.csv"}],ts=[...On,{name:"Sennheiser HD 600 (Filk)",type:"over-ear",path:"Filk/over-ear/Sennheiser HD 600",fileName:"Sennheiser HD 600.csv"},{name:"Sennheiser HD 600 (Innerfidelity)",type:"over-ear",path:"Innerfidelity/over-ear/Sennheiser HD 600",fileName:"Sennheiser HD 600.csv"},{name:"Samsung Galaxy Buds2 Pro (Rtings)",type:"in-ear",path:"Rtings/Bruel & Kjaer 5128 in-ear/Samsung Galaxy Buds2 Pro",fileName:"Samsung Galaxy Buds2 Pro.csv"},{name:"Sony WF-1000XM5 (Kazi)",type:"in-ear",path:"Kazi/in-ear/Sony WF-1000XM5",fileName:"Sony WF-1000XM5.csv"},{name:"Samsung Galaxy Buds3 Pro (DHRME)",type:"in-ear",path:"DHRME/in-ear/Samsung Galaxy Buds3 Pro",fileName:"Samsung Galaxy Buds3 Pro.csv"},{name:"Apple AirPods Pro (Super Review)",type:"in-ear",path:"Super Review/in-ear/Apple AirPods Pro",fileName:"Apple AirPods Pro.csv"},{name:"Sennheiser HD 600 (2020) (Kuulokenurkka)",type:"over-ear",path:"Kuulokenurkka/over-ear/Sennheiser HD 600 (2020)",fileName:"Sennheiser HD 600 (2020).csv"}];async function c8(){try{localStorage.removeItem(l8)}catch{}try{const f=await Xe.getSetting(Ha);if(f&&f.timestamp&&f.data&&Date.now()-f.timestamp<r8)return console.log("[AutoEQ] Loaded index from cache"),f.data}catch(f){console.warn("[AutoEQ] Failed to read cache:",f)}try{console.log("[AutoEQ] Fetching index from GitHub...");const f=new AbortController,h=setTimeout(()=>f.abort(),8e3);let I;try{I=await fetch("https://api.github.com/repos/jaakkopasanen/AutoEq/git/trees/master?recursive=1",{signal:f.signal})}finally{clearTimeout(h)}if(!I.ok){try{const M=await Xe.getSetting(Ha);if(M?.data)return console.warn("[AutoEQ] GitHub API limit reached. Using stale cache."),M.data}catch{}return console.warn("[AutoEQ] GitHub API error. Using fallback."),ts}const P=await I.json(),R=[];for(const M of P.tree){if(!M.path.startsWith("results/")||!M.path.endsWith(".csv")&&!M.path.endsWith(".txt"))continue;const $=M.path.split("/");if($.length<4)continue;const y=$.pop(),C=y.toLowerCase();if(C.includes("parametriceq")||C.includes("fixedbandeq")||C.includes("graphiceq")||C.includes("convolution")||C.includes("fixed band eq")||C.includes("parametric eq")||C.includes("graphic eq"))continue;const N=$[$.length-1],S=$.slice(1).join("/"),z=$[1];let J="over-ear";const T=M.path.toLowerCase();(T.includes("in-ear")||T.includes("iem")||T.includes("earbud"))&&(J="in-ear"),R.push({name:`${N} (${z})`,type:J,path:S,fileName:y})}if(R.length===0)return ts;const L=R.sort((M,$)=>M.name.localeCompare($.name));try{await Xe.saveSetting(Ha,{timestamp:Date.now(),data:L}),console.log(`[AutoEQ] Cached ${L.length} entries`)}catch(M){console.warn("[AutoEQ] Failed to save cache:",M)}return L}catch(f){f.name==="AbortError"?console.warn("[AutoEQ] GitHub API request timed out. Falling back to cache or fallback index."):console.error("[AutoEQ] Failed to fetch index:",f);try{const h=await Xe.getSetting(Ha);if(h?.data)return h.data}catch{}return ts}}async function d8(f){const h=f.path.split("/").map(encodeURIComponent).join("/"),I=encodeURIComponent(f.fileName),P=[`https://raw.githubusercontent.com/jaakkopasanen/AutoEq/master/results/${h}/${I}`,`https://cdn.jsdelivr.net/gh/jaakkopasanen/AutoEq@master/results/${h}/${I}`];for(const R of P)try{const L=new AbortController,M=setTimeout(()=>L.abort(),8e3);let $;try{$=await fetch(R,{signal:L.signal})}finally{clearTimeout(M)}if(!$.ok)continue;const y=await $.text();if(y.trim().startsWith("<!")||y.trim().startsWith("<html"))continue;const C=xe(y);if(C.length>0)return C}catch(L){console.warn(`[AutoEQ] Fetch failed for ${R}:`,L)}throw new Error(`Failed to fetch data for ${f.name}`)}function u8(f,h,I="all",P=100){let R=h;if(I!=="all"&&(R=R.filter(L=>L.type===I)),f&&f.trim()){const L=f.toLowerCase().trim();R=R.filter(M=>M.name.toLowerCase().includes(L))}return R.slice(0,P)}async function fi(...f){return(await Qi(()=>import("./butterchurn-BbdCfyv_.js"),__vite__mapDeps([0,1,2,3]))).getButterchurnPresets(...f)}let At=[],ja=null,Nn=null;async function E8(f,h,I,P){const R=pi.getActiveTab(),L=document.querySelector(`.settings-tab[data-tab="${R}"]`);L&&(document.querySelectorAll(".settings-tab").forEach(e=>e.classList.remove("active")),document.querySelectorAll(".settings-tab-content").forEach(e=>e.classList.remove("active")),L.classList.add("active"),document.getElementById(`settings-tab-${R}`)?.classList.add("active")),mn.updateUI(mn.user);const M=document.getElementById("dev-mode-toggle"),$=document.getElementById("dev-mode-url-setting"),y=document.getElementById("dev-mode-url-input");function C(){M&&(M.checked=_n.isEnabled()),$&&($.style.display=_n.isEnabled()?"":"none"),y&&(y.value=_n.getUrl())}C(),M&&M.addEventListener("change",e=>{_n.setEnabled(e.target.checked),C()}),y&&y.addEventListener("change",e=>{_n.setUrl(e.target.value.trim())});const N=document.getElementById("server-disruption-banner"),S=document.getElementById("dismiss-disruption-btn");N&&!z1.isDismissed()&&(N.style.display="flex"),S&&S.addEventListener("click",()=>{z1.dismiss(),N&&(N.style.display="none")});const z=document.getElementById("toggle-email-auth-btn"),J=document.getElementById("email-auth-modal-close"),T=document.getElementById("email-auth-modal"),G=document.getElementById("auth-email"),Z=document.getElementById("auth-password"),ge=document.getElementById("email-signin-btn"),Be=document.getElementById("email-signup-btn"),De=document.getElementById("reset-password-btn");if(z&&T&&z.addEventListener("click",()=>{T.classList.add("active")}),T){const e=()=>T.classList.remove("active");J?.addEventListener("click",e),T.querySelector(".modal-overlay")?.addEventListener("click",e)}ge&&ge.addEventListener("click",async()=>{const e=G.value,t=Z.value;if(!e||!t){alert("Please enter both email and password.");return}try{await mn.signInWithEmail(e,t),T.classList.remove("active"),G.value="",Z.value=""}catch{}}),Be&&Be.addEventListener("click",async()=>{const e=G.value,t=Z.value;if(!e||!t){alert("Please enter both email and password.");return}try{await mn.signUpWithEmail(e,t),T.classList.remove("active"),G.value="",Z.value=""}catch{}}),De&&De.addEventListener("click",async()=>{const e=G.value;if(!e){alert("Please enter your email address to reset your password.");return}try{await mn.sendPasswordReset(e)}catch{}});const de=document.getElementById("lastfm-connect-btn"),B=document.getElementById("lastfm-status"),j=document.getElementById("lastfm-toggle"),ve=document.getElementById("lastfm-toggle-setting"),Ae=document.getElementById("lastfm-love-toggle"),Ve=document.getElementById("lastfm-love-setting"),Me=document.getElementById("lastfm-custom-creds-toggle"),hn=document.getElementById("lastfm-custom-creds-toggle-setting"),ue=document.getElementById("lastfm-custom-creds-setting"),Ze=document.getElementById("lastfm-custom-api-key"),ct=document.getElementById("lastfm-custom-api-secret"),dt=document.getElementById("lastfm-save-custom-creds"),Qa=document.getElementById("lastfm-clear-custom-creds"),Un=document.getElementById("lastfm-credential-auth"),zn=document.getElementById("lastfm-credential-form"),yn=document.getElementById("lastfm-username"),vn=document.getElementById("lastfm-password"),zt=document.getElementById("lastfm-login-credentials"),ns=document.getElementById("lastfm-use-oauth");function Mt(){f.lastfm.isAuthenticated()?(B.textContent=`Connected as ${f.lastfm.username}`,de.textContent="Disconnect",de.classList.add("danger"),ve.style.display="flex",Ve.style.display="flex",j.checked=Le.isEnabled(),Ae.checked=Le.shouldLoveOnLike(),hn.style.display="flex",Me.checked=Le.useCustomCredentials(),Hn(),Wa()):(B.textContent="Connect your Last.fm account to scrobble tracks",de.textContent="Connect Last.fm",de.classList.remove("danger"),ve.style.display="none",Ve.style.display="none",hn.style.display="none",ue.style.display="none",Wa())}function as(){Un&&(Un.style.display="block"),zn&&(zn.style.display="block"),yn&&yn.focus()}function Wa(){Un&&(Un.style.display="none"),zn&&(zn.style.display="none"),yn&&(yn.value=""),vn&&(vn.value="")}function Hn(){const e=Le.useCustomCredentials();if(ue.style.display=e?"flex":"none",e){Ze.value=Le.getCustomApiKey(),ct.value=Le.getCustomApiSecret();const t=Le.getCustomApiKey()&&Le.getCustomApiSecret();Qa.style.display=t?"inline-block":"none"}}Mt(),de?.addEventListener("click",async()=>{if(f.lastfm.isAuthenticated()){confirm("Disconnect from Last.fm?")&&(f.lastfm.disconnect(),Mt());return}let e=window.open("","_blank");de.disabled=!0,de.textContent="Opening Last.fm...";try{const{token:t,url:n}=await f.lastfm.getAuthUrl();if(e)e.location.href=n;else{alert("Popup blocked! Please allow popups."),de.textContent="Connect Last.fm",de.disabled=!1;return}de.textContent="Waiting for authorization...";let a=0;const o=5,s=setInterval(async()=>{if(a++,a>o){clearInterval(s),e&&!e.closed&&e.close(),de.textContent="Connect Last.fm",de.disabled=!1,confirm("Authorization timed out. Would you like to login with username and password instead?")&&as();return}try{(await f.lastfm.completeAuthentication(t)).success&&(clearInterval(s),e&&!e.closed&&e.close(),Le.setEnabled(!0),j.checked=!0,Mt(),de.disabled=!1)}catch{}},2e3)}catch(t){console.error("Last.fm connection failed:",t),e&&!e.closed&&e.close(),de.textContent="Connect Last.fm",de.disabled=!1,confirm("Failed to connect to Last.fm. Would you like to login with username and password instead?")&&as()}}),j&&j.addEventListener("change",e=>{Le.setEnabled(e.target.checked)}),Ae&&Ae.addEventListener("change",e=>{Le.setLoveOnLike(e.target.checked)}),Me&&Me.addEventListener("change",e=>{Le.setUseCustomCredentials(e.target.checked),Hn(),f.lastfm.reloadCredentials(),!e.target.checked&&f.lastfm.isAuthenticated()&&(f.lastfm.disconnect(),Mt(),alert("Switched to default API credentials. Please reconnect to Last.fm."))}),dt&&dt.addEventListener("click",()=>{const e=Ze.value.trim(),t=ct.value.trim();if(!e||!t){alert("Please enter both API Key and API Secret");return}Le.setCustomApiKey(e),Le.setCustomApiSecret(t),f.lastfm.reloadCredentials(),Hn(),alert("Custom API credentials saved! Please reconnect to Last.fm to use them."),f.lastfm.isAuthenticated()&&(f.lastfm.disconnect(),Mt())}),Qa&&Qa.addEventListener("click",()=>{confirm("Clear custom API credentials?")&&(Le.clearCustomCredentials(),Ze.value="",ct.value="",Me.checked=!1,f.lastfm.reloadCredentials(),Hn(),f.lastfm.isAuthenticated()&&(f.lastfm.disconnect(),Mt(),alert("Custom credentials cleared. Switched to default API credentials. Please reconnect to Last.fm.")))}),zt&&zt.addEventListener("click",async()=>{const e=yn?.value?.trim(),t=vn?.value;if(!e||!t){alert("Please enter both username and password.");return}zt.disabled=!0,zt.textContent="Logging in...";try{(await f.lastfm.authenticateWithCredentials(e,t)).success&&(Le.setEnabled(!0),j.checked=!0,Mt(),vn&&(vn.value=""))}catch(n){console.error("Last.fm credential login failed:",n),alert("Failed to login: "+n.message)}finally{zt.disabled=!1,zt.textContent="Login"}}),ns&&ns.addEventListener("click",()=>{Wa()});const En=document.getElementById("scrobble-percentage-slider"),Ht=document.getElementById("scrobble-percentage-input");if(En&&Ht){const e=Le.getScrobblePercentage();En.value=e,Ht.value=e,En.addEventListener("input",t=>{const n=parseInt(t.target.value,10);Ht.value=n,Le.setScrobblePercentage(n)}),Ht.addEventListener("change",t=>{let n=parseInt(t.target.value,10);n=Math.max(1,Math.min(100,n||75)),En.value=n,Ht.value=n,Le.setScrobblePercentage(n)}),Ht.addEventListener("input",t=>{let n=parseInt(t.target.value,10);!isNaN(n)&&n>=1&&n<=100&&(En.value=n,Le.setScrobblePercentage(n))})}const jn=document.getElementById("listenbrainz-enabled-toggle"),os=document.getElementById("listenbrainz-token-setting"),ss=document.getElementById("listenbrainz-custom-url-setting"),is=document.getElementById("listenbrainz-love-setting"),Qn=document.getElementById("listenbrainz-love-toggle"),Wn=document.getElementById("listenbrainz-token-input"),Kn=document.getElementById("listenbrainz-custom-url-input"),ls=()=>{const e=Lt.isEnabled();jn&&(jn.checked=e),os&&(os.style.display=e?"flex":"none"),ss&&(ss.style.display=e?"flex":"none"),is&&(is.style.display=e?"flex":"none"),Wn&&(Wn.value=Lt.getToken()),Kn&&(Kn.value=Lt.getCustomUrl()),Qn&&(Qn.checked=Lt.shouldLoveOnLike())};ls(),jn&&jn.addEventListener("change",e=>{const t=e.target.checked;Lt.setEnabled(t),ls()}),Wn&&Wn.addEventListener("change",e=>{Lt.setToken(e.target.value.trim())}),Kn&&Kn.addEventListener("change",e=>{Lt.setCustomUrl(e.target.value.trim())}),Qn&&Qn.addEventListener("change",e=>{Lt.setLoveOnLike(e.target.checked)});const Vn=document.getElementById("maloja-enabled-toggle"),rs=document.getElementById("maloja-token-setting"),cs=document.getElementById("maloja-custom-url-setting"),Yn=document.getElementById("maloja-token-input"),Jn=document.getElementById("maloja-custom-url-input"),ds=()=>{const e=gn.isEnabled();Vn&&(Vn.checked=e),rs&&(rs.style.display=e?"flex":"none"),cs&&(cs.style.display=e?"flex":"none"),Yn&&(Yn.value=gn.getToken()),Jn&&(Jn.value=gn.getCustomUrl())};ds(),Vn&&Vn.addEventListener("change",e=>{const t=e.target.checked;gn.setEnabled(t),ds()}),Yn&&Yn.addEventListener("change",e=>{gn.setToken(e.target.value.trim())}),Jn&&Jn.addEventListener("change",e=>{gn.setCustomUrl(e.target.value.trim())});const Ge=document.getElementById("librefm-connect-btn"),us=document.getElementById("librefm-status"),Xn=document.getElementById("librefm-toggle"),ms=document.getElementById("librefm-toggle-setting"),Ka=document.getElementById("librefm-love-toggle"),gs=document.getElementById("librefm-love-setting");function Va(){f.librefm.isAuthenticated()?(us.textContent=`Connected as ${f.librefm.username}`,Ge.textContent="Disconnect",Ge.classList.add("danger"),ms.style.display="flex",gs.style.display="flex",Xn.checked=$n.isEnabled(),Ka.checked=$n.shouldLoveOnLike()):(us.textContent="Connect your Libre.fm account to scrobble tracks",Ge.textContent="Connect Libre.fm",Ge.classList.remove("danger"),ms.style.display="none",gs.style.display="none")}Ge&&(Va(),Ge.addEventListener("click",async()=>{if(f.librefm.isAuthenticated()){confirm("Disconnect from Libre.fm?")&&(f.librefm.disconnect(),Va());return}let e=window.open("","_blank");Ge.disabled=!0,Ge.textContent="Opening Libre.fm...";try{const{token:t,url:n}=await f.librefm.getAuthUrl();if(e)e.location.href=n;else{alert("Popup blocked! Please allow popups."),Ge.textContent="Connect Libre.fm",Ge.disabled=!1;return}Ge.textContent="Waiting for authorization...";let a=0;const o=30,s=setInterval(async()=>{if(a++,a>o){clearInterval(s),Ge.textContent="Connect Libre.fm",Ge.disabled=!1,e&&!e.closed&&e.close(),alert("Authorization timed out. Please try again.");return}try{const i=await f.librefm.completeAuthentication(t);i.success&&(clearInterval(s),e&&!e.closed&&e.close(),$n.setEnabled(!0),Xn.checked=!0,Va(),Ge.disabled=!1,alert(`Successfully connected to Libre.fm as ${i.username}!`))}catch{}},2e3)}catch(t){console.error("Libre.fm connection failed:",t),alert("Failed to connect to Libre.fm: "+t.message),Ge.textContent="Connect Libre.fm",Ge.disabled=!1,e&&!e.closed&&e.close()}}),Xn&&Xn.addEventListener("change",e=>{$n.setEnabled(e.target.checked)}),Ka&&Ka.addEventListener("change",e=>{$n.setLoveOnLike(e.target.checked)}));const fs=document.getElementById("theme-picker"),Ei=fn.getTheme();fs.querySelectorAll(".theme-option").forEach(e=>{e.dataset.theme===Ei&&e.classList.add("active"),e.addEventListener("click",()=>{const t=e.dataset.theme;fs.querySelectorAll(".theme-option").forEach(n=>n.classList.remove("active")),e.classList.add("active"),t==="custom"?(document.getElementById("custom-theme-editor").classList.add("show"),ks(),fn.setTheme("custom")):(document.getElementById("custom-theme-editor").classList.remove("show"),fn.setTheme(t))})});const jt=document.getElementById("applied-community-theme-container"),ps=document.getElementById("applied-community-theme-btn"),Zn=document.getElementById("community-theme-details-panel"),hs=document.getElementById("ct-unapply-btn"),ys=document.getElementById("applied-theme-name"),vs=document.getElementById("ct-details-title"),Es=document.getElementById("ct-details-author");function bs(){const e=localStorage.getItem("community-theme");if(e)try{const t=JSON.parse(e);jt&&(jt.style.display="block"),ys&&(ys.textContent=t.name),vs&&(vs.textContent=t.name),Es&&(Es.textContent=`by ${t.author}`)}catch{jt&&(jt.style.display="none")}else jt&&(jt.style.display="none"),Zn&&(Zn.style.display="none")}bs(),window.addEventListener("theme-changed",bs),ps&&ps.addEventListener("click",()=>{const e=Zn.style.display==="block";Zn.style.display=e?"none":"block"}),hs&&hs.addEventListener("click",()=>{if(confirm("Unapply this community theme?")){localStorage.removeItem("custom_theme_css"),localStorage.removeItem("community-theme");const e=document.getElementById("custom-theme-style");e&&e.remove(),fn.setTheme("system");const t=document.getElementById("theme-picker");t&&(t.querySelectorAll(".theme-option").forEach(n=>n.classList.remove("active")),t.querySelector('[data-theme="system"]')?.classList.add("active")),document.getElementById("custom-theme-editor").classList.remove("show")}});function ks(){const e=document.getElementById("theme-color-grid"),t=fn.getCustomTheme()||{background:"#000000",foreground:"#fafafa",primary:"#ffffff",secondary:"#27272a",muted:"#27272a",border:"#27272a",highlight:"#ffffff"};e.innerHTML=Object.entries(t).map(([n,a])=>`
+`;
+function xe(f) {
+    if (!f) return [];
+    const h = f.trim().split(`
+`);
+    if (h.length === 0) return [];
+    const I = [],
+        P = h[0].trim();
+    let R = /\s+/;
+    P.indexOf(';') > -1 ? (R = ';') : P.indexOf(',') > -1 ? (R = ',') : P.indexOf('	') > -1 && (R = '	');
+    let L = 0,
+        M = 1;
+    if (/[a-zA-Z]/.test(P)) {
+        const y = P.split(R).map((S) => S.trim().toLowerCase().replace(/['"]+/g, '')),
+            C = y.findIndex((S) => S.includes('freq') || S === 'f');
+        C > -1 && (L = C);
+        const N = y.findIndex((S) => S === 'raw');
+        if (N > -1) M = N;
+        else {
+            const S = y.findIndex(
+                (z) => z.includes('spl') || z.includes('gain') || z.includes('db') || z.includes('mag')
+            );
+            S > -1 && S !== L && (M = S);
+        }
+    }
+    for (const y of h) {
+        const C = y.trim();
+        if (!C || !/^[\d\-.]/u.test(C)) continue;
+        const N = C.split(R);
+        if (N.length <= Math.max(L, M)) continue;
+        let S = N[L].trim(),
+            z = N[M].trim();
+        R !== ',' && (S.includes(',') && (S = S.replace(',', '.')), z.includes(',') && (z = z.replace(',', '.')));
+        const J = parseFloat(S),
+            T = parseFloat(z);
+        !isNaN(J) && !isNaN(T) && I.push({ freq: J, gain: T });
+    }
+    return I.sort((y, C) => y.freq - C.freq);
+}
+const xt = [
+        { id: 'harman_oe_2018', label: 'Harman Over-Ear 2018', data: xe(Yi) },
+        { id: 'harman_ie_2019', label: 'Harman In-Ear 2019', data: xe(Ji) },
+        { id: 'diffuse_field', label: 'Diffuse Field', data: xe(Xi) },
+        { id: 'knowles', label: 'Knowles', data: xe(Zi) },
+        { id: 'moondrop', label: 'Moondrop VDSF', data: xe(e8) },
+        { id: 'hifi_endgame', label: 'HiFi Endgame 2026', data: xe(t8) },
+        { id: 'hifi_endgame_mkii', label: 'HiFi Endgame 2026 MKII', data: xe(n8) },
+        { id: 'peqdb_ultra', label: 'PEQdB Ultra', data: xe(a8) },
+        { id: 'peqdb_diamond_beta', label: 'PEQdB Diamond β', data: xe(o8) },
+        { id: 'seap', label: 'SEAP', data: xe(s8) },
+        { id: 'seap_bass', label: 'SEAP Bass', data: xe(yi) },
+        { id: 'flat', label: 'Flat (Calibration)', data: xe(vi) },
+    ],
+    bt = [
+        { id: 'harman_room', label: 'Harman In-Room (2013)', data: xe(i8) },
+        { id: 'seap_bass', label: 'SEAP Bass (Room)', data: xe(yi) },
+        { id: 'flat', label: 'Flat', data: xe(vi) },
+    ],
+    Ha = 'autoeq_index_v4',
+    l8 = 'monochrome_autoeq_index_v4',
+    r8 = 1440 * 60 * 1e3,
+    On = [
+        {
+            name: 'Sony WH-1000XM5 (Rtings)',
+            type: 'over-ear',
+            path: 'Rtings/Bruel & Kjaer 5128 over-ear/Sony WH-1000XM5',
+            fileName: 'Sony WH-1000XM5.csv',
+        },
+        {
+            name: 'Apple AirPods Pro2 (Rtings)',
+            type: 'in-ear',
+            path: 'Rtings/Bruel & Kjaer 5128 in-ear/Apple AirPods Pro2',
+            fileName: 'Apple AirPods Pro2.csv',
+        },
+        {
+            name: 'Sony WF-1000XM5 (Rtings)',
+            type: 'in-ear',
+            path: 'Rtings/Bruel & Kjaer 5128 in-ear/Sony WF-1000XM5',
+            fileName: 'Sony WF-1000XM5.csv',
+        },
+        {
+            name: 'Samsung Galaxy Buds3 Pro (Rtings)',
+            type: 'in-ear',
+            path: 'Rtings/Bruel & Kjaer 5128 in-ear/Samsung Galaxy Buds3 Pro',
+            fileName: 'Samsung Galaxy Buds3 Pro.csv',
+        },
+        {
+            name: 'Sennheiser HD 600 (Rtings)',
+            type: 'over-ear',
+            path: 'Rtings/Bruel & Kjaer 5128 over-ear/Sennheiser HD 600',
+            fileName: 'Sennheiser HD 600.csv',
+        },
+    ],
+    ts = [
+        ...On,
+        {
+            name: 'Sennheiser HD 600 (Filk)',
+            type: 'over-ear',
+            path: 'Filk/over-ear/Sennheiser HD 600',
+            fileName: 'Sennheiser HD 600.csv',
+        },
+        {
+            name: 'Sennheiser HD 600 (Innerfidelity)',
+            type: 'over-ear',
+            path: 'Innerfidelity/over-ear/Sennheiser HD 600',
+            fileName: 'Sennheiser HD 600.csv',
+        },
+        {
+            name: 'Samsung Galaxy Buds2 Pro (Rtings)',
+            type: 'in-ear',
+            path: 'Rtings/Bruel & Kjaer 5128 in-ear/Samsung Galaxy Buds2 Pro',
+            fileName: 'Samsung Galaxy Buds2 Pro.csv',
+        },
+        {
+            name: 'Sony WF-1000XM5 (Kazi)',
+            type: 'in-ear',
+            path: 'Kazi/in-ear/Sony WF-1000XM5',
+            fileName: 'Sony WF-1000XM5.csv',
+        },
+        {
+            name: 'Samsung Galaxy Buds3 Pro (DHRME)',
+            type: 'in-ear',
+            path: 'DHRME/in-ear/Samsung Galaxy Buds3 Pro',
+            fileName: 'Samsung Galaxy Buds3 Pro.csv',
+        },
+        {
+            name: 'Apple AirPods Pro (Super Review)',
+            type: 'in-ear',
+            path: 'Super Review/in-ear/Apple AirPods Pro',
+            fileName: 'Apple AirPods Pro.csv',
+        },
+        {
+            name: 'Sennheiser HD 600 (2020) (Kuulokenurkka)',
+            type: 'over-ear',
+            path: 'Kuulokenurkka/over-ear/Sennheiser HD 600 (2020)',
+            fileName: 'Sennheiser HD 600 (2020).csv',
+        },
+    ];
+async function c8() {
+    try {
+        localStorage.removeItem(l8);
+    } catch {}
+    try {
+        const f = await Xe.getSetting(Ha);
+        if (f && f.timestamp && f.data && Date.now() - f.timestamp < r8)
+            return (console.log('[AutoEQ] Loaded index from cache'), f.data);
+    } catch (f) {
+        console.warn('[AutoEQ] Failed to read cache:', f);
+    }
+    try {
+        console.log('[AutoEQ] Fetching index from GitHub...');
+        const f = new AbortController(),
+            h = setTimeout(() => f.abort(), 8e3);
+        let I;
+        try {
+            I = await fetch('https://api.github.com/repos/jaakkopasanen/AutoEq/git/trees/master?recursive=1', {
+                signal: f.signal,
+            });
+        } finally {
+            clearTimeout(h);
+        }
+        if (!I.ok) {
+            try {
+                const M = await Xe.getSetting(Ha);
+                if (M?.data) return (console.warn('[AutoEQ] GitHub API limit reached. Using stale cache.'), M.data);
+            } catch {}
+            return (console.warn('[AutoEQ] GitHub API error. Using fallback.'), ts);
+        }
+        const P = await I.json(),
+            R = [];
+        for (const M of P.tree) {
+            if (!M.path.startsWith('results/') || (!M.path.endsWith('.csv') && !M.path.endsWith('.txt'))) continue;
+            const $ = M.path.split('/');
+            if ($.length < 4) continue;
+            const y = $.pop(),
+                C = y.toLowerCase();
+            if (
+                C.includes('parametriceq') ||
+                C.includes('fixedbandeq') ||
+                C.includes('graphiceq') ||
+                C.includes('convolution') ||
+                C.includes('fixed band eq') ||
+                C.includes('parametric eq') ||
+                C.includes('graphic eq')
+            )
+                continue;
+            const N = $[$.length - 1],
+                S = $.slice(1).join('/'),
+                z = $[1];
+            let J = 'over-ear';
+            const T = M.path.toLowerCase();
+            ((T.includes('in-ear') || T.includes('iem') || T.includes('earbud')) && (J = 'in-ear'),
+                R.push({ name: `${N} (${z})`, type: J, path: S, fileName: y }));
+        }
+        if (R.length === 0) return ts;
+        const L = R.sort((M, $) => M.name.localeCompare($.name));
+        try {
+            (await Xe.saveSetting(Ha, { timestamp: Date.now(), data: L }),
+                console.log(`[AutoEQ] Cached ${L.length} entries`));
+        } catch (M) {
+            console.warn('[AutoEQ] Failed to save cache:', M);
+        }
+        return L;
+    } catch (f) {
+        f.name === 'AbortError'
+            ? console.warn('[AutoEQ] GitHub API request timed out. Falling back to cache or fallback index.')
+            : console.error('[AutoEQ] Failed to fetch index:', f);
+        try {
+            const h = await Xe.getSetting(Ha);
+            if (h?.data) return h.data;
+        } catch {}
+        return ts;
+    }
+}
+async function d8(f) {
+    const h = f.path.split('/').map(encodeURIComponent).join('/'),
+        I = encodeURIComponent(f.fileName),
+        P = [
+            `https://raw.githubusercontent.com/jaakkopasanen/AutoEq/master/results/${h}/${I}`,
+            `https://cdn.jsdelivr.net/gh/jaakkopasanen/AutoEq@master/results/${h}/${I}`,
+        ];
+    for (const R of P)
+        try {
+            const L = new AbortController(),
+                M = setTimeout(() => L.abort(), 8e3);
+            let $;
+            try {
+                $ = await fetch(R, { signal: L.signal });
+            } finally {
+                clearTimeout(M);
+            }
+            if (!$.ok) continue;
+            const y = await $.text();
+            if (y.trim().startsWith('<!') || y.trim().startsWith('<html')) continue;
+            const C = xe(y);
+            if (C.length > 0) return C;
+        } catch (L) {
+            console.warn(`[AutoEQ] Fetch failed for ${R}:`, L);
+        }
+    throw new Error(`Failed to fetch data for ${f.name}`);
+}
+function u8(f, h, I = 'all', P = 100) {
+    let R = h;
+    if ((I !== 'all' && (R = R.filter((L) => L.type === I)), f && f.trim())) {
+        const L = f.toLowerCase().trim();
+        R = R.filter((M) => M.name.toLowerCase().includes(L));
+    }
+    return R.slice(0, P);
+}
+async function fi(...f) {
+    return (await Qi(() => import('./butterchurn-BbdCfyv_.js'), __vite__mapDeps([0, 1, 2, 3]))).getButterchurnPresets(
+        ...f
+    );
+}
+let At = [],
+    ja = null,
+    Nn = null;
+async function E8(f, h, I, P) {
+    const R = pi.getActiveTab(),
+        L = document.querySelector(`.settings-tab[data-tab="${R}"]`);
+    (L &&
+        (document.querySelectorAll('.settings-tab').forEach((e) => e.classList.remove('active')),
+        document.querySelectorAll('.settings-tab-content').forEach((e) => e.classList.remove('active')),
+        L.classList.add('active'),
+        document.getElementById(`settings-tab-${R}`)?.classList.add('active')),
+        mn.updateUI(mn.user));
+    const M = document.getElementById('dev-mode-toggle'),
+        $ = document.getElementById('dev-mode-url-setting'),
+        y = document.getElementById('dev-mode-url-input');
+    function C() {
+        (M && (M.checked = _n.isEnabled()),
+            $ && ($.style.display = _n.isEnabled() ? '' : 'none'),
+            y && (y.value = _n.getUrl()));
+    }
+    (C(),
+        M &&
+            M.addEventListener('change', (e) => {
+                (_n.setEnabled(e.target.checked), C());
+            }),
+        y &&
+            y.addEventListener('change', (e) => {
+                _n.setUrl(e.target.value.trim());
+            }));
+    const N = document.getElementById('server-disruption-banner'),
+        S = document.getElementById('dismiss-disruption-btn');
+    (N && !z1.isDismissed() && (N.style.display = 'flex'),
+        S &&
+            S.addEventListener('click', () => {
+                (z1.dismiss(), N && (N.style.display = 'none'));
+            }));
+    const z = document.getElementById('toggle-email-auth-btn'),
+        J = document.getElementById('email-auth-modal-close'),
+        T = document.getElementById('email-auth-modal'),
+        G = document.getElementById('auth-email'),
+        Z = document.getElementById('auth-password'),
+        ge = document.getElementById('email-signin-btn'),
+        Be = document.getElementById('email-signup-btn'),
+        De = document.getElementById('reset-password-btn');
+    if (
+        (z &&
+            T &&
+            z.addEventListener('click', () => {
+                T.classList.add('active');
+            }),
+        T)
+    ) {
+        const e = () => T.classList.remove('active');
+        (J?.addEventListener('click', e), T.querySelector('.modal-overlay')?.addEventListener('click', e));
+    }
+    (ge &&
+        ge.addEventListener('click', async () => {
+            const e = G.value,
+                t = Z.value;
+            if (!e || !t) {
+                alert('Please enter both email and password.');
+                return;
+            }
+            try {
+                (await mn.signInWithEmail(e, t), T.classList.remove('active'), (G.value = ''), (Z.value = ''));
+            } catch {}
+        }),
+        Be &&
+            Be.addEventListener('click', async () => {
+                const e = G.value,
+                    t = Z.value;
+                if (!e || !t) {
+                    alert('Please enter both email and password.');
+                    return;
+                }
+                try {
+                    (await mn.signUpWithEmail(e, t), T.classList.remove('active'), (G.value = ''), (Z.value = ''));
+                } catch {}
+            }),
+        De &&
+            De.addEventListener('click', async () => {
+                const e = G.value;
+                if (!e) {
+                    alert('Please enter your email address to reset your password.');
+                    return;
+                }
+                try {
+                    await mn.sendPasswordReset(e);
+                } catch {}
+            }));
+    const de = document.getElementById('lastfm-connect-btn'),
+        B = document.getElementById('lastfm-status'),
+        j = document.getElementById('lastfm-toggle'),
+        ve = document.getElementById('lastfm-toggle-setting'),
+        Ae = document.getElementById('lastfm-love-toggle'),
+        Ve = document.getElementById('lastfm-love-setting'),
+        Me = document.getElementById('lastfm-custom-creds-toggle'),
+        hn = document.getElementById('lastfm-custom-creds-toggle-setting'),
+        ue = document.getElementById('lastfm-custom-creds-setting'),
+        Ze = document.getElementById('lastfm-custom-api-key'),
+        ct = document.getElementById('lastfm-custom-api-secret'),
+        dt = document.getElementById('lastfm-save-custom-creds'),
+        Qa = document.getElementById('lastfm-clear-custom-creds'),
+        Un = document.getElementById('lastfm-credential-auth'),
+        zn = document.getElementById('lastfm-credential-form'),
+        yn = document.getElementById('lastfm-username'),
+        vn = document.getElementById('lastfm-password'),
+        zt = document.getElementById('lastfm-login-credentials'),
+        ns = document.getElementById('lastfm-use-oauth');
+    function Mt() {
+        f.lastfm.isAuthenticated()
+            ? ((B.textContent = `Connected as ${f.lastfm.username}`),
+              (de.textContent = 'Disconnect'),
+              de.classList.add('danger'),
+              (ve.style.display = 'flex'),
+              (Ve.style.display = 'flex'),
+              (j.checked = Le.isEnabled()),
+              (Ae.checked = Le.shouldLoveOnLike()),
+              (hn.style.display = 'flex'),
+              (Me.checked = Le.useCustomCredentials()),
+              Hn(),
+              Wa())
+            : ((B.textContent = 'Connect your Last.fm account to scrobble tracks'),
+              (de.textContent = 'Connect Last.fm'),
+              de.classList.remove('danger'),
+              (ve.style.display = 'none'),
+              (Ve.style.display = 'none'),
+              (hn.style.display = 'none'),
+              (ue.style.display = 'none'),
+              Wa());
+    }
+    function as() {
+        (Un && (Un.style.display = 'block'), zn && (zn.style.display = 'block'), yn && yn.focus());
+    }
+    function Wa() {
+        (Un && (Un.style.display = 'none'),
+            zn && (zn.style.display = 'none'),
+            yn && (yn.value = ''),
+            vn && (vn.value = ''));
+    }
+    function Hn() {
+        const e = Le.useCustomCredentials();
+        if (((ue.style.display = e ? 'flex' : 'none'), e)) {
+            ((Ze.value = Le.getCustomApiKey()), (ct.value = Le.getCustomApiSecret()));
+            const t = Le.getCustomApiKey() && Le.getCustomApiSecret();
+            Qa.style.display = t ? 'inline-block' : 'none';
+        }
+    }
+    (Mt(),
+        de?.addEventListener('click', async () => {
+            if (f.lastfm.isAuthenticated()) {
+                confirm('Disconnect from Last.fm?') && (f.lastfm.disconnect(), Mt());
+                return;
+            }
+            let e = window.open('', '_blank');
+            ((de.disabled = !0), (de.textContent = 'Opening Last.fm...'));
+            try {
+                const { token: t, url: n } = await f.lastfm.getAuthUrl();
+                if (e) e.location.href = n;
+                else {
+                    (alert('Popup blocked! Please allow popups.'),
+                        (de.textContent = 'Connect Last.fm'),
+                        (de.disabled = !1));
+                    return;
+                }
+                de.textContent = 'Waiting for authorization...';
+                let a = 0;
+                const o = 5,
+                    s = setInterval(async () => {
+                        if ((a++, a > o)) {
+                            (clearInterval(s),
+                                e && !e.closed && e.close(),
+                                (de.textContent = 'Connect Last.fm'),
+                                (de.disabled = !1),
+                                confirm(
+                                    'Authorization timed out. Would you like to login with username and password instead?'
+                                ) && as());
+                            return;
+                        }
+                        try {
+                            (await f.lastfm.completeAuthentication(t)).success &&
+                                (clearInterval(s),
+                                e && !e.closed && e.close(),
+                                Le.setEnabled(!0),
+                                (j.checked = !0),
+                                Mt(),
+                                (de.disabled = !1));
+                        } catch {}
+                    }, 2e3);
+            } catch (t) {
+                (console.error('Last.fm connection failed:', t),
+                    e && !e.closed && e.close(),
+                    (de.textContent = 'Connect Last.fm'),
+                    (de.disabled = !1),
+                    confirm(
+                        'Failed to connect to Last.fm. Would you like to login with username and password instead?'
+                    ) && as());
+            }
+        }),
+        j &&
+            j.addEventListener('change', (e) => {
+                Le.setEnabled(e.target.checked);
+            }),
+        Ae &&
+            Ae.addEventListener('change', (e) => {
+                Le.setLoveOnLike(e.target.checked);
+            }),
+        Me &&
+            Me.addEventListener('change', (e) => {
+                (Le.setUseCustomCredentials(e.target.checked),
+                    Hn(),
+                    f.lastfm.reloadCredentials(),
+                    !e.target.checked &&
+                        f.lastfm.isAuthenticated() &&
+                        (f.lastfm.disconnect(),
+                        Mt(),
+                        alert('Switched to default API credentials. Please reconnect to Last.fm.')));
+            }),
+        dt &&
+            dt.addEventListener('click', () => {
+                const e = Ze.value.trim(),
+                    t = ct.value.trim();
+                if (!e || !t) {
+                    alert('Please enter both API Key and API Secret');
+                    return;
+                }
+                (Le.setCustomApiKey(e),
+                    Le.setCustomApiSecret(t),
+                    f.lastfm.reloadCredentials(),
+                    Hn(),
+                    alert('Custom API credentials saved! Please reconnect to Last.fm to use them.'),
+                    f.lastfm.isAuthenticated() && (f.lastfm.disconnect(), Mt()));
+            }),
+        Qa &&
+            Qa.addEventListener('click', () => {
+                confirm('Clear custom API credentials?') &&
+                    (Le.clearCustomCredentials(),
+                    (Ze.value = ''),
+                    (ct.value = ''),
+                    (Me.checked = !1),
+                    f.lastfm.reloadCredentials(),
+                    Hn(),
+                    f.lastfm.isAuthenticated() &&
+                        (f.lastfm.disconnect(),
+                        Mt(),
+                        alert(
+                            'Custom credentials cleared. Switched to default API credentials. Please reconnect to Last.fm.'
+                        )));
+            }),
+        zt &&
+            zt.addEventListener('click', async () => {
+                const e = yn?.value?.trim(),
+                    t = vn?.value;
+                if (!e || !t) {
+                    alert('Please enter both username and password.');
+                    return;
+                }
+                ((zt.disabled = !0), (zt.textContent = 'Logging in...'));
+                try {
+                    (await f.lastfm.authenticateWithCredentials(e, t)).success &&
+                        (Le.setEnabled(!0), (j.checked = !0), Mt(), vn && (vn.value = ''));
+                } catch (n) {
+                    (console.error('Last.fm credential login failed:', n), alert('Failed to login: ' + n.message));
+                } finally {
+                    ((zt.disabled = !1), (zt.textContent = 'Login'));
+                }
+            }),
+        ns &&
+            ns.addEventListener('click', () => {
+                Wa();
+            }));
+    const En = document.getElementById('scrobble-percentage-slider'),
+        Ht = document.getElementById('scrobble-percentage-input');
+    if (En && Ht) {
+        const e = Le.getScrobblePercentage();
+        ((En.value = e),
+            (Ht.value = e),
+            En.addEventListener('input', (t) => {
+                const n = parseInt(t.target.value, 10);
+                ((Ht.value = n), Le.setScrobblePercentage(n));
+            }),
+            Ht.addEventListener('change', (t) => {
+                let n = parseInt(t.target.value, 10);
+                ((n = Math.max(1, Math.min(100, n || 75))),
+                    (En.value = n),
+                    (Ht.value = n),
+                    Le.setScrobblePercentage(n));
+            }),
+            Ht.addEventListener('input', (t) => {
+                let n = parseInt(t.target.value, 10);
+                !isNaN(n) && n >= 1 && n <= 100 && ((En.value = n), Le.setScrobblePercentage(n));
+            }));
+    }
+    const jn = document.getElementById('listenbrainz-enabled-toggle'),
+        os = document.getElementById('listenbrainz-token-setting'),
+        ss = document.getElementById('listenbrainz-custom-url-setting'),
+        is = document.getElementById('listenbrainz-love-setting'),
+        Qn = document.getElementById('listenbrainz-love-toggle'),
+        Wn = document.getElementById('listenbrainz-token-input'),
+        Kn = document.getElementById('listenbrainz-custom-url-input'),
+        ls = () => {
+            const e = Lt.isEnabled();
+            (jn && (jn.checked = e),
+                os && (os.style.display = e ? 'flex' : 'none'),
+                ss && (ss.style.display = e ? 'flex' : 'none'),
+                is && (is.style.display = e ? 'flex' : 'none'),
+                Wn && (Wn.value = Lt.getToken()),
+                Kn && (Kn.value = Lt.getCustomUrl()),
+                Qn && (Qn.checked = Lt.shouldLoveOnLike()));
+        };
+    (ls(),
+        jn &&
+            jn.addEventListener('change', (e) => {
+                const t = e.target.checked;
+                (Lt.setEnabled(t), ls());
+            }),
+        Wn &&
+            Wn.addEventListener('change', (e) => {
+                Lt.setToken(e.target.value.trim());
+            }),
+        Kn &&
+            Kn.addEventListener('change', (e) => {
+                Lt.setCustomUrl(e.target.value.trim());
+            }),
+        Qn &&
+            Qn.addEventListener('change', (e) => {
+                Lt.setLoveOnLike(e.target.checked);
+            }));
+    const Vn = document.getElementById('maloja-enabled-toggle'),
+        rs = document.getElementById('maloja-token-setting'),
+        cs = document.getElementById('maloja-custom-url-setting'),
+        Yn = document.getElementById('maloja-token-input'),
+        Jn = document.getElementById('maloja-custom-url-input'),
+        ds = () => {
+            const e = gn.isEnabled();
+            (Vn && (Vn.checked = e),
+                rs && (rs.style.display = e ? 'flex' : 'none'),
+                cs && (cs.style.display = e ? 'flex' : 'none'),
+                Yn && (Yn.value = gn.getToken()),
+                Jn && (Jn.value = gn.getCustomUrl()));
+        };
+    (ds(),
+        Vn &&
+            Vn.addEventListener('change', (e) => {
+                const t = e.target.checked;
+                (gn.setEnabled(t), ds());
+            }),
+        Yn &&
+            Yn.addEventListener('change', (e) => {
+                gn.setToken(e.target.value.trim());
+            }),
+        Jn &&
+            Jn.addEventListener('change', (e) => {
+                gn.setCustomUrl(e.target.value.trim());
+            }));
+    const Ge = document.getElementById('librefm-connect-btn'),
+        us = document.getElementById('librefm-status'),
+        Xn = document.getElementById('librefm-toggle'),
+        ms = document.getElementById('librefm-toggle-setting'),
+        Ka = document.getElementById('librefm-love-toggle'),
+        gs = document.getElementById('librefm-love-setting');
+    function Va() {
+        f.librefm.isAuthenticated()
+            ? ((us.textContent = `Connected as ${f.librefm.username}`),
+              (Ge.textContent = 'Disconnect'),
+              Ge.classList.add('danger'),
+              (ms.style.display = 'flex'),
+              (gs.style.display = 'flex'),
+              (Xn.checked = $n.isEnabled()),
+              (Ka.checked = $n.shouldLoveOnLike()))
+            : ((us.textContent = 'Connect your Libre.fm account to scrobble tracks'),
+              (Ge.textContent = 'Connect Libre.fm'),
+              Ge.classList.remove('danger'),
+              (ms.style.display = 'none'),
+              (gs.style.display = 'none'));
+    }
+    Ge &&
+        (Va(),
+        Ge.addEventListener('click', async () => {
+            if (f.librefm.isAuthenticated()) {
+                confirm('Disconnect from Libre.fm?') && (f.librefm.disconnect(), Va());
+                return;
+            }
+            let e = window.open('', '_blank');
+            ((Ge.disabled = !0), (Ge.textContent = 'Opening Libre.fm...'));
+            try {
+                const { token: t, url: n } = await f.librefm.getAuthUrl();
+                if (e) e.location.href = n;
+                else {
+                    (alert('Popup blocked! Please allow popups.'),
+                        (Ge.textContent = 'Connect Libre.fm'),
+                        (Ge.disabled = !1));
+                    return;
+                }
+                Ge.textContent = 'Waiting for authorization...';
+                let a = 0;
+                const o = 30,
+                    s = setInterval(async () => {
+                        if ((a++, a > o)) {
+                            (clearInterval(s),
+                                (Ge.textContent = 'Connect Libre.fm'),
+                                (Ge.disabled = !1),
+                                e && !e.closed && e.close(),
+                                alert('Authorization timed out. Please try again.'));
+                            return;
+                        }
+                        try {
+                            const i = await f.librefm.completeAuthentication(t);
+                            i.success &&
+                                (clearInterval(s),
+                                e && !e.closed && e.close(),
+                                $n.setEnabled(!0),
+                                (Xn.checked = !0),
+                                Va(),
+                                (Ge.disabled = !1),
+                                alert(`Successfully connected to Libre.fm as ${i.username}!`));
+                        } catch {}
+                    }, 2e3);
+            } catch (t) {
+                (console.error('Libre.fm connection failed:', t),
+                    alert('Failed to connect to Libre.fm: ' + t.message),
+                    (Ge.textContent = 'Connect Libre.fm'),
+                    (Ge.disabled = !1),
+                    e && !e.closed && e.close());
+            }
+        }),
+        Xn &&
+            Xn.addEventListener('change', (e) => {
+                $n.setEnabled(e.target.checked);
+            }),
+        Ka &&
+            Ka.addEventListener('change', (e) => {
+                $n.setLoveOnLike(e.target.checked);
+            }));
+    const fs = document.getElementById('theme-picker'),
+        Ei = fn.getTheme();
+    fs.querySelectorAll('.theme-option').forEach((e) => {
+        (e.dataset.theme === Ei && e.classList.add('active'),
+            e.addEventListener('click', () => {
+                const t = e.dataset.theme;
+                (fs.querySelectorAll('.theme-option').forEach((n) => n.classList.remove('active')),
+                    e.classList.add('active'),
+                    t === 'custom'
+                        ? (document.getElementById('custom-theme-editor').classList.add('show'),
+                          ks(),
+                          fn.setTheme('custom'))
+                        : (document.getElementById('custom-theme-editor').classList.remove('show'), fn.setTheme(t)));
+            }));
+    });
+    const jt = document.getElementById('applied-community-theme-container'),
+        ps = document.getElementById('applied-community-theme-btn'),
+        Zn = document.getElementById('community-theme-details-panel'),
+        hs = document.getElementById('ct-unapply-btn'),
+        ys = document.getElementById('applied-theme-name'),
+        vs = document.getElementById('ct-details-title'),
+        Es = document.getElementById('ct-details-author');
+    function bs() {
+        const e = localStorage.getItem('community-theme');
+        if (e)
+            try {
+                const t = JSON.parse(e);
+                (jt && (jt.style.display = 'block'),
+                    ys && (ys.textContent = t.name),
+                    vs && (vs.textContent = t.name),
+                    Es && (Es.textContent = `by ${t.author}`));
+            } catch {
+                jt && (jt.style.display = 'none');
+            }
+        else (jt && (jt.style.display = 'none'), Zn && (Zn.style.display = 'none'));
+    }
+    (bs(),
+        window.addEventListener('theme-changed', bs),
+        ps &&
+            ps.addEventListener('click', () => {
+                const e = Zn.style.display === 'block';
+                Zn.style.display = e ? 'none' : 'block';
+            }),
+        hs &&
+            hs.addEventListener('click', () => {
+                if (confirm('Unapply this community theme?')) {
+                    (localStorage.removeItem('custom_theme_css'), localStorage.removeItem('community-theme'));
+                    const e = document.getElementById('custom-theme-style');
+                    (e && e.remove(), fn.setTheme('system'));
+                    const t = document.getElementById('theme-picker');
+                    (t &&
+                        (t.querySelectorAll('.theme-option').forEach((n) => n.classList.remove('active')),
+                        t.querySelector('[data-theme="system"]')?.classList.add('active')),
+                        document.getElementById('custom-theme-editor').classList.remove('show'));
+                }
+            }));
+    function ks() {
+        const e = document.getElementById('theme-color-grid'),
+            t = fn.getCustomTheme() || {
+                background: '#000000',
+                foreground: '#fafafa',
+                primary: '#ffffff',
+                secondary: '#27272a',
+                muted: '#27272a',
+                border: '#27272a',
+                highlight: '#ffffff',
+            };
+        e.innerHTML = Object.entries(t)
+            .map(
+                ([n, a]) => `
             <div class="theme-color-input">
                 <label>${n}</label>
                 <input type="color" data-color="${n}" value="${a}">
             </div>
-        `).join("")}document.getElementById("apply-custom-theme")?.addEventListener("click",()=>{const e={};document.querySelectorAll('#theme-color-grid input[type="color"]').forEach(t=>{e[t.dataset.color]=t.value}),fn.setCustomTheme(e)}),document.getElementById("reset-custom-theme")?.addEventListener("click",()=>{ks()});const Ya=document.getElementById("music-provider-setting");Ya&&(Ya.value=H1.getProvider(),Ya.addEventListener("change",e=>{H1.setProvider(e.target.value),window.location.reload()}));const Ja=document.getElementById("amazon-music-toggle");Ja&&(Ja.checked=rt.isEnabled(),Ja.addEventListener("change",e=>{rt.setEnabled(e.target.checked)}));const Xa=document.getElementById("amazon-music-api-base-url");Xa&&(Xa.value=rt.getApiBaseUrl(),Xa.addEventListener("change",e=>{rt.setApiBaseUrl(e.target.value.trim())}));const Za=document.getElementById("amazon-music-converter-base-url");Za&&(Za.value=rt.getConverterBaseUrl(),Za.addEventListener("change",e=>{rt.setConverterBaseUrl(e.target.value.trim())}));const e7=document.getElementById("amazon-music-turnstile-site-key");e7&&(e7.value=rt.getTurnstileSiteKey(),e7.addEventListener("change",e=>{rt.setTurnstileSiteKey(e.target.value.trim())}));const t7=document.getElementById("amazon-music-turnstile-bypass-token");t7&&(t7.value=rt.getTurnstileBypassToken(),t7.addEventListener("change",e=>{rt.setTurnstileBypassToken(e.target.value.trim())}));const n7=document.getElementById("deezer-fallback-toggle");n7&&(n7.checked=Ga.isEnabled(),n7.addEventListener("change",e=>{Ga.setEnabled(e.target.checked)}));const a7=document.getElementById("deezer-fallback-api-base-url");a7&&(a7.value=Ga.getApiBaseUrl(),a7.addEventListener("change",e=>{Ga.setApiBaseUrl(e.target.value.trim())}));const Pt=document.getElementById("streaming-quality-setting");if(Pt){const e=localStorage.getItem("adaptive-playback-quality")||"auto",t=Array.from(Pt.options).some(a=>a.value===e);Pt.value=t?e:localStorage.getItem("playback-quality")||"auto",h.forceQuality&&h.forceQuality(Pt.value);const n=Pt.value==="auto"?"LOSSLESS":Pt.value;h.setQuality(localStorage.getItem("playback-quality")||n),Pt.addEventListener("change",a=>{const o=a.target.value;localStorage.setItem("adaptive-playback-quality",o),h.forceQuality&&h.forceQuality(o);const s=o==="auto"?"LOSSLESS":o;h.setQuality(s),localStorage.setItem("playback-quality",s)})}const Qt=document.getElementById("download-quality-setting");if(Qt){const e={HI_RES_LOSSLESS:"Lossless",LOSSLESS:"Lossless",HIGH:"AAC",LOW:"AAC"},t=Array.from(Qt.options).map(i=>({value:i.value,text:i.textContent,category:e[i.value]||"Other"}));for(const[i,c]of Object.entries(zi))t.push({value:i,text:c.displayName,category:c.category});const n=i=>{const c=i.match(/(\d+)\s*kbps/i);return c?parseInt(c[1],10):1/0},a=["Lossless","AAC","MP3","OGG","Opus"];t.sort((i,c)=>{if(i.category==c.category&&i.category==="Lossless")return 0;const u=a.indexOf(i.category),v=a.indexOf(c.category),g=(u===-1?a.length:u)-(v===-1?a.length:v);if(g!==0)return g;const d=n(i.text),l=n(c.text);return d!==l?l-d:c.text.localeCompare(i.text)}),Qt.innerHTML="";let o=null,s=null;for(const i of t){i.category!==s&&(s=i.category,o=document.createElement("optgroup"),o.label=i.category,Qt.appendChild(o));const c=document.createElement("option");c.value=i.value,c.textContent=i.text,o.appendChild(c)}Qt.value=Zo.getQuality(),Qt.addEventListener("change",i=>{Zo.setQuality(i.target.value),Is()})}const Tt=document.getElementById("lossless-container-setting"),qs=Tt?.closest(".setting-item");function Is(){if(!qs)return;const e=Zo.getQuality(),t=e==="LOSSLESS"||e==="HI_RES_LOSSLESS";qs.style.display=t?"":"none"}if(Tt){const e=Tt.querySelector("option:last-child");e.remove();for(const[t,{displayName:n}]of Object.entries(Hi)){const a=document.createElement("option");a.value=t,a.textContent=n,Tt.appendChild(a)}Tt.append(e),Tt.value=j1.getContainer(),Tt.addEventListener("change",t=>{j1.setContainer(t.target.value)})}Is();const o7=document.getElementById("cover-art-size-setting");o7&&(o7.value=Q1.getSize(),o7.addEventListener("change",e=>{Q1.setSize(e.target.value)}));const s7=document.getElementById("show-quality-badges-toggle");s7&&(s7.checked=W1.isEnabled(),s7.addEventListener("change",async e=>{W1.setEnabled(e.target.checked),window.renderQueueFunction&&await window.renderQueueFunction()}));const i7=document.getElementById("use-album-release-year-toggle");i7&&(i7.checked=K1.useAlbumYear(),i7.addEventListener("change",e=>{K1.setUseAlbumYear(e.target.checked)}));const ea=document.getElementById("force-zip-blob-toggle"),Ss=ea?.closest(".setting-item"),bi="showSaveFilePicker"in window&&typeof FileSystemFileHandle<"u"&&"createWritable"in FileSystemFileHandle.prototype,ta="showDirectoryPicker"in window,Bs=document.getElementById("remember-folder-setting"),l7=document.getElementById("remember-folder-toggle"),ws=document.getElementById("reset-saved-folder-setting"),Ls=document.getElementById("reset-saved-folder-btn"),Cs=document.getElementById("single-to-folder-setting"),r7=document.getElementById("single-to-folder-toggle");function c7(){if(!Ss)return;const t=me.bulkDownloadMethod===Gt.Zip&&bi;Ss.style.display=t?"":"none"}async function bn(){const e=me.bulkDownloadMethod,t=e===Gt.Folder,n=t||e===Gt.LocalMedia;if(Bs&&(Bs.style.display=t&&ta?"":"none"),ws){let a=!1;t&&ta&&me.rememberBulkDownloadFolder&&(a=!!me.bulkDownloadFolder),ws.style.display=a?"":"none"}Cs&&(Cs.style.display=n?"":"none")}const qt=document.getElementById("bulk-download-method");if(qt){if(!ta){const e=qt.querySelector('option[value="folder"]');e&&e.remove();const t=qt.querySelector('option[value="local"]');t&&t.remove();const n=me.bulkDownloadMethod;(n===Gt.Folder||n===Gt.LocalMedia)&&(me.bulkDownloadMethod=Gt.Zip)}qt.value=me.bulkDownloadMethod,qt.addEventListener("change",async e=>{const t=me.bulkDownloadMethod,n=e.target.value;if(me.bulkDownloadMethod=n,n===Gt.LocalMedia&&!await Xe.getSetting("local_folder_handle")){let o=!1;try{if(ta){const s=await window.showDirectoryPicker({mode:"readwrite"});s&&(o=!0,await Xe.saveSetting("local_folder_handle",s))}}catch{}o||(qt.querySelector(`option[value="${t}"]`)?(me.bulkDownloadMethod=t,qt.value=t):(me.bulkDownloadMethod="zip",qt.value="zip"))}await me.waitPending(),c7(),await bn()})}l7&&(l7.checked=me.rememberBulkDownloadFolder,l7.addEventListener("change",async e=>{me.rememberBulkDownloadFolder=!!e.target.checked,await me.waitPending(),await bn()})),Ls&&Ls.addEventListener("click",async()=>{me.bulkDownloadFolder=null,await me.waitPending(),await bn()}),r7&&(r7.checked=me.downloadSinglesToFolder,r7.addEventListener("change",e=>{me.downloadSinglesToFolder=!!e.target.checked})),ea&&(ea.checked=me.forceZipBlob,ea.addEventListener("change",e=>{me.forceZipBlob=!!e.target.checked})),c7(),await bn();const d7=document.getElementById("include-cover-toggle");d7&&(d7.checked=He.shouldIncludeCover(),d7.addEventListener("change",e=>{He.setIncludeCover(e.target.checked)}));const u7=document.getElementById("gapless-playback-toggle");u7&&(u7.checked=V1.isEnabled(),u7.addEventListener("change",e=>{V1.setEnabled(e.target.checked)}));const m7=document.getElementById("replay-gain-mode");m7&&(m7.value=Oa.getMode(),m7.addEventListener("change",e=>{Oa.setMode(e.target.value),h.applyReplayGain()}));const g7=document.getElementById("replay-gain-preamp");g7&&(g7.value=Oa.getPreamp(),g7.addEventListener("change",e=>{const t=parseFloat(e.target.value);Oa.setPreamp(isNaN(t)?3:t),h.applyReplayGain()}));const f7=document.getElementById("mono-audio-toggle");f7&&(f7.checked=Y1.isEnabled(),f7.addEventListener("change",e=>{const t=e.target.checked;Y1.setEnabled(t),W.toggleMonoAudio(t)}));const p7=document.getElementById("binaural-dsp-toggle"),h7=document.getElementById("binaural-dsp-container"),y7=document.getElementById("binaural-auto-spatial-toggle"),na=document.getElementById("binaural-crossfeed-toggle"),v7=document.getElementById("binaural-crossfeed-level"),aa=document.getElementById("crossfeed-level-row"),E7=document.getElementById("binaural-hrtf-preset"),oa=document.getElementById("binaural-widening-toggle"),sa=document.getElementById("binaural-widening-slider"),b7=document.getElementById("binaural-width-value"),ia=document.getElementById("widening-slider-row");if(p7&&h7){const e=Ct.isEnabled();p7.checked=e,h7.style.display=e?"block":"none",p7.addEventListener("change",async t=>{const n=t.target.checked;h7.style.display=n?"block":"none",await W.toggleBinaural(n)})}y7&&(y7.checked=Ct.getAutoEnableForSpatial(),y7.addEventListener("change",e=>{Ct.setAutoEnableForSpatial(e.target.checked)})),na&&(na.checked=Ct.getCrossfeedEnabled(),aa&&(aa.style.display=na.checked?"flex":"none"),na.addEventListener("change",async e=>{const t=e.target.checked;aa&&(aa.style.display=t?"flex":"none"),await W.setBinauralCrossfeedEnabled(t)})),v7&&(v7.value=Ct.getCrossfeedLevel(),v7.addEventListener("change",e=>{W.setBinauralCrossfeedLevel(e.target.value)})),E7&&(E7.value=Ct.getHrtfPreset(),E7.addEventListener("change",async e=>{await W.setBinauralHrtfPreset(e.target.value)})),oa&&(oa.checked=Ct.getWideningEnabled(),ia&&(ia.style.display=oa.checked?"flex":"none"),oa.addEventListener("change",async e=>{const t=e.target.checked;ia&&(ia.style.display=t?"flex":"none"),await W.setBinauralWideningEnabled(t)})),sa&&b7&&(sa.value=Ct.getWideningAmount(),b7.textContent=parseFloat(sa.value).toFixed(2),sa.addEventListener("input",e=>{const t=parseFloat(e.target.value);b7.textContent=t.toFixed(2),W.setBinauralWidening(t)})),window.addEventListener("binaural-mode-changed",e=>{const t=document.getElementById("binaural-status");if(t){const{mode:n,channels:a}=e.detail,o=t.querySelector(".binaural-mode-label");o&&(o.textContent=n==="multichannel"?`Mode: Multichannel (${a>6?"7.1":"5.1"} → Binaural)`:"Mode: Stereo")}});const k7=document.getElementById("exponential-volume-toggle");k7&&(k7.checked=J1.isEnabled(),k7.addEventListener("change",e=>{J1.setEnabled(e.target.checked),h.applyReplayGain()}));const la=document.getElementById("playback-speed-slider"),kn=document.getElementById("playback-speed-input"),xs=document.getElementById("playback-speed-reset");if(la&&kn){const e=n=>{const a=parseFloat(n),o=Math.max(.01,Math.min(100,isNaN(a)?1:a));return kn.value=o,o>=.25&&o<=4&&(la.value=o),o},t=pn.getSpeed();e(t),la.addEventListener("input",n=>{const a=parseFloat(n.target.value);kn.value=a,pn.setSpeed(a),h.setPlaybackSpeed(a)}),kn.addEventListener("input",n=>{const a=parseFloat(n.target.value);!isNaN(a)&&a>=.01&&a<=100&&(a>=.25&&a<=4&&(la.value=a),pn.setSpeed(a),h.setPlaybackSpeed(a))}),kn.addEventListener("change",n=>{const a=parseFloat(n.target.value),o=e(a);pn.setSpeed(o),h.setPlaybackSpeed(o)}),xs&&xs.addEventListener("click",()=>{const n=pn.resetSpeed();e(n),h.setPlaybackSpeed(n)})}const q7=document.getElementById("preserve-pitch-toggle");q7&&(q7.checked=pn.isPreservePitchEnabled(),q7.addEventListener("change",e=>{h.setPreservePitch(e.target.checked)}));let et=F.getGraphicEqBandCount(),ut=F.getGraphicEqFreqRange();const As=e=>e>=1e4?(e/1e3).toFixed(0)+"K":e>=1e3?(e/1e3).toFixed(e%1e3===0?0:1)+"K":e.toString(),Ms=(e,t,n)=>{const a=[];for(let o=0;o<e;o++){const s=o/(e-1);let i=Math.round(t*Math.pow(n/t,s));a.length>0&&i<=a[a.length-1]&&(i=a[a.length-1]+1),a.push(i)}return a};let mt=Ms(et,ut.min,ut.max),ra=mt.map(As);const Ps=document.getElementById("graphic-eq-bands"),ki=document.getElementById("graphic-eq-preamp-slider"),qi=document.getElementById("graphic-eq-preamp-value"),Ii=document.getElementById("graphic-eq-preset-select"),Si=document.getElementById("graphic-eq-reset-btn"),Ts=document.getElementById("legacy-graphic-eq-bands"),Bi=document.getElementById("legacy-graphic-eq-preamp-slider"),wi=document.getElementById("legacy-graphic-eq-preamp-value"),I7=document.getElementById("legacy-graphic-eq-preset-select"),Li=document.getElementById("legacy-graphic-eq-reset-btn"),qn=document.getElementById("legacy-geq-band-count"),In=document.getElementById("legacy-geq-freq-min"),Sn=document.getElementById("legacy-geq-freq-max"),ca=[ki,Bi].filter(Boolean),da=[qi,wi].filter(Boolean),tt=[Ii,I7].filter(Boolean);let pe=F.getGraphicEqGains(et)||new Array(et).fill(0),qe=F.getGraphicEqPreamp()||0;const Wt=F.getRange(),Kt=()=>{pe.forEach((e,t)=>{["geq","legacy-geq"].forEach(n=>{const a=document.getElementById(`${n}-slider-${t}`),o=document.getElementById(`${n}-value-${t}`);a&&(a.value=e),o&&(o.textContent=`${e>0?"+":""}${e.toFixed(1)}`)})})},ua=(e,t)=>{e&&(e.innerHTML="",ra.forEach((n,a)=>{const o=document.createElement("div");o.className="graphic-eq-band";const s=document.createElement("span");s.className="graphic-eq-band-value",s.textContent=`${pe[a]>0?"+":""}${pe[a].toFixed(1)}`,s.id=`${t}-value-${a}`;const i=document.createElement("div");i.className="graphic-eq-band-slider-wrap";const c=document.createElement("input");c.type="range",c.min=Wt.min,c.max=Wt.max,c.step="0.1",c.value=pe[a],c.id=`${t}-slider-${a}`,c.setAttribute("aria-label",`${ra[a]} Hz`),c.addEventListener("input",()=>{const v=parseFloat(c.value);pe[a]=v,F.setGraphicEqGains(pe),W.setGraphicEqBandGain(a,v),Kt(),tt.forEach(g=>g.value="")}),i.appendChild(c);const u=document.createElement("span");u.className="graphic-eq-band-label",u.textContent=ra[a],o.appendChild(s),o.appendChild(i),o.appendChild(u),e.appendChild(o)}))};ua(Ps,"geq"),ua(Ts,"legacy-geq"),ca.forEach(e=>{e.value=qe,e.addEventListener("input",()=>{qe=parseFloat(e.value);const t=`${qe.toFixed(1)} dB`;da.forEach(n=>n.textContent=t),ca.forEach(n=>{n!==e&&(n.value=qe)}),F.setGraphicEqPreamp(qe),W.setGraphicEqPreamp(qe)})}),da.forEach(e=>e.textContent=`${qe} dB`),tt.forEach(e=>{e.addEventListener("change",()=>{const t=e.value;if(!t)return;const a=X1(et)[t];a&&(pe=[...a.gains],F.setGraphicEqGains(pe),W.setGraphicEqAllGains(pe),Kt(),tt.forEach(o=>{o!==e&&(o.value=t)}))})}),[Si,Li].filter(Boolean).forEach(e=>{e.addEventListener("click",()=>{pe=new Array(et).fill(0),F.setGraphicEqGains(pe),W.setGraphicEqAllGains(pe),Kt(),tt.forEach(t=>t.value="flat")})});const Fs=()=>{mt=Ms(et,ut.min,ut.max),ra=mt.map(As),ua(Ps,"geq"),ua(Ts,"legacy-geq"),Kt()};if(qn&&(qn.value=et,qn.addEventListener("change",()=>{const e=Math.max(3,Math.min(32,parseInt(qn.value,10)||16));qn.value=e,e!==et&&(pe=F.interpolateGains(pe,e),et=e,F.setGraphicEqGains(pe),W.setGraphicEqBandCount(e),Fs(),tt.forEach(t=>t.value=""))})),In&&Sn){In.value=ut.min,Sn.value=ut.max;const e=()=>{const t=Math.max(10,Math.min(96e3,parseInt(In.value,10)||25)),n=Math.max(10,Math.min(96e3,parseInt(Sn.value,10)||2e4));In.value=t,Sn.value=n,!(t>=n)&&(t===ut.min&&n===ut.max||(ut={min:t,max:n},W.setGraphicEqFreqRange(t,n),Fs()))};In.addEventListener("change",e),Sn.addEventListener("change",e)}const Rs=e=>{const t=String(e).trim().toLowerCase().replace(/\s+/g,"");if(t.endsWith("khz"))return Number.parseFloat(t.slice(0,-3))*1e3;const n=t.replace(/hz$/,"");return n.endsWith("k")?Number.parseFloat(n.slice(0,-1))*1e3:Number.parseFloat(n)},Ds=document.getElementById("legacy-geq-export-btn"),_s=document.getElementById("legacy-geq-export-csv-btn"),$s=document.getElementById("legacy-geq-import-btn"),S7=document.getElementById("legacy-geq-import-file");Ds&&Ds.addEventListener("click",()=>{const e=[`Preamp: ${qe.toFixed(1)} dB`];mt.forEach((o,s)=>{const i=mt[Math.max(0,s-1)],c=mt[Math.min(mt.length-1,s+1)],u=Math.log2(c/i),v=u>0?(Math.SQRT2/(2*Math.sinh(Math.LN2/2*u))).toFixed(2):Math.SQRT2.toFixed(2);e.push(`Filter ${s+1}: ON PK Fc ${o} Hz Gain ${pe[s].toFixed(1)} dB Q ${v}`)});const t=new Blob([e.join(`
-`)],{type:"text/plain"}),n=URL.createObjectURL(t),a=document.createElement("a");a.href=n,a.download="legacy-eq.txt",a.click(),setTimeout(()=>URL.revokeObjectURL(n),0)}),_s&&_s.addEventListener("click",()=>{const e=mt.map((s,i)=>`${s} ${pe[i].toFixed(1)}`).join("; "),t=[`Preamp: ${qe.toFixed(1)} dB`,`GraphicEQ: ${e}`],n=new Blob([t.join(`
-`)],{type:"text/plain"}),a=URL.createObjectURL(n),o=document.createElement("a");o.href=a,o.download="legacy-eq-apo.txt",o.click(),setTimeout(()=>URL.revokeObjectURL(a),0)}),$s&&S7&&($s.addEventListener("click",()=>S7.click()),S7.addEventListener("change",e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=a=>{try{const s=a.target.result.split(`
-`);let i=qe,c=!1;const u=[];for(const d of s){const l=d.match(/Preamp:\s*([-\d.]+)\s*dB/i);if(l){i=parseFloat(l[1]),c=!0;continue}const m=d.match(/Filter\s+\d+:\s*ON\s+\w+\s+Fc\s+([\d.]+[kK]?)\s*(?:Hz)?\s+Gain\s+([+-]?[\d.]+)\s*dB/i);if(m){u.push({freq:Rs(m[1]),gain:parseFloat(m[2])});continue}const r=d.trim().match(/^([\d.]+)\s*([kK])?(?:Hz)?\s*[,\s\t]+([+-]?[\d.]+)/);r&&u.push({freq:Rs(`${r[1]}${r[2]||""}`),gain:parseFloat(r[3])})}if(u.length===0)return;const v=u.filter(d=>Number.isFinite(d.freq)&&d.freq>0&&Number.isFinite(d.gain));if(v.length===0)return;v.sort((d,l)=>d.freq-l.freq),pe=mt.map(d=>{let l=v[0],m=Math.abs(Math.log10(d)-Math.log10(l.freq));for(let r=1;r<v.length;r++){const p=Math.abs(Math.log10(d)-Math.log10(v[r].freq));p<m&&(m=p,l=v[r])}return Math.max(parseFloat(Wt.min),Math.min(parseFloat(Wt.max),l.gain))}),F.setGraphicEqGains(pe),W.setGraphicEqAllGains(pe),Kt(),c&&(qe=Math.max(-20,Math.min(20,i)),F.setGraphicEqPreamp(qe),W.setGraphicEqPreamp(qe),ca.forEach(d=>d.value=qe),da.forEach(d=>d.textContent=`${qe.toFixed(1)} dB`)),tt.forEach(d=>{d.value="",d.dispatchEvent(new Event("change"))})}catch(o){console.error("[Legacy GEQ Import] Failed:",o)}},n.readAsText(t),e.target.value=""}));const ma="monochrome-legacy-geq-custom-presets";try{const e=localStorage.getItem("legacy-geq-custom-presets");e&&!localStorage.getItem(ma)&&(localStorage.setItem(ma,e),localStorage.removeItem("legacy-geq-custom-presets"))}catch{}const Ns=document.getElementById("legacy-geq-save-preset-btn"),ga=document.getElementById("legacy-geq-delete-preset-btn"),fa=()=>{try{const e=localStorage.getItem(ma);return e?JSON.parse(e):{}}catch{return{}}},Gs=e=>{try{localStorage.setItem(ma,JSON.stringify(e))}catch(t){console.error("[Legacy GEQ] Failed to save presets:",t),alert("Failed to save preset. Storage may be full.")}},B7=()=>{const e=fa();tt.forEach(t=>{t.querySelectorAll("option[data-custom]").forEach(o=>o.remove()),t.querySelectorAll("optgroup[data-custom-group]").forEach(o=>o.remove());const n=Object.entries(e);if(n.length===0)return;const a=document.createElement("optgroup");a.label="Custom Presets",a.setAttribute("data-custom-group",""),n.forEach(([o,s])=>{const i=document.createElement("option");i.value=o,i.textContent=s.name,i.setAttribute("data-custom",""),a.appendChild(i)}),t.appendChild(a)})};B7();const Vt=()=>{const t=(I7?.value||"").startsWith("geq_custom_");ga&&(ga.style.display=t?"":"none")};tt.forEach(e=>{e.addEventListener("change",()=>{const t=e.value;if(!t){Vt();return}const n=fa();if(n[t]){const a=n[t]?.gains;if(!Array.isArray(a)||a.length===0){Vt();return}pe=(a.length!==et?F.interpolateGains(a,et):a).map(s=>{const i=Number(s);return Number.isFinite(i)?Math.max(parseFloat(Wt.min),Math.min(parseFloat(Wt.max),i)):0}),F.setGraphicEqGains(pe),W.setGraphicEqAllGains(pe),Kt(),n[t].preamp!==void 0&&(qe=n[t].preamp,F.setGraphicEqPreamp(qe),W.setGraphicEqPreamp(qe),ca.forEach(s=>s.value=qe),da.forEach(s=>s.textContent=`${qe.toFixed(1)} dB`)),tt.forEach(s=>{s!==e&&(s.value=t)}),Vt();return}Vt()})}),Ns&&Ns.addEventListener("click",()=>{const e=prompt("Preset name:");if(!e||!e.trim())return;const t=e.trim().substring(0,50),n=fa(),a="geq_custom_"+Date.now();n[a]={name:t,gains:pe.map(o=>Math.round(o*10)/10),preamp:Math.round(qe*10)/10},Gs(n),B7(),tt.forEach(o=>o.value=a),Vt()}),ga&&ga.addEventListener("click",()=>{const e=I7?.value||"";if(!e.startsWith("geq_custom_"))return;const t=fa(),n=t[e]?.name||e;confirm(`Delete preset "${n}"?`)&&(delete t[e],Gs(t),B7(),tt.forEach(a=>a.value=""),Vt())});const pa=document.getElementById("equalizer-enabled-toggle"),Os=document.getElementById("equalizer-container"),Ye=document.getElementById("eq-preamp-slider");let je=null,Oe=null,oe=null,Ue=null,gt=F.getPreamp(),H=null,ye=null,We=null,Yt=null,It=16,St=16;const Pe=()=>Ie==="parametric"?H:Ie==="speaker"?ae[ze]?.bands||null:oe,ha=e=>{Ie==="parametric"?H=e:Ie==="speaker"?ae[ze].bands=e:oe=e},se=document.getElementById("autoeq-response-canvas"),Us=document.getElementById("autoeq-graph-wrapper"),we=document.getElementById("autoeq-headphone-select"),Ee=document.getElementById("autoeq-target-select"),Ke=document.getElementById("autoeq-band-count"),ot=document.getElementById("autoeq-max-freq"),Te=document.getElementById("autoeq-sample-rate"),zs=(e,t)=>{if(!Ke)return;const n=String(e||t&&t.length||10);if(Ke.value=n,Ke.value!==n){if(t&&t.length){const a=String(t.length);if(Ke.value=a,Ke.value===a)return}Ke.value="10"}},_e=document.getElementById("autoeq-run-btn"),Hs=document.getElementById("autoeq-download-btn"),w7=document.getElementById("autoeq-status"),js=document.getElementById("autoeq-import-measurement-btn"),L7=document.getElementById("autoeq-import-measurement-file"),C7=document.getElementById("autoeq-saved-grid"),Qs=document.getElementById("autoeq-saved-count"),ya=document.getElementById("autoeq-profile-name"),Ws=document.getElementById("autoeq-save-btn"),va=document.getElementById("autoeq-saved-collapse"),st=document.getElementById("autoeq-database-list"),Ks=document.getElementById("autoeq-database-count"),Vs=document.getElementById("autoeq-filters-toggle"),x7=document.getElementById("autoeq-filters-content"),Jt=document.getElementById("autoeq-filters-collapse"),A7=document.getElementById("autoeq-bands-list"),Je=document.getElementById("autoeq-preamp-value");if(we){const e=document.createElement("optgroup");e.label="Popular";for(const t of On){const n=document.createElement("option");n.value=t.name,n.textContent=t.name.replace(/\s*\([^)]*\)\s*$/,""),n.dataset.type=t.type,e.appendChild(n)}we.appendChild(e),we.addEventListener("change",async()=>{const t=we.value;if(!t)return;const n=On.find(a=>a.name===t);n&&(!Oe||Oe.name!==t)&&await ka(n)})}const Xt=20,Bn=2e4,Ys=[20,50,100,200,500,1e3,2e3,5e3,1e4,2e4],M7=Math.log10(Xt),Js=Math.log10(Bn)-M7,Ft=(e,t)=>(Math.log10(Math.max(Xt,e))-M7)/Js*t,Ea=(e,t)=>Math.pow(10,e/t*Js+M7),Xs=(e,t,n,a)=>t-(e-n)/(a-n)*t,Zt=(e,t,n,a)=>n+(1-e/t)*(a-n),P7=e=>e>=1e3?(e/1e3).toFixed(e%1e3===0?0:1)+"k":Math.round(e).toString();let T7=null;const en=()=>{T7||(T7=requestAnimationFrame(()=>{T7=null,x()}))},x=()=>{if(!se)return;const e=Pe(),t=se.getContext("2d"),n=window.devicePixelRatio||1,a=se.getBoundingClientRect();if(a.width===0||a.height===0)return;se.width=a.width*n,se.height=a.height*n,t.scale(n,n);const o=40,s=10,i=10,c=30,u=a.width-o-s,v=a.height-i-c;t.clearRect(0,0,a.width,a.height);const g=Ie==="parametric",d=g?0:75,l=g?St:It,m=d-l,r=d+l,p=k=>o+Ft(k,u),E=k=>i+Xs(k,v,m,r),b="rgba(255,255,255,0.06)",w="rgba(255,255,255,0.4)",D="#3b82f6",V="rgba(255,255,255,0.5)",O="#f472b6";t.strokeStyle=b,t.lineWidth=1;for(let k=m;k<=r;k+=5){const A=E(k);t.beginPath(),t.moveTo(o,A),t.lineTo(o+u,A),t.stroke()}for(const k of Ys){const A=p(k);t.beginPath(),t.moveTo(A,i),t.lineTo(A,i+v),t.stroke()}t.fillStyle=w,t.font="10px system-ui, sans-serif",t.textAlign="right",t.textBaseline="middle";for(let k=m;k<=r;k+=5)t.fillText(k.toString(),o-5,E(k));t.textAlign="center",t.textBaseline="top";for(const k of Ys)t.fillText(P7(k),p(k),i+v+8);const te=(k,A,_,q=!1)=>{if(!k||k.length<2)return;t.save(),t.beginPath(),t.strokeStyle=A,t.lineWidth=_,q&&t.setLineDash([6,4]);let U=!1;for(const Q of k){if(Q.freq<Xt||Q.freq>Bn)continue;const Y=p(Q.freq),ce=E(Q.gain);U?t.lineTo(Y,ce):(t.moveTo(Y,ce),U=!0)}t.stroke(),t.restore()};let ne,le,re,he;if(Ie==="speaker"){const k=ae[ze];ne=k?.targetId||"harman_room",le=bt.find(A=>A.id===ne),re=le?.data,he=k?.measurement}else ne=Ee?Ee.value:"harman_oe_2018",le=xt.find(k=>k.id===ne),re=le?.data,he=je;let Fe=0;if(g){if(t.strokeStyle="rgba(255,255,255,0.2)",t.lineWidth=1,t.beginPath(),t.moveTo(o,E(0)),t.lineTo(o+u,E(0)),t.stroke(),e&&e.length>0){const k=Te?parseInt(Te.value,10):48e3,A=["#f472b6","#fb923c","#facc15","#4ade80","#22d3ee","#818cf8","#c084fc","#f87171","#34d399","#60a5fa","#a78bfa","#fb7185","#fbbf24","#2dd4bf","#38bdf8","#a3e635"];e.forEach((q,U)=>{if(!q.enabled||Math.abs(q.gain)<.1)return;const Q=A[U%A.length],Y=parseInt(Q.slice(1,3),16),ce=parseInt(Q.slice(3,5),16),$e=parseInt(Q.slice(5,7),16);t.save(),t.beginPath(),t.moveTo(o,E(0));for(let Ne=Xt;Ne<=Bn;Ne*=1.02){const un=at(Ne,q,k);t.lineTo(p(Ne),E(un))}t.lineTo(o+u,E(0)),t.closePath(),t.fillStyle=`rgba(${Y},${ce},${$e},0.12)`,t.fill(),t.beginPath();let dn=!1;for(let Ne=Xt;Ne<=Bn;Ne*=1.02){const un=at(Ne,q,k),Nt=p(Ne),Et=E(un);dn?t.lineTo(Nt,Et):(t.moveTo(Nt,Et),dn=!0)}t.strokeStyle=`rgba(${Y},${ce},${$e},0.5)`,t.lineWidth=1,t.stroke(),t.restore()});const _=[];for(let q=Xt;q<=Bn;q*=1.02){let U=0;for(const Q of e)Q.enabled&&(U+=at(q,Q,k));_.push({freq:q,gain:U})}te(_,"rgba(255,255,255,0.8)",2)}}else{if(re){const k=Ut(re);Fe=d-k}else if(he){const k=Ut(he);Fe=d-k}if(re){const k=re.map(A=>({freq:A.freq,gain:A.gain+Fe}));te(k,V,1.5,!0)}if(he){const k=re?Ut(he,re):0,A=he.map(_=>({freq:_.freq,gain:_.gain+k+Fe}));te(A,D,1.5)}if(Ue){const k=Ue.map(A=>({freq:A.freq,gain:A.gain+Fe}));te(k,O,2)}}if(Ie==="speaker"){const k=ht?parseInt(ht.value,10):40,A=yt?parseInt(yt.value,10):500;t.fillStyle="rgba(34, 211, 238, 0.04)",t.fillRect(o,i,p(k)-o,v),t.fillStyle="rgba(245, 158, 11, 0.04)",t.fillRect(p(A),i,o+u-p(A),v),t.save(),t.beginPath(),t.setLineDash([4,4]),t.strokeStyle="rgba(34, 211, 238, 0.6)",t.lineWidth=1.5,t.moveTo(p(k),i),t.lineTo(p(k),i+v),t.stroke(),t.restore(),t.save(),t.font="bold 9px system-ui",t.fillStyle="rgba(34, 211, 238, 0.7)",t.textAlign="center",t.fillText(k+" Hz",p(k),i-2),t.restore(),t.save(),t.beginPath(),t.setLineDash([4,4]),t.strokeStyle="rgba(245, 158, 11, 0.6)",t.lineWidth=1.5,t.moveTo(p(A),i),t.lineTo(p(A),i+v),t.stroke(),t.restore(),t.save(),t.font="bold 9px system-ui",t.fillStyle="rgba(245, 158, 11, 0.7)",t.textAlign="center",t.fillText(A+" Hz",p(A),i-2),t.restore()}if(e&&e.length>0&&(Ue||g)){const k=Te?parseInt(Te.value,10):48e3;e.forEach((A,_)=>{if(!A.enabled)return;const q=p(A.freq);let U,Q;if(g){U=A.gain,Q=0;for(const Et of e)Et.enabled&&(Q+=at(A.freq,Et,k))}else U=kt(A.freq,Ue)+Fe,Q=U;const Y=E(U),ce=["#f472b6","#fb923c","#facc15","#4ade80","#22d3ee","#818cf8","#c084fc","#f87171","#34d399","#60a5fa","#a78bfa","#fb7185","#fbbf24","#2dd4bf","#38bdf8","#a3e635"],$e=ce[_%ce.length],dn=_===We,Ne=_===ye,un=Ne?9:dn?7:5;if(dn||Ne){t.save(),t.beginPath(),t.arc(q,Y,un+4,0,Math.PI*2),t.fillStyle=$e.replace(")",", 0.25)").replace("rgb","rgba").replace("#","");const Et=parseInt($e.slice(1,3),16),$a=parseInt($e.slice(3,5),16),Na=parseInt($e.slice(5,7),16);t.fillStyle=`rgba(${Et},${$a},${Na},0.25)`,t.fill(),t.restore()}t.beginPath(),t.arc(q,Y,un,0,Math.PI*2),t.fillStyle=Ne?"#fff":$e,t.fill(),t.strokeStyle=Ne?$e:"rgba(0,0,0,0.5)",t.lineWidth=1.5,t.stroke();const Nt=A.channel||"stereo";if(Nt!=="stereo"&&(t.save(),t.font=`bold ${Ne?10:dn?9:7}px system-ui, sans-serif`,t.textAlign="center",t.textBaseline="middle",t.fillStyle=Ne?$e:"#fff",t.fillText(Nt==="mid"?"M":"S",q,Y+.5),t.restore()),Ne){t.save(),t.font="bold 11px system-ui, sans-serif";const Et=Nt!=="stereo"?` [${Nt.toUpperCase()}]`:"",$a=`${Math.round(A.freq)} Hz  ${A.gain>0?"+":""}${A.gain.toFixed(1)} dB  Q${A.q.toFixed(2)}${Et}`,Na=`Sum: ${Q>0?"+":""}${Q.toFixed(1)} dB`,Gi=t.measureText($a).width,Oi=t.measureText(Na).width,Dn=Math.max(Gi,Oi)+12,Ui=34,Jo=Math.max(5,Math.min(q-Dn/2,a.width-Dn-5)),Xo=Y-44;t.fillStyle="rgba(0,0,0,0.8)",t.fillRect(Jo,Xo,Dn,Ui),t.fillStyle="#fff",t.textAlign="center",t.textBaseline="middle",t.fillText($a,Jo+Dn/2,Xo+10),t.fillStyle="rgba(255,255,255,0.7)",t.fillText(Na,Jo+Dn/2,Xo+24),t.restore()}})}},X=()=>{let e,t,n,a;if(Ie==="speaker"){const u=ae[ze];e=u?.measurement,t=u?.bands,n=u?.targetId||"harman_room",a=bt}else e=je,t=oe,n=Ee?Ee.value:"harman_oe_2018",a=xt;if(!e||!t){Ue=null;return}const s=a.find(u=>u.id===n)?.data,i=s?Ut(e,s):0,c=Te?parseInt(Te.value,10):48e3;Ue=e.map(u=>{let v=0;for(const g of t)g.enabled&&(v+=at(u.freq,g,c));return{freq:u.freq,gain:u.gain+i+v}})},wn=e=>{const t=se.getBoundingClientRect();return{x:e.clientX-t.left,y:e.clientY-t.top}},Ln=(e,t,n=15)=>{const a=Pe();if(!a||!se)return-1;const o=Ie==="parametric";if(!o&&!Ue)return-1;const s=se.getBoundingClientRect(),i=40,c=10,u=10,v=30,g=s.width-i-c,d=s.height-u-v,l=o?0:75,m=o?St:It,r=l-m,p=l+m;let E=0;if(!o){let D,V,O;if(Ie==="speaker"){const le=ae[ze];D=le?.targetId||"harman_room",V=bt,O=le?.measurement}else D=Ee?Ee.value:"harman_oe_2018",V=xt,O=je;const ne=V.find(le=>le.id===D)?.data;ne?E=75-Ut(ne):O&&(E=75-Ut(O))}let b=-1,w=1/0;return a.forEach((D,V)=>{if(!D.enabled)return;const O=i+Ft(D.freq,g);let te;o?te=D.gain:te=kt(D.freq,Ue)+E;const ne=u+Xs(te,d,r,p),le=Math.sqrt((e-O)**2+(t-ne)**2);le<n&&le<w&&(b=V,w=le)}),b};let Cn=!1;const xn=document.getElementById("autoeq-auto-preamp-toggle"),ee=e=>{e&&e.length>0&&(W.applyAutoEQBands(e,!Cn),gt=F.getPreamp(),Ye&&(Ye.value=gt),Je&&(Je.textContent=`${gt} dB`))};if(se){se.addEventListener("mousedown",d=>{o(),u();const l=wn(d),m=Ln(l.x,l.y,18);m>=0&&(ye=m,se.style.cursor="grabbing",d.preventDefault())});const e=d=>{const l=se.getBoundingClientRect();return{x:d.clientX-l.left,y:d.clientY-l.top}};ja&&ja.abort(),ja=new AbortController;const t=ja.signal;Nn&&(Nn.disconnect(),Nn=null),document.addEventListener("mousemove",d=>{if(ye===null)return;const l=Pe();if(!l)return;const m=e(d),r=se.getBoundingClientRect(),p=40,E=10,b=10,w=30,D=r.width-p-E,V=r.height-b-w,O=Ie==="parametric",te=O?0:75,ne=O?St:It,le=te-ne,re=te+ne,he=Ea(m.x-p,D);if(l[ye].freq=Math.max(20,Math.min(2e4,he)),O){const Fe=Zt(m.y-b,V,le,re);l[ye].gain=Math.max(-30,Math.min(30,Math.round(Fe*10)/10))}else{const Fe=kt(l[ye].freq,Ue||[]),A=Zt(m.y-b,V,le,re)-Fe;l[ye].gain=Math.max(-30,Math.min(30,l[ye].gain+A*.3))}Yt||(Yt=requestAnimationFrame(()=>{X(),ee(l),x(),fe(l),Yt=null}))},{signal:t}),se.addEventListener("mousemove",d=>{if(ye!==null)return;const l=wn(d);if(l.x<=40+10)se.style.cursor="ns-resize",We!==null&&(We=null,x());else{const r=Ln(l.x,l.y,18);r!==We&&(We=r,se.style.cursor=We>=0?"grab":"crosshair",x())}}),document.addEventListener("mouseup",()=>{ye!==null&&(ye=null,se.style.cursor=We>=0?"grab":"crosshair")},{signal:t}),se.addEventListener("mouseleave",()=>{We=null,ye===null&&(se.style.cursor="crosshair"),x()});const n=document.getElementById("eq-node-context-menu");let a=null;const o=()=>{n&&(n.style.display="none"),a=null},s=(d,l,m)=>{if(!n)return;const r=Pe();if(!r||!r[m])return;a=m;const p=r[m];n.querySelectorAll(".eq-ctx-type").forEach(V=>{const O=V.dataset.action,te=O==="eq-type-lowshelf"&&p.type==="lowshelf"||O==="eq-type-peaking"&&p.type==="peaking"||O==="eq-type-highshelf"&&p.type==="highshelf";V.classList.toggle("eq-ctx-active",te)});const E=p.channel||"stereo";n.querySelectorAll(".eq-ctx-channel").forEach(V=>{const O=V.dataset.action,te=O==="eq-channel-stereo"&&E==="stereo"||O==="eq-channel-mid"&&E==="mid"||O==="eq-channel-side"&&E==="side";V.classList.toggle("eq-ctx-active",te)}),n.style.display="block";const b=n.getBoundingClientRect(),w=Math.min(d,window.innerWidth-b.width-4),D=Math.min(l,window.innerHeight-b.height-4);n.style.left=`${w}px`,n.style.top=`${D}px`};n&&n.addEventListener("click",d=>{const l=d.target.closest("li[data-action]");if(!l)return;const m=l.dataset.action,r=Pe();if(m.startsWith("eq-type-")&&a!==null&&r&&r[a]){const E={"eq-type-lowshelf":"lowshelf","eq-type-peaking":"peaking","eq-type-highshelf":"highshelf"}[m];E&&(r[a].type=E,X(),ee(r),fe(r),x())}if(m.startsWith("eq-channel-")&&a!==null&&r&&r[a]){const E={"eq-channel-stereo":"stereo","eq-channel-mid":"mid","eq-channel-side":"side"}[m];E&&(r[a].channel=E,X(),ee(r),fe(r),x())}o()});const i=document.getElementById("eq-empty-context-menu");let c=null;const u=()=>{i&&(i.style.display="none"),c=null},v=(d,l,m)=>{if(!i)return;c=m,i.style.display="block";const r=i.getBoundingClientRect();i.style.left=`${Math.min(d,window.innerWidth-r.width-4)}px`,i.style.top=`${Math.min(l,window.innerHeight-r.height-4)}px`};i&&i.addEventListener("click",d=>{const l=d.target.closest("li[data-action]");if(!l||l.dataset.action!=="eq-add-node"||!c)return;const m=Ie==="parametric";let r=Pe();if(!r)if(Ie==="autoeq")oe=[],r=oe;else{u();return}if(r.length>=32){u();return}const p=se.getBoundingClientRect(),E=40,b=10,w=10,D=30,V=p.width-E-b,O=p.height-w-D,te=m?0:75,ne=m?St:It,le=te-ne,re=te+ne,he=Math.max(20,Math.min(2e4,Math.round(Ea(c.x-E,V)))),Fe=Math.max(-30,Math.min(30,Math.round((Zt(c.y-w,O,le,re)-te)*10)/10));r.push({id:r.length,type:"peaking",freq:he,gain:Fe,q:1,enabled:!0,channel:"stereo"}),ha(r),X(),ee(r),fe(r),x(),u()}),se.addEventListener("contextmenu",d=>{d.preventDefault(),u(),o();const l=wn(d),m=Ln(l.x,l.y,18);m>=0?s(d.clientX,d.clientY,m):v(d.clientX,d.clientY,l)}),document.addEventListener("mousedown",d=>{const l=document.getElementById("autoeq-graph-wrapper");a!==null&&n&&!n.contains(d.target)&&(!l||!l.contains(d.target))&&o(),c&&i&&!i.contains(d.target)&&(!l||!l.contains(d.target))&&u()},{signal:t}),se.addEventListener("dblclick",d=>{d.preventDefault();const l=wn(d),m=Ie==="parametric";let r=Pe();if(!r)if(Ie==="autoeq")oe=[],r=oe;else return;let p=Ln(l.x,l.y,18);if(p<0&&!m&&!Ue&&r.length>0){const b=se.getBoundingClientRect().width-40-10;let w=1/0;r.forEach((D,V)=>{const O=Math.abs(l.x-(40+Ft(D.freq,b)));O<18&&O<w&&(w=O,p=V)})}if(p>=0)r.splice(p,1),r.forEach((E,b)=>{E.id=b}),ye=null,We=null;else{if(r.length>=32)return;const E=se.getBoundingClientRect(),b=40,w=10,D=10,V=30,O=E.width-b-w,te=E.height-D-V,ne=m?0:75,le=m?St:It,re=ne-le,he=ne+le,Fe=Math.max(20,Math.min(2e4,Math.round(Ea(l.x-b,O)))),k=Math.max(-30,Math.min(30,Math.round((Zt(l.y-D,te,re,he)-ne)*10)/10));r.push({id:r.length,type:"peaking",freq:Fe,gain:k,q:1,enabled:!0,channel:"stereo"})}ha(r),X(),ee(r),fe(r),x()}),se.addEventListener("wheel",d=>{if(wn(d).x<=40+10){d.preventDefault();const p=d.deltaY>0?2:-2;Ie==="parametric"?St=Math.max(5,Math.min(60,St+p)):It=Math.max(5,Math.min(60,It+p)),x();return}const r=Pe();if(We>=0&&r&&r[We]){d.preventDefault();const p=r[We],E=d.deltaY>0?-.15:.15;p.q=Math.max(.1,Math.min(10,(p.q||1)+E)),X(),ee(r),x(),fe(r)}},{passive:!1});let g=-1;se.addEventListener("touchstart",d=>{const l=d.touches[0],m=se.getBoundingClientRect(),r={x:l.clientX-m.left,y:l.clientY-m.top};g=Ln(r.x,r.y,25),g>=0&&(ye=g,d.preventDefault())},{passive:!1}),document.addEventListener("touchmove",d=>{if(ye===null)return;const l=Pe();if(!l)return;const m=d.touches[0],r=se.getBoundingClientRect(),p={x:m.clientX-r.left,y:m.clientY-r.top},E=40,b=10,w=10,D=30,V=r.width-E-b,O=r.height-w-D,te=Ie==="parametric",ne=te?0:75,le=te?St:It,re=ne-le,he=ne+le,Fe=Ea(p.x-E,V);if(l[ye].freq=Math.max(20,Math.min(2e4,Fe)),te){const k=Zt(p.y-w,O,re,he);l[ye].gain=Math.max(-30,Math.min(30,Math.round(k*10)/10))}else{const k=kt(l[ye].freq,Ue||[]),_=Zt(p.y-w,O,re,he)-k;l[ye].gain=Math.max(-30,Math.min(30,l[ye].gain+_*.3))}X(),ee(l),Yt||(Yt=requestAnimationFrame(()=>{x(),fe(l),Yt=null})),d.preventDefault()},{passive:!1,signal:t}),document.addEventListener("touchend",()=>{ye!==null&&(ye=null,g=-1)},{signal:t}),Us&&(Nn=new ResizeObserver(()=>{en()}),Nn.observe(Us))}const fe=e=>{A7&&(A7.innerHTML="",!(!e||e.length===0)&&e.forEach((t,n)=>{const a=document.createElement("div");a.className="autoeq-band-control",a.dataset.band=n;const o=t.type||"peaking",s=t.channel||"stereo";a.innerHTML=`
+        `
+            )
+            .join('');
+    }
+    (document.getElementById('apply-custom-theme')?.addEventListener('click', () => {
+        const e = {};
+        (document.querySelectorAll('#theme-color-grid input[type="color"]').forEach((t) => {
+            e[t.dataset.color] = t.value;
+        }),
+            fn.setCustomTheme(e));
+    }),
+        document.getElementById('reset-custom-theme')?.addEventListener('click', () => {
+            ks();
+        }));
+    const Ya = document.getElementById('music-provider-setting');
+    Ya &&
+        ((Ya.value = H1.getProvider()),
+        Ya.addEventListener('change', (e) => {
+            (H1.setProvider(e.target.value), window.location.reload());
+        }));
+    const Ja = document.getElementById('amazon-music-toggle');
+    Ja &&
+        ((Ja.checked = rt.isEnabled()),
+        Ja.addEventListener('change', (e) => {
+            rt.setEnabled(e.target.checked);
+        }));
+    const Xa = document.getElementById('amazon-music-api-base-url');
+    Xa &&
+        ((Xa.value = rt.getApiBaseUrl()),
+        Xa.addEventListener('change', (e) => {
+            rt.setApiBaseUrl(e.target.value.trim());
+        }));
+    const Za = document.getElementById('amazon-music-converter-base-url');
+    Za &&
+        ((Za.value = rt.getConverterBaseUrl()),
+        Za.addEventListener('change', (e) => {
+            rt.setConverterBaseUrl(e.target.value.trim());
+        }));
+    const e7 = document.getElementById('amazon-music-turnstile-site-key');
+    e7 &&
+        ((e7.value = rt.getTurnstileSiteKey()),
+        e7.addEventListener('change', (e) => {
+            rt.setTurnstileSiteKey(e.target.value.trim());
+        }));
+    const t7 = document.getElementById('amazon-music-turnstile-bypass-token');
+    t7 &&
+        ((t7.value = rt.getTurnstileBypassToken()),
+        t7.addEventListener('change', (e) => {
+            rt.setTurnstileBypassToken(e.target.value.trim());
+        }));
+    const n7 = document.getElementById('deezer-fallback-toggle');
+    n7 &&
+        ((n7.checked = Ga.isEnabled()),
+        n7.addEventListener('change', (e) => {
+            Ga.setEnabled(e.target.checked);
+        }));
+    const a7 = document.getElementById('deezer-fallback-api-base-url');
+    a7 &&
+        ((a7.value = Ga.getApiBaseUrl()),
+        a7.addEventListener('change', (e) => {
+            Ga.setApiBaseUrl(e.target.value.trim());
+        }));
+    const Pt = document.getElementById('streaming-quality-setting');
+    if (Pt) {
+        const e = localStorage.getItem('adaptive-playback-quality') || 'auto',
+            t = Array.from(Pt.options).some((a) => a.value === e);
+        ((Pt.value = t ? e : localStorage.getItem('playback-quality') || 'auto'),
+            h.forceQuality && h.forceQuality(Pt.value));
+        const n = Pt.value === 'auto' ? 'LOSSLESS' : Pt.value;
+        (h.setQuality(localStorage.getItem('playback-quality') || n),
+            Pt.addEventListener('change', (a) => {
+                const o = a.target.value;
+                (localStorage.setItem('adaptive-playback-quality', o), h.forceQuality && h.forceQuality(o));
+                const s = o === 'auto' ? 'LOSSLESS' : o;
+                (h.setQuality(s), localStorage.setItem('playback-quality', s));
+            }));
+    }
+    const Qt = document.getElementById('download-quality-setting');
+    if (Qt) {
+        const e = { HI_RES_LOSSLESS: 'Lossless', LOSSLESS: 'Lossless', HIGH: 'AAC', LOW: 'AAC' },
+            t = Array.from(Qt.options).map((i) => ({
+                value: i.value,
+                text: i.textContent,
+                category: e[i.value] || 'Other',
+            }));
+        for (const [i, c] of Object.entries(zi)) t.push({ value: i, text: c.displayName, category: c.category });
+        const n = (i) => {
+                const c = i.match(/(\d+)\s*kbps/i);
+                return c ? parseInt(c[1], 10) : 1 / 0;
+            },
+            a = ['Lossless', 'AAC', 'MP3', 'OGG', 'Opus'];
+        (t.sort((i, c) => {
+            if (i.category == c.category && i.category === 'Lossless') return 0;
+            const u = a.indexOf(i.category),
+                v = a.indexOf(c.category),
+                g = (u === -1 ? a.length : u) - (v === -1 ? a.length : v);
+            if (g !== 0) return g;
+            const d = n(i.text),
+                l = n(c.text);
+            return d !== l ? l - d : c.text.localeCompare(i.text);
+        }),
+            (Qt.innerHTML = ''));
+        let o = null,
+            s = null;
+        for (const i of t) {
+            i.category !== s &&
+                ((s = i.category), (o = document.createElement('optgroup')), (o.label = i.category), Qt.appendChild(o));
+            const c = document.createElement('option');
+            ((c.value = i.value), (c.textContent = i.text), o.appendChild(c));
+        }
+        ((Qt.value = Zo.getQuality()),
+            Qt.addEventListener('change', (i) => {
+                (Zo.setQuality(i.target.value), Is());
+            }));
+    }
+    const Tt = document.getElementById('lossless-container-setting'),
+        qs = Tt?.closest('.setting-item');
+    function Is() {
+        if (!qs) return;
+        const e = Zo.getQuality(),
+            t = e === 'LOSSLESS' || e === 'HI_RES_LOSSLESS';
+        qs.style.display = t ? '' : 'none';
+    }
+    if (Tt) {
+        const e = Tt.querySelector('option:last-child');
+        e.remove();
+        for (const [t, { displayName: n }] of Object.entries(Hi)) {
+            const a = document.createElement('option');
+            ((a.value = t), (a.textContent = n), Tt.appendChild(a));
+        }
+        (Tt.append(e),
+            (Tt.value = j1.getContainer()),
+            Tt.addEventListener('change', (t) => {
+                j1.setContainer(t.target.value);
+            }));
+    }
+    Is();
+    const o7 = document.getElementById('cover-art-size-setting');
+    o7 &&
+        ((o7.value = Q1.getSize()),
+        o7.addEventListener('change', (e) => {
+            Q1.setSize(e.target.value);
+        }));
+    const s7 = document.getElementById('show-quality-badges-toggle');
+    s7 &&
+        ((s7.checked = W1.isEnabled()),
+        s7.addEventListener('change', async (e) => {
+            (W1.setEnabled(e.target.checked), window.renderQueueFunction && (await window.renderQueueFunction()));
+        }));
+    const i7 = document.getElementById('use-album-release-year-toggle');
+    i7 &&
+        ((i7.checked = K1.useAlbumYear()),
+        i7.addEventListener('change', (e) => {
+            K1.setUseAlbumYear(e.target.checked);
+        }));
+    const ea = document.getElementById('force-zip-blob-toggle'),
+        Ss = ea?.closest('.setting-item'),
+        bi =
+            'showSaveFilePicker' in window &&
+            typeof FileSystemFileHandle < 'u' &&
+            'createWritable' in FileSystemFileHandle.prototype,
+        ta = 'showDirectoryPicker' in window,
+        Bs = document.getElementById('remember-folder-setting'),
+        l7 = document.getElementById('remember-folder-toggle'),
+        ws = document.getElementById('reset-saved-folder-setting'),
+        Ls = document.getElementById('reset-saved-folder-btn'),
+        Cs = document.getElementById('single-to-folder-setting'),
+        r7 = document.getElementById('single-to-folder-toggle');
+    function c7() {
+        if (!Ss) return;
+        const t = me.bulkDownloadMethod === Gt.Zip && bi;
+        Ss.style.display = t ? '' : 'none';
+    }
+    async function bn() {
+        const e = me.bulkDownloadMethod,
+            t = e === Gt.Folder,
+            n = t || e === Gt.LocalMedia;
+        if ((Bs && (Bs.style.display = t && ta ? '' : 'none'), ws)) {
+            let a = !1;
+            (t && ta && me.rememberBulkDownloadFolder && (a = !!me.bulkDownloadFolder),
+                (ws.style.display = a ? '' : 'none'));
+        }
+        Cs && (Cs.style.display = n ? '' : 'none');
+    }
+    const qt = document.getElementById('bulk-download-method');
+    if (qt) {
+        if (!ta) {
+            const e = qt.querySelector('option[value="folder"]');
+            e && e.remove();
+            const t = qt.querySelector('option[value="local"]');
+            t && t.remove();
+            const n = me.bulkDownloadMethod;
+            (n === Gt.Folder || n === Gt.LocalMedia) && (me.bulkDownloadMethod = Gt.Zip);
+        }
+        ((qt.value = me.bulkDownloadMethod),
+            qt.addEventListener('change', async (e) => {
+                const t = me.bulkDownloadMethod,
+                    n = e.target.value;
+                if (
+                    ((me.bulkDownloadMethod = n), n === Gt.LocalMedia && !(await Xe.getSetting('local_folder_handle')))
+                ) {
+                    let o = !1;
+                    try {
+                        if (ta) {
+                            const s = await window.showDirectoryPicker({ mode: 'readwrite' });
+                            s && ((o = !0), await Xe.saveSetting('local_folder_handle', s));
+                        }
+                    } catch {}
+                    o ||
+                        (qt.querySelector(`option[value="${t}"]`)
+                            ? ((me.bulkDownloadMethod = t), (qt.value = t))
+                            : ((me.bulkDownloadMethod = 'zip'), (qt.value = 'zip')));
+                }
+                (await me.waitPending(), c7(), await bn());
+            }));
+    }
+    (l7 &&
+        ((l7.checked = me.rememberBulkDownloadFolder),
+        l7.addEventListener('change', async (e) => {
+            ((me.rememberBulkDownloadFolder = !!e.target.checked), await me.waitPending(), await bn());
+        })),
+        Ls &&
+            Ls.addEventListener('click', async () => {
+                ((me.bulkDownloadFolder = null), await me.waitPending(), await bn());
+            }),
+        r7 &&
+            ((r7.checked = me.downloadSinglesToFolder),
+            r7.addEventListener('change', (e) => {
+                me.downloadSinglesToFolder = !!e.target.checked;
+            })),
+        ea &&
+            ((ea.checked = me.forceZipBlob),
+            ea.addEventListener('change', (e) => {
+                me.forceZipBlob = !!e.target.checked;
+            })),
+        c7(),
+        await bn());
+    const d7 = document.getElementById('include-cover-toggle');
+    d7 &&
+        ((d7.checked = He.shouldIncludeCover()),
+        d7.addEventListener('change', (e) => {
+            He.setIncludeCover(e.target.checked);
+        }));
+    const u7 = document.getElementById('gapless-playback-toggle');
+    u7 &&
+        ((u7.checked = V1.isEnabled()),
+        u7.addEventListener('change', (e) => {
+            V1.setEnabled(e.target.checked);
+        }));
+    const m7 = document.getElementById('replay-gain-mode');
+    m7 &&
+        ((m7.value = Oa.getMode()),
+        m7.addEventListener('change', (e) => {
+            (Oa.setMode(e.target.value), h.applyReplayGain());
+        }));
+    const g7 = document.getElementById('replay-gain-preamp');
+    g7 &&
+        ((g7.value = Oa.getPreamp()),
+        g7.addEventListener('change', (e) => {
+            const t = parseFloat(e.target.value);
+            (Oa.setPreamp(isNaN(t) ? 3 : t), h.applyReplayGain());
+        }));
+    const f7 = document.getElementById('mono-audio-toggle');
+    f7 &&
+        ((f7.checked = Y1.isEnabled()),
+        f7.addEventListener('change', (e) => {
+            const t = e.target.checked;
+            (Y1.setEnabled(t), W.toggleMonoAudio(t));
+        }));
+    const p7 = document.getElementById('binaural-dsp-toggle'),
+        h7 = document.getElementById('binaural-dsp-container'),
+        y7 = document.getElementById('binaural-auto-spatial-toggle'),
+        na = document.getElementById('binaural-crossfeed-toggle'),
+        v7 = document.getElementById('binaural-crossfeed-level'),
+        aa = document.getElementById('crossfeed-level-row'),
+        E7 = document.getElementById('binaural-hrtf-preset'),
+        oa = document.getElementById('binaural-widening-toggle'),
+        sa = document.getElementById('binaural-widening-slider'),
+        b7 = document.getElementById('binaural-width-value'),
+        ia = document.getElementById('widening-slider-row');
+    if (p7 && h7) {
+        const e = Ct.isEnabled();
+        ((p7.checked = e),
+            (h7.style.display = e ? 'block' : 'none'),
+            p7.addEventListener('change', async (t) => {
+                const n = t.target.checked;
+                ((h7.style.display = n ? 'block' : 'none'), await W.toggleBinaural(n));
+            }));
+    }
+    (y7 &&
+        ((y7.checked = Ct.getAutoEnableForSpatial()),
+        y7.addEventListener('change', (e) => {
+            Ct.setAutoEnableForSpatial(e.target.checked);
+        })),
+        na &&
+            ((na.checked = Ct.getCrossfeedEnabled()),
+            aa && (aa.style.display = na.checked ? 'flex' : 'none'),
+            na.addEventListener('change', async (e) => {
+                const t = e.target.checked;
+                (aa && (aa.style.display = t ? 'flex' : 'none'), await W.setBinauralCrossfeedEnabled(t));
+            })),
+        v7 &&
+            ((v7.value = Ct.getCrossfeedLevel()),
+            v7.addEventListener('change', (e) => {
+                W.setBinauralCrossfeedLevel(e.target.value);
+            })),
+        E7 &&
+            ((E7.value = Ct.getHrtfPreset()),
+            E7.addEventListener('change', async (e) => {
+                await W.setBinauralHrtfPreset(e.target.value);
+            })),
+        oa &&
+            ((oa.checked = Ct.getWideningEnabled()),
+            ia && (ia.style.display = oa.checked ? 'flex' : 'none'),
+            oa.addEventListener('change', async (e) => {
+                const t = e.target.checked;
+                (ia && (ia.style.display = t ? 'flex' : 'none'), await W.setBinauralWideningEnabled(t));
+            })),
+        sa &&
+            b7 &&
+            ((sa.value = Ct.getWideningAmount()),
+            (b7.textContent = parseFloat(sa.value).toFixed(2)),
+            sa.addEventListener('input', (e) => {
+                const t = parseFloat(e.target.value);
+                ((b7.textContent = t.toFixed(2)), W.setBinauralWidening(t));
+            })),
+        window.addEventListener('binaural-mode-changed', (e) => {
+            const t = document.getElementById('binaural-status');
+            if (t) {
+                const { mode: n, channels: a } = e.detail,
+                    o = t.querySelector('.binaural-mode-label');
+                o &&
+                    (o.textContent =
+                        n === 'multichannel'
+                            ? `Mode: Multichannel (${a > 6 ? '7.1' : '5.1'} → Binaural)`
+                            : 'Mode: Stereo');
+            }
+        }));
+    const k7 = document.getElementById('exponential-volume-toggle');
+    k7 &&
+        ((k7.checked = J1.isEnabled()),
+        k7.addEventListener('change', (e) => {
+            (J1.setEnabled(e.target.checked), h.applyReplayGain());
+        }));
+    const la = document.getElementById('playback-speed-slider'),
+        kn = document.getElementById('playback-speed-input'),
+        xs = document.getElementById('playback-speed-reset');
+    if (la && kn) {
+        const e = (n) => {
+                const a = parseFloat(n),
+                    o = Math.max(0.01, Math.min(100, isNaN(a) ? 1 : a));
+                return ((kn.value = o), o >= 0.25 && o <= 4 && (la.value = o), o);
+            },
+            t = pn.getSpeed();
+        (e(t),
+            la.addEventListener('input', (n) => {
+                const a = parseFloat(n.target.value);
+                ((kn.value = a), pn.setSpeed(a), h.setPlaybackSpeed(a));
+            }),
+            kn.addEventListener('input', (n) => {
+                const a = parseFloat(n.target.value);
+                !isNaN(a) &&
+                    a >= 0.01 &&
+                    a <= 100 &&
+                    (a >= 0.25 && a <= 4 && (la.value = a), pn.setSpeed(a), h.setPlaybackSpeed(a));
+            }),
+            kn.addEventListener('change', (n) => {
+                const a = parseFloat(n.target.value),
+                    o = e(a);
+                (pn.setSpeed(o), h.setPlaybackSpeed(o));
+            }),
+            xs &&
+                xs.addEventListener('click', () => {
+                    const n = pn.resetSpeed();
+                    (e(n), h.setPlaybackSpeed(n));
+                }));
+    }
+    const q7 = document.getElementById('preserve-pitch-toggle');
+    q7 &&
+        ((q7.checked = pn.isPreservePitchEnabled()),
+        q7.addEventListener('change', (e) => {
+            h.setPreservePitch(e.target.checked);
+        }));
+    let et = F.getGraphicEqBandCount(),
+        ut = F.getGraphicEqFreqRange();
+    const As = (e) =>
+            e >= 1e4
+                ? (e / 1e3).toFixed(0) + 'K'
+                : e >= 1e3
+                  ? (e / 1e3).toFixed(e % 1e3 === 0 ? 0 : 1) + 'K'
+                  : e.toString(),
+        Ms = (e, t, n) => {
+            const a = [];
+            for (let o = 0; o < e; o++) {
+                const s = o / (e - 1);
+                let i = Math.round(t * Math.pow(n / t, s));
+                (a.length > 0 && i <= a[a.length - 1] && (i = a[a.length - 1] + 1), a.push(i));
+            }
+            return a;
+        };
+    let mt = Ms(et, ut.min, ut.max),
+        ra = mt.map(As);
+    const Ps = document.getElementById('graphic-eq-bands'),
+        ki = document.getElementById('graphic-eq-preamp-slider'),
+        qi = document.getElementById('graphic-eq-preamp-value'),
+        Ii = document.getElementById('graphic-eq-preset-select'),
+        Si = document.getElementById('graphic-eq-reset-btn'),
+        Ts = document.getElementById('legacy-graphic-eq-bands'),
+        Bi = document.getElementById('legacy-graphic-eq-preamp-slider'),
+        wi = document.getElementById('legacy-graphic-eq-preamp-value'),
+        I7 = document.getElementById('legacy-graphic-eq-preset-select'),
+        Li = document.getElementById('legacy-graphic-eq-reset-btn'),
+        qn = document.getElementById('legacy-geq-band-count'),
+        In = document.getElementById('legacy-geq-freq-min'),
+        Sn = document.getElementById('legacy-geq-freq-max'),
+        ca = [ki, Bi].filter(Boolean),
+        da = [qi, wi].filter(Boolean),
+        tt = [Ii, I7].filter(Boolean);
+    let pe = F.getGraphicEqGains(et) || new Array(et).fill(0),
+        qe = F.getGraphicEqPreamp() || 0;
+    const Wt = F.getRange(),
+        Kt = () => {
+            pe.forEach((e, t) => {
+                ['geq', 'legacy-geq'].forEach((n) => {
+                    const a = document.getElementById(`${n}-slider-${t}`),
+                        o = document.getElementById(`${n}-value-${t}`);
+                    (a && (a.value = e), o && (o.textContent = `${e > 0 ? '+' : ''}${e.toFixed(1)}`));
+                });
+            });
+        },
+        ua = (e, t) => {
+            e &&
+                ((e.innerHTML = ''),
+                ra.forEach((n, a) => {
+                    const o = document.createElement('div');
+                    o.className = 'graphic-eq-band';
+                    const s = document.createElement('span');
+                    ((s.className = 'graphic-eq-band-value'),
+                        (s.textContent = `${pe[a] > 0 ? '+' : ''}${pe[a].toFixed(1)}`),
+                        (s.id = `${t}-value-${a}`));
+                    const i = document.createElement('div');
+                    i.className = 'graphic-eq-band-slider-wrap';
+                    const c = document.createElement('input');
+                    ((c.type = 'range'),
+                        (c.min = Wt.min),
+                        (c.max = Wt.max),
+                        (c.step = '0.1'),
+                        (c.value = pe[a]),
+                        (c.id = `${t}-slider-${a}`),
+                        c.setAttribute('aria-label', `${ra[a]} Hz`),
+                        c.addEventListener('input', () => {
+                            const v = parseFloat(c.value);
+                            ((pe[a] = v),
+                                F.setGraphicEqGains(pe),
+                                W.setGraphicEqBandGain(a, v),
+                                Kt(),
+                                tt.forEach((g) => (g.value = '')));
+                        }),
+                        i.appendChild(c));
+                    const u = document.createElement('span');
+                    ((u.className = 'graphic-eq-band-label'),
+                        (u.textContent = ra[a]),
+                        o.appendChild(s),
+                        o.appendChild(i),
+                        o.appendChild(u),
+                        e.appendChild(o));
+                }));
+        };
+    (ua(Ps, 'geq'),
+        ua(Ts, 'legacy-geq'),
+        ca.forEach((e) => {
+            ((e.value = qe),
+                e.addEventListener('input', () => {
+                    qe = parseFloat(e.value);
+                    const t = `${qe.toFixed(1)} dB`;
+                    (da.forEach((n) => (n.textContent = t)),
+                        ca.forEach((n) => {
+                            n !== e && (n.value = qe);
+                        }),
+                        F.setGraphicEqPreamp(qe),
+                        W.setGraphicEqPreamp(qe));
+                }));
+        }),
+        da.forEach((e) => (e.textContent = `${qe} dB`)),
+        tt.forEach((e) => {
+            e.addEventListener('change', () => {
+                const t = e.value;
+                if (!t) return;
+                const a = X1(et)[t];
+                a &&
+                    ((pe = [...a.gains]),
+                    F.setGraphicEqGains(pe),
+                    W.setGraphicEqAllGains(pe),
+                    Kt(),
+                    tt.forEach((o) => {
+                        o !== e && (o.value = t);
+                    }));
+            });
+        }),
+        [Si, Li].filter(Boolean).forEach((e) => {
+            e.addEventListener('click', () => {
+                ((pe = new Array(et).fill(0)),
+                    F.setGraphicEqGains(pe),
+                    W.setGraphicEqAllGains(pe),
+                    Kt(),
+                    tt.forEach((t) => (t.value = 'flat')));
+            });
+        }));
+    const Fs = () => {
+        ((mt = Ms(et, ut.min, ut.max)), (ra = mt.map(As)), ua(Ps, 'geq'), ua(Ts, 'legacy-geq'), Kt());
+    };
+    if (
+        (qn &&
+            ((qn.value = et),
+            qn.addEventListener('change', () => {
+                const e = Math.max(3, Math.min(32, parseInt(qn.value, 10) || 16));
+                ((qn.value = e),
+                    e !== et &&
+                        ((pe = F.interpolateGains(pe, e)),
+                        (et = e),
+                        F.setGraphicEqGains(pe),
+                        W.setGraphicEqBandCount(e),
+                        Fs(),
+                        tt.forEach((t) => (t.value = ''))));
+            })),
+        In && Sn)
+    ) {
+        ((In.value = ut.min), (Sn.value = ut.max));
+        const e = () => {
+            const t = Math.max(10, Math.min(96e3, parseInt(In.value, 10) || 25)),
+                n = Math.max(10, Math.min(96e3, parseInt(Sn.value, 10) || 2e4));
+            ((In.value = t),
+                (Sn.value = n),
+                !(t >= n) &&
+                    ((t === ut.min && n === ut.max) ||
+                        ((ut = { min: t, max: n }), W.setGraphicEqFreqRange(t, n), Fs())));
+        };
+        (In.addEventListener('change', e), Sn.addEventListener('change', e));
+    }
+    const Rs = (e) => {
+            const t = String(e).trim().toLowerCase().replace(/\s+/g, '');
+            if (t.endsWith('khz')) return Number.parseFloat(t.slice(0, -3)) * 1e3;
+            const n = t.replace(/hz$/, '');
+            return n.endsWith('k') ? Number.parseFloat(n.slice(0, -1)) * 1e3 : Number.parseFloat(n);
+        },
+        Ds = document.getElementById('legacy-geq-export-btn'),
+        _s = document.getElementById('legacy-geq-export-csv-btn'),
+        $s = document.getElementById('legacy-geq-import-btn'),
+        S7 = document.getElementById('legacy-geq-import-file');
+    (Ds &&
+        Ds.addEventListener('click', () => {
+            const e = [`Preamp: ${qe.toFixed(1)} dB`];
+            mt.forEach((o, s) => {
+                const i = mt[Math.max(0, s - 1)],
+                    c = mt[Math.min(mt.length - 1, s + 1)],
+                    u = Math.log2(c / i),
+                    v = u > 0 ? (Math.SQRT2 / (2 * Math.sinh((Math.LN2 / 2) * u))).toFixed(2) : Math.SQRT2.toFixed(2);
+                e.push(`Filter ${s + 1}: ON PK Fc ${o} Hz Gain ${pe[s].toFixed(1)} dB Q ${v}`);
+            });
+            const t = new Blob(
+                    [
+                        e.join(`
+`),
+                    ],
+                    { type: 'text/plain' }
+                ),
+                n = URL.createObjectURL(t),
+                a = document.createElement('a');
+            ((a.href = n), (a.download = 'legacy-eq.txt'), a.click(), setTimeout(() => URL.revokeObjectURL(n), 0));
+        }),
+        _s &&
+            _s.addEventListener('click', () => {
+                const e = mt.map((s, i) => `${s} ${pe[i].toFixed(1)}`).join('; '),
+                    t = [`Preamp: ${qe.toFixed(1)} dB`, `GraphicEQ: ${e}`],
+                    n = new Blob(
+                        [
+                            t.join(`
+`),
+                        ],
+                        { type: 'text/plain' }
+                    ),
+                    a = URL.createObjectURL(n),
+                    o = document.createElement('a');
+                ((o.href = a),
+                    (o.download = 'legacy-eq-apo.txt'),
+                    o.click(),
+                    setTimeout(() => URL.revokeObjectURL(a), 0));
+            }),
+        $s &&
+            S7 &&
+            ($s.addEventListener('click', () => S7.click()),
+            S7.addEventListener('change', (e) => {
+                const t = e.target.files[0];
+                if (!t) return;
+                const n = new FileReader();
+                ((n.onload = (a) => {
+                    try {
+                        const s = a.target.result.split(`
+`);
+                        let i = qe,
+                            c = !1;
+                        const u = [];
+                        for (const d of s) {
+                            const l = d.match(/Preamp:\s*([-\d.]+)\s*dB/i);
+                            if (l) {
+                                ((i = parseFloat(l[1])), (c = !0));
+                                continue;
+                            }
+                            const m = d.match(
+                                /Filter\s+\d+:\s*ON\s+\w+\s+Fc\s+([\d.]+[kK]?)\s*(?:Hz)?\s+Gain\s+([+-]?[\d.]+)\s*dB/i
+                            );
+                            if (m) {
+                                u.push({ freq: Rs(m[1]), gain: parseFloat(m[2]) });
+                                continue;
+                            }
+                            const r = d.trim().match(/^([\d.]+)\s*([kK])?(?:Hz)?\s*[,\s\t]+([+-]?[\d.]+)/);
+                            r && u.push({ freq: Rs(`${r[1]}${r[2] || ''}`), gain: parseFloat(r[3]) });
+                        }
+                        if (u.length === 0) return;
+                        const v = u.filter((d) => Number.isFinite(d.freq) && d.freq > 0 && Number.isFinite(d.gain));
+                        if (v.length === 0) return;
+                        (v.sort((d, l) => d.freq - l.freq),
+                            (pe = mt.map((d) => {
+                                let l = v[0],
+                                    m = Math.abs(Math.log10(d) - Math.log10(l.freq));
+                                for (let r = 1; r < v.length; r++) {
+                                    const p = Math.abs(Math.log10(d) - Math.log10(v[r].freq));
+                                    p < m && ((m = p), (l = v[r]));
+                                }
+                                return Math.max(parseFloat(Wt.min), Math.min(parseFloat(Wt.max), l.gain));
+                            })),
+                            F.setGraphicEqGains(pe),
+                            W.setGraphicEqAllGains(pe),
+                            Kt(),
+                            c &&
+                                ((qe = Math.max(-20, Math.min(20, i))),
+                                F.setGraphicEqPreamp(qe),
+                                W.setGraphicEqPreamp(qe),
+                                ca.forEach((d) => (d.value = qe)),
+                                da.forEach((d) => (d.textContent = `${qe.toFixed(1)} dB`))),
+                            tt.forEach((d) => {
+                                ((d.value = ''), d.dispatchEvent(new Event('change')));
+                            }));
+                    } catch (o) {
+                        console.error('[Legacy GEQ Import] Failed:', o);
+                    }
+                }),
+                    n.readAsText(t),
+                    (e.target.value = ''));
+            })));
+    const ma = 'monochrome-legacy-geq-custom-presets';
+    try {
+        const e = localStorage.getItem('legacy-geq-custom-presets');
+        e &&
+            !localStorage.getItem(ma) &&
+            (localStorage.setItem(ma, e), localStorage.removeItem('legacy-geq-custom-presets'));
+    } catch {}
+    const Ns = document.getElementById('legacy-geq-save-preset-btn'),
+        ga = document.getElementById('legacy-geq-delete-preset-btn'),
+        fa = () => {
+            try {
+                const e = localStorage.getItem(ma);
+                return e ? JSON.parse(e) : {};
+            } catch {
+                return {};
+            }
+        },
+        Gs = (e) => {
+            try {
+                localStorage.setItem(ma, JSON.stringify(e));
+            } catch (t) {
+                (console.error('[Legacy GEQ] Failed to save presets:', t),
+                    alert('Failed to save preset. Storage may be full.'));
+            }
+        },
+        B7 = () => {
+            const e = fa();
+            tt.forEach((t) => {
+                (t.querySelectorAll('option[data-custom]').forEach((o) => o.remove()),
+                    t.querySelectorAll('optgroup[data-custom-group]').forEach((o) => o.remove()));
+                const n = Object.entries(e);
+                if (n.length === 0) return;
+                const a = document.createElement('optgroup');
+                ((a.label = 'Custom Presets'),
+                    a.setAttribute('data-custom-group', ''),
+                    n.forEach(([o, s]) => {
+                        const i = document.createElement('option');
+                        ((i.value = o), (i.textContent = s.name), i.setAttribute('data-custom', ''), a.appendChild(i));
+                    }),
+                    t.appendChild(a));
+            });
+        };
+    B7();
+    const Vt = () => {
+        const t = (I7?.value || '').startsWith('geq_custom_');
+        ga && (ga.style.display = t ? '' : 'none');
+    };
+    (tt.forEach((e) => {
+        e.addEventListener('change', () => {
+            const t = e.value;
+            if (!t) {
+                Vt();
+                return;
+            }
+            const n = fa();
+            if (n[t]) {
+                const a = n[t]?.gains;
+                if (!Array.isArray(a) || a.length === 0) {
+                    Vt();
+                    return;
+                }
+                ((pe = (a.length !== et ? F.interpolateGains(a, et) : a).map((s) => {
+                    const i = Number(s);
+                    return Number.isFinite(i) ? Math.max(parseFloat(Wt.min), Math.min(parseFloat(Wt.max), i)) : 0;
+                })),
+                    F.setGraphicEqGains(pe),
+                    W.setGraphicEqAllGains(pe),
+                    Kt(),
+                    n[t].preamp !== void 0 &&
+                        ((qe = n[t].preamp),
+                        F.setGraphicEqPreamp(qe),
+                        W.setGraphicEqPreamp(qe),
+                        ca.forEach((s) => (s.value = qe)),
+                        da.forEach((s) => (s.textContent = `${qe.toFixed(1)} dB`))),
+                    tt.forEach((s) => {
+                        s !== e && (s.value = t);
+                    }),
+                    Vt());
+                return;
+            }
+            Vt();
+        });
+    }),
+        Ns &&
+            Ns.addEventListener('click', () => {
+                const e = prompt('Preset name:');
+                if (!e || !e.trim()) return;
+                const t = e.trim().substring(0, 50),
+                    n = fa(),
+                    a = 'geq_custom_' + Date.now();
+                ((n[a] = { name: t, gains: pe.map((o) => Math.round(o * 10) / 10), preamp: Math.round(qe * 10) / 10 }),
+                    Gs(n),
+                    B7(),
+                    tt.forEach((o) => (o.value = a)),
+                    Vt());
+            }),
+        ga &&
+            ga.addEventListener('click', () => {
+                const e = I7?.value || '';
+                if (!e.startsWith('geq_custom_')) return;
+                const t = fa(),
+                    n = t[e]?.name || e;
+                confirm(`Delete preset "${n}"?`) && (delete t[e], Gs(t), B7(), tt.forEach((a) => (a.value = '')), Vt());
+            }));
+    const pa = document.getElementById('equalizer-enabled-toggle'),
+        Os = document.getElementById('equalizer-container'),
+        Ye = document.getElementById('eq-preamp-slider');
+    let je = null,
+        Oe = null,
+        oe = null,
+        Ue = null,
+        gt = F.getPreamp(),
+        H = null,
+        ye = null,
+        We = null,
+        Yt = null,
+        It = 16,
+        St = 16;
+    const Pe = () => (Ie === 'parametric' ? H : Ie === 'speaker' ? ae[ze]?.bands || null : oe),
+        ha = (e) => {
+            Ie === 'parametric' ? (H = e) : Ie === 'speaker' ? (ae[ze].bands = e) : (oe = e);
+        },
+        se = document.getElementById('autoeq-response-canvas'),
+        Us = document.getElementById('autoeq-graph-wrapper'),
+        we = document.getElementById('autoeq-headphone-select'),
+        Ee = document.getElementById('autoeq-target-select'),
+        Ke = document.getElementById('autoeq-band-count'),
+        ot = document.getElementById('autoeq-max-freq'),
+        Te = document.getElementById('autoeq-sample-rate'),
+        zs = (e, t) => {
+            if (!Ke) return;
+            const n = String(e || (t && t.length) || 10);
+            if (((Ke.value = n), Ke.value !== n)) {
+                if (t && t.length) {
+                    const a = String(t.length);
+                    if (((Ke.value = a), Ke.value === a)) return;
+                }
+                Ke.value = '10';
+            }
+        },
+        _e = document.getElementById('autoeq-run-btn'),
+        Hs = document.getElementById('autoeq-download-btn'),
+        w7 = document.getElementById('autoeq-status'),
+        js = document.getElementById('autoeq-import-measurement-btn'),
+        L7 = document.getElementById('autoeq-import-measurement-file'),
+        C7 = document.getElementById('autoeq-saved-grid'),
+        Qs = document.getElementById('autoeq-saved-count'),
+        ya = document.getElementById('autoeq-profile-name'),
+        Ws = document.getElementById('autoeq-save-btn'),
+        va = document.getElementById('autoeq-saved-collapse'),
+        st = document.getElementById('autoeq-database-list'),
+        Ks = document.getElementById('autoeq-database-count'),
+        Vs = document.getElementById('autoeq-filters-toggle'),
+        x7 = document.getElementById('autoeq-filters-content'),
+        Jt = document.getElementById('autoeq-filters-collapse'),
+        A7 = document.getElementById('autoeq-bands-list'),
+        Je = document.getElementById('autoeq-preamp-value');
+    if (we) {
+        const e = document.createElement('optgroup');
+        e.label = 'Popular';
+        for (const t of On) {
+            const n = document.createElement('option');
+            ((n.value = t.name),
+                (n.textContent = t.name.replace(/\s*\([^)]*\)\s*$/, '')),
+                (n.dataset.type = t.type),
+                e.appendChild(n));
+        }
+        (we.appendChild(e),
+            we.addEventListener('change', async () => {
+                const t = we.value;
+                if (!t) return;
+                const n = On.find((a) => a.name === t);
+                n && (!Oe || Oe.name !== t) && (await ka(n));
+            }));
+    }
+    const Xt = 20,
+        Bn = 2e4,
+        Ys = [20, 50, 100, 200, 500, 1e3, 2e3, 5e3, 1e4, 2e4],
+        M7 = Math.log10(Xt),
+        Js = Math.log10(Bn) - M7,
+        Ft = (e, t) => ((Math.log10(Math.max(Xt, e)) - M7) / Js) * t,
+        Ea = (e, t) => Math.pow(10, (e / t) * Js + M7),
+        Xs = (e, t, n, a) => t - ((e - n) / (a - n)) * t,
+        Zt = (e, t, n, a) => n + (1 - e / t) * (a - n),
+        P7 = (e) => (e >= 1e3 ? (e / 1e3).toFixed(e % 1e3 === 0 ? 0 : 1) + 'k' : Math.round(e).toString());
+    let T7 = null;
+    const en = () => {
+            T7 ||
+                (T7 = requestAnimationFrame(() => {
+                    ((T7 = null), x());
+                }));
+        },
+        x = () => {
+            if (!se) return;
+            const e = Pe(),
+                t = se.getContext('2d'),
+                n = window.devicePixelRatio || 1,
+                a = se.getBoundingClientRect();
+            if (a.width === 0 || a.height === 0) return;
+            ((se.width = a.width * n), (se.height = a.height * n), t.scale(n, n));
+            const o = 40,
+                s = 10,
+                i = 10,
+                c = 30,
+                u = a.width - o - s,
+                v = a.height - i - c;
+            t.clearRect(0, 0, a.width, a.height);
+            const g = Ie === 'parametric',
+                d = g ? 0 : 75,
+                l = g ? St : It,
+                m = d - l,
+                r = d + l,
+                p = (k) => o + Ft(k, u),
+                E = (k) => i + Xs(k, v, m, r),
+                b = 'rgba(255,255,255,0.06)',
+                w = 'rgba(255,255,255,0.4)',
+                D = '#3b82f6',
+                V = 'rgba(255,255,255,0.5)',
+                O = '#f472b6';
+            ((t.strokeStyle = b), (t.lineWidth = 1));
+            for (let k = m; k <= r; k += 5) {
+                const A = E(k);
+                (t.beginPath(), t.moveTo(o, A), t.lineTo(o + u, A), t.stroke());
+            }
+            for (const k of Ys) {
+                const A = p(k);
+                (t.beginPath(), t.moveTo(A, i), t.lineTo(A, i + v), t.stroke());
+            }
+            ((t.fillStyle = w),
+                (t.font = '10px system-ui, sans-serif'),
+                (t.textAlign = 'right'),
+                (t.textBaseline = 'middle'));
+            for (let k = m; k <= r; k += 5) t.fillText(k.toString(), o - 5, E(k));
+            ((t.textAlign = 'center'), (t.textBaseline = 'top'));
+            for (const k of Ys) t.fillText(P7(k), p(k), i + v + 8);
+            const te = (k, A, _, q = !1) => {
+                if (!k || k.length < 2) return;
+                (t.save(), t.beginPath(), (t.strokeStyle = A), (t.lineWidth = _), q && t.setLineDash([6, 4]));
+                let U = !1;
+                for (const Q of k) {
+                    if (Q.freq < Xt || Q.freq > Bn) continue;
+                    const Y = p(Q.freq),
+                        ce = E(Q.gain);
+                    U ? t.lineTo(Y, ce) : (t.moveTo(Y, ce), (U = !0));
+                }
+                (t.stroke(), t.restore());
+            };
+            let ne, le, re, he;
+            if (Ie === 'speaker') {
+                const k = ae[ze];
+                ((ne = k?.targetId || 'harman_room'),
+                    (le = bt.find((A) => A.id === ne)),
+                    (re = le?.data),
+                    (he = k?.measurement));
+            } else
+                ((ne = Ee ? Ee.value : 'harman_oe_2018'),
+                    (le = xt.find((k) => k.id === ne)),
+                    (re = le?.data),
+                    (he = je));
+            let Fe = 0;
+            if (g) {
+                if (
+                    ((t.strokeStyle = 'rgba(255,255,255,0.2)'),
+                    (t.lineWidth = 1),
+                    t.beginPath(),
+                    t.moveTo(o, E(0)),
+                    t.lineTo(o + u, E(0)),
+                    t.stroke(),
+                    e && e.length > 0)
+                ) {
+                    const k = Te ? parseInt(Te.value, 10) : 48e3,
+                        A = [
+                            '#f472b6',
+                            '#fb923c',
+                            '#facc15',
+                            '#4ade80',
+                            '#22d3ee',
+                            '#818cf8',
+                            '#c084fc',
+                            '#f87171',
+                            '#34d399',
+                            '#60a5fa',
+                            '#a78bfa',
+                            '#fb7185',
+                            '#fbbf24',
+                            '#2dd4bf',
+                            '#38bdf8',
+                            '#a3e635',
+                        ];
+                    e.forEach((q, U) => {
+                        if (!q.enabled || Math.abs(q.gain) < 0.1) return;
+                        const Q = A[U % A.length],
+                            Y = parseInt(Q.slice(1, 3), 16),
+                            ce = parseInt(Q.slice(3, 5), 16),
+                            $e = parseInt(Q.slice(5, 7), 16);
+                        (t.save(), t.beginPath(), t.moveTo(o, E(0)));
+                        for (let Ne = Xt; Ne <= Bn; Ne *= 1.02) {
+                            const un = at(Ne, q, k);
+                            t.lineTo(p(Ne), E(un));
+                        }
+                        (t.lineTo(o + u, E(0)),
+                            t.closePath(),
+                            (t.fillStyle = `rgba(${Y},${ce},${$e},0.12)`),
+                            t.fill(),
+                            t.beginPath());
+                        let dn = !1;
+                        for (let Ne = Xt; Ne <= Bn; Ne *= 1.02) {
+                            const un = at(Ne, q, k),
+                                Nt = p(Ne),
+                                Et = E(un);
+                            dn ? t.lineTo(Nt, Et) : (t.moveTo(Nt, Et), (dn = !0));
+                        }
+                        ((t.strokeStyle = `rgba(${Y},${ce},${$e},0.5)`), (t.lineWidth = 1), t.stroke(), t.restore());
+                    });
+                    const _ = [];
+                    for (let q = Xt; q <= Bn; q *= 1.02) {
+                        let U = 0;
+                        for (const Q of e) Q.enabled && (U += at(q, Q, k));
+                        _.push({ freq: q, gain: U });
+                    }
+                    te(_, 'rgba(255,255,255,0.8)', 2);
+                }
+            } else {
+                if (re) {
+                    const k = Ut(re);
+                    Fe = d - k;
+                } else if (he) {
+                    const k = Ut(he);
+                    Fe = d - k;
+                }
+                if (re) {
+                    const k = re.map((A) => ({ freq: A.freq, gain: A.gain + Fe }));
+                    te(k, V, 1.5, !0);
+                }
+                if (he) {
+                    const k = re ? Ut(he, re) : 0,
+                        A = he.map((_) => ({ freq: _.freq, gain: _.gain + k + Fe }));
+                    te(A, D, 1.5);
+                }
+                if (Ue) {
+                    const k = Ue.map((A) => ({ freq: A.freq, gain: A.gain + Fe }));
+                    te(k, O, 2);
+                }
+            }
+            if (Ie === 'speaker') {
+                const k = ht ? parseInt(ht.value, 10) : 40,
+                    A = yt ? parseInt(yt.value, 10) : 500;
+                ((t.fillStyle = 'rgba(34, 211, 238, 0.04)'),
+                    t.fillRect(o, i, p(k) - o, v),
+                    (t.fillStyle = 'rgba(245, 158, 11, 0.04)'),
+                    t.fillRect(p(A), i, o + u - p(A), v),
+                    t.save(),
+                    t.beginPath(),
+                    t.setLineDash([4, 4]),
+                    (t.strokeStyle = 'rgba(34, 211, 238, 0.6)'),
+                    (t.lineWidth = 1.5),
+                    t.moveTo(p(k), i),
+                    t.lineTo(p(k), i + v),
+                    t.stroke(),
+                    t.restore(),
+                    t.save(),
+                    (t.font = 'bold 9px system-ui'),
+                    (t.fillStyle = 'rgba(34, 211, 238, 0.7)'),
+                    (t.textAlign = 'center'),
+                    t.fillText(k + ' Hz', p(k), i - 2),
+                    t.restore(),
+                    t.save(),
+                    t.beginPath(),
+                    t.setLineDash([4, 4]),
+                    (t.strokeStyle = 'rgba(245, 158, 11, 0.6)'),
+                    (t.lineWidth = 1.5),
+                    t.moveTo(p(A), i),
+                    t.lineTo(p(A), i + v),
+                    t.stroke(),
+                    t.restore(),
+                    t.save(),
+                    (t.font = 'bold 9px system-ui'),
+                    (t.fillStyle = 'rgba(245, 158, 11, 0.7)'),
+                    (t.textAlign = 'center'),
+                    t.fillText(A + ' Hz', p(A), i - 2),
+                    t.restore());
+            }
+            if (e && e.length > 0 && (Ue || g)) {
+                const k = Te ? parseInt(Te.value, 10) : 48e3;
+                e.forEach((A, _) => {
+                    if (!A.enabled) return;
+                    const q = p(A.freq);
+                    let U, Q;
+                    if (g) {
+                        ((U = A.gain), (Q = 0));
+                        for (const Et of e) Et.enabled && (Q += at(A.freq, Et, k));
+                    } else ((U = kt(A.freq, Ue) + Fe), (Q = U));
+                    const Y = E(U),
+                        ce = [
+                            '#f472b6',
+                            '#fb923c',
+                            '#facc15',
+                            '#4ade80',
+                            '#22d3ee',
+                            '#818cf8',
+                            '#c084fc',
+                            '#f87171',
+                            '#34d399',
+                            '#60a5fa',
+                            '#a78bfa',
+                            '#fb7185',
+                            '#fbbf24',
+                            '#2dd4bf',
+                            '#38bdf8',
+                            '#a3e635',
+                        ],
+                        $e = ce[_ % ce.length],
+                        dn = _ === We,
+                        Ne = _ === ye,
+                        un = Ne ? 9 : dn ? 7 : 5;
+                    if (dn || Ne) {
+                        (t.save(),
+                            t.beginPath(),
+                            t.arc(q, Y, un + 4, 0, Math.PI * 2),
+                            (t.fillStyle = $e.replace(')', ', 0.25)').replace('rgb', 'rgba').replace('#', '')));
+                        const Et = parseInt($e.slice(1, 3), 16),
+                            $a = parseInt($e.slice(3, 5), 16),
+                            Na = parseInt($e.slice(5, 7), 16);
+                        ((t.fillStyle = `rgba(${Et},${$a},${Na},0.25)`), t.fill(), t.restore());
+                    }
+                    (t.beginPath(),
+                        t.arc(q, Y, un, 0, Math.PI * 2),
+                        (t.fillStyle = Ne ? '#fff' : $e),
+                        t.fill(),
+                        (t.strokeStyle = Ne ? $e : 'rgba(0,0,0,0.5)'),
+                        (t.lineWidth = 1.5),
+                        t.stroke());
+                    const Nt = A.channel || 'stereo';
+                    if (
+                        (Nt !== 'stereo' &&
+                            (t.save(),
+                            (t.font = `bold ${Ne ? 10 : dn ? 9 : 7}px system-ui, sans-serif`),
+                            (t.textAlign = 'center'),
+                            (t.textBaseline = 'middle'),
+                            (t.fillStyle = Ne ? $e : '#fff'),
+                            t.fillText(Nt === 'mid' ? 'M' : 'S', q, Y + 0.5),
+                            t.restore()),
+                        Ne)
+                    ) {
+                        (t.save(), (t.font = 'bold 11px system-ui, sans-serif'));
+                        const Et = Nt !== 'stereo' ? ` [${Nt.toUpperCase()}]` : '',
+                            $a = `${Math.round(A.freq)} Hz  ${A.gain > 0 ? '+' : ''}${A.gain.toFixed(1)} dB  Q${A.q.toFixed(2)}${Et}`,
+                            Na = `Sum: ${Q > 0 ? '+' : ''}${Q.toFixed(1)} dB`,
+                            Gi = t.measureText($a).width,
+                            Oi = t.measureText(Na).width,
+                            Dn = Math.max(Gi, Oi) + 12,
+                            Ui = 34,
+                            Jo = Math.max(5, Math.min(q - Dn / 2, a.width - Dn - 5)),
+                            Xo = Y - 44;
+                        ((t.fillStyle = 'rgba(0,0,0,0.8)'),
+                            t.fillRect(Jo, Xo, Dn, Ui),
+                            (t.fillStyle = '#fff'),
+                            (t.textAlign = 'center'),
+                            (t.textBaseline = 'middle'),
+                            t.fillText($a, Jo + Dn / 2, Xo + 10),
+                            (t.fillStyle = 'rgba(255,255,255,0.7)'),
+                            t.fillText(Na, Jo + Dn / 2, Xo + 24),
+                            t.restore());
+                    }
+                });
+            }
+        },
+        X = () => {
+            let e, t, n, a;
+            if (Ie === 'speaker') {
+                const u = ae[ze];
+                ((e = u?.measurement), (t = u?.bands), (n = u?.targetId || 'harman_room'), (a = bt));
+            } else ((e = je), (t = oe), (n = Ee ? Ee.value : 'harman_oe_2018'), (a = xt));
+            if (!e || !t) {
+                Ue = null;
+                return;
+            }
+            const s = a.find((u) => u.id === n)?.data,
+                i = s ? Ut(e, s) : 0,
+                c = Te ? parseInt(Te.value, 10) : 48e3;
+            Ue = e.map((u) => {
+                let v = 0;
+                for (const g of t) g.enabled && (v += at(u.freq, g, c));
+                return { freq: u.freq, gain: u.gain + i + v };
+            });
+        },
+        wn = (e) => {
+            const t = se.getBoundingClientRect();
+            return { x: e.clientX - t.left, y: e.clientY - t.top };
+        },
+        Ln = (e, t, n = 15) => {
+            const a = Pe();
+            if (!a || !se) return -1;
+            const o = Ie === 'parametric';
+            if (!o && !Ue) return -1;
+            const s = se.getBoundingClientRect(),
+                i = 40,
+                c = 10,
+                u = 10,
+                v = 30,
+                g = s.width - i - c,
+                d = s.height - u - v,
+                l = o ? 0 : 75,
+                m = o ? St : It,
+                r = l - m,
+                p = l + m;
+            let E = 0;
+            if (!o) {
+                let D, V, O;
+                if (Ie === 'speaker') {
+                    const le = ae[ze];
+                    ((D = le?.targetId || 'harman_room'), (V = bt), (O = le?.measurement));
+                } else ((D = Ee ? Ee.value : 'harman_oe_2018'), (V = xt), (O = je));
+                const ne = V.find((le) => le.id === D)?.data;
+                ne ? (E = 75 - Ut(ne)) : O && (E = 75 - Ut(O));
+            }
+            let b = -1,
+                w = 1 / 0;
+            return (
+                a.forEach((D, V) => {
+                    if (!D.enabled) return;
+                    const O = i + Ft(D.freq, g);
+                    let te;
+                    o ? (te = D.gain) : (te = kt(D.freq, Ue) + E);
+                    const ne = u + Xs(te, d, r, p),
+                        le = Math.sqrt((e - O) ** 2 + (t - ne) ** 2);
+                    le < n && le < w && ((b = V), (w = le));
+                }),
+                b
+            );
+        };
+    let Cn = !1;
+    const xn = document.getElementById('autoeq-auto-preamp-toggle'),
+        ee = (e) => {
+            e &&
+                e.length > 0 &&
+                (W.applyAutoEQBands(e, !Cn),
+                (gt = F.getPreamp()),
+                Ye && (Ye.value = gt),
+                Je && (Je.textContent = `${gt} dB`));
+        };
+    if (se) {
+        se.addEventListener('mousedown', (d) => {
+            (o(), u());
+            const l = wn(d),
+                m = Ln(l.x, l.y, 18);
+            m >= 0 && ((ye = m), (se.style.cursor = 'grabbing'), d.preventDefault());
+        });
+        const e = (d) => {
+            const l = se.getBoundingClientRect();
+            return { x: d.clientX - l.left, y: d.clientY - l.top };
+        };
+        (ja && ja.abort(), (ja = new AbortController()));
+        const t = ja.signal;
+        (Nn && (Nn.disconnect(), (Nn = null)),
+            document.addEventListener(
+                'mousemove',
+                (d) => {
+                    if (ye === null) return;
+                    const l = Pe();
+                    if (!l) return;
+                    const m = e(d),
+                        r = se.getBoundingClientRect(),
+                        p = 40,
+                        E = 10,
+                        b = 10,
+                        w = 30,
+                        D = r.width - p - E,
+                        V = r.height - b - w,
+                        O = Ie === 'parametric',
+                        te = O ? 0 : 75,
+                        ne = O ? St : It,
+                        le = te - ne,
+                        re = te + ne,
+                        he = Ea(m.x - p, D);
+                    if (((l[ye].freq = Math.max(20, Math.min(2e4, he))), O)) {
+                        const Fe = Zt(m.y - b, V, le, re);
+                        l[ye].gain = Math.max(-30, Math.min(30, Math.round(Fe * 10) / 10));
+                    } else {
+                        const Fe = kt(l[ye].freq, Ue || []),
+                            A = Zt(m.y - b, V, le, re) - Fe;
+                        l[ye].gain = Math.max(-30, Math.min(30, l[ye].gain + A * 0.3));
+                    }
+                    Yt ||
+                        (Yt = requestAnimationFrame(() => {
+                            (X(), ee(l), x(), fe(l), (Yt = null));
+                        }));
+                },
+                { signal: t }
+            ),
+            se.addEventListener('mousemove', (d) => {
+                if (ye !== null) return;
+                const l = wn(d);
+                if (l.x <= 40 + 10) ((se.style.cursor = 'ns-resize'), We !== null && ((We = null), x()));
+                else {
+                    const r = Ln(l.x, l.y, 18);
+                    r !== We && ((We = r), (se.style.cursor = We >= 0 ? 'grab' : 'crosshair'), x());
+                }
+            }),
+            document.addEventListener(
+                'mouseup',
+                () => {
+                    ye !== null && ((ye = null), (se.style.cursor = We >= 0 ? 'grab' : 'crosshair'));
+                },
+                { signal: t }
+            ),
+            se.addEventListener('mouseleave', () => {
+                ((We = null), ye === null && (se.style.cursor = 'crosshair'), x());
+            }));
+        const n = document.getElementById('eq-node-context-menu');
+        let a = null;
+        const o = () => {
+                (n && (n.style.display = 'none'), (a = null));
+            },
+            s = (d, l, m) => {
+                if (!n) return;
+                const r = Pe();
+                if (!r || !r[m]) return;
+                a = m;
+                const p = r[m];
+                n.querySelectorAll('.eq-ctx-type').forEach((V) => {
+                    const O = V.dataset.action,
+                        te =
+                            (O === 'eq-type-lowshelf' && p.type === 'lowshelf') ||
+                            (O === 'eq-type-peaking' && p.type === 'peaking') ||
+                            (O === 'eq-type-highshelf' && p.type === 'highshelf');
+                    V.classList.toggle('eq-ctx-active', te);
+                });
+                const E = p.channel || 'stereo';
+                (n.querySelectorAll('.eq-ctx-channel').forEach((V) => {
+                    const O = V.dataset.action,
+                        te =
+                            (O === 'eq-channel-stereo' && E === 'stereo') ||
+                            (O === 'eq-channel-mid' && E === 'mid') ||
+                            (O === 'eq-channel-side' && E === 'side');
+                    V.classList.toggle('eq-ctx-active', te);
+                }),
+                    (n.style.display = 'block'));
+                const b = n.getBoundingClientRect(),
+                    w = Math.min(d, window.innerWidth - b.width - 4),
+                    D = Math.min(l, window.innerHeight - b.height - 4);
+                ((n.style.left = `${w}px`), (n.style.top = `${D}px`));
+            };
+        n &&
+            n.addEventListener('click', (d) => {
+                const l = d.target.closest('li[data-action]');
+                if (!l) return;
+                const m = l.dataset.action,
+                    r = Pe();
+                if (m.startsWith('eq-type-') && a !== null && r && r[a]) {
+                    const E = {
+                        'eq-type-lowshelf': 'lowshelf',
+                        'eq-type-peaking': 'peaking',
+                        'eq-type-highshelf': 'highshelf',
+                    }[m];
+                    E && ((r[a].type = E), X(), ee(r), fe(r), x());
+                }
+                if (m.startsWith('eq-channel-') && a !== null && r && r[a]) {
+                    const E = { 'eq-channel-stereo': 'stereo', 'eq-channel-mid': 'mid', 'eq-channel-side': 'side' }[m];
+                    E && ((r[a].channel = E), X(), ee(r), fe(r), x());
+                }
+                o();
+            });
+        const i = document.getElementById('eq-empty-context-menu');
+        let c = null;
+        const u = () => {
+                (i && (i.style.display = 'none'), (c = null));
+            },
+            v = (d, l, m) => {
+                if (!i) return;
+                ((c = m), (i.style.display = 'block'));
+                const r = i.getBoundingClientRect();
+                ((i.style.left = `${Math.min(d, window.innerWidth - r.width - 4)}px`),
+                    (i.style.top = `${Math.min(l, window.innerHeight - r.height - 4)}px`));
+            };
+        (i &&
+            i.addEventListener('click', (d) => {
+                const l = d.target.closest('li[data-action]');
+                if (!l || l.dataset.action !== 'eq-add-node' || !c) return;
+                const m = Ie === 'parametric';
+                let r = Pe();
+                if (!r)
+                    if (Ie === 'autoeq') ((oe = []), (r = oe));
+                    else {
+                        u();
+                        return;
+                    }
+                if (r.length >= 32) {
+                    u();
+                    return;
+                }
+                const p = se.getBoundingClientRect(),
+                    E = 40,
+                    b = 10,
+                    w = 10,
+                    D = 30,
+                    V = p.width - E - b,
+                    O = p.height - w - D,
+                    te = m ? 0 : 75,
+                    ne = m ? St : It,
+                    le = te - ne,
+                    re = te + ne,
+                    he = Math.max(20, Math.min(2e4, Math.round(Ea(c.x - E, V)))),
+                    Fe = Math.max(-30, Math.min(30, Math.round((Zt(c.y - w, O, le, re) - te) * 10) / 10));
+                (r.push({ id: r.length, type: 'peaking', freq: he, gain: Fe, q: 1, enabled: !0, channel: 'stereo' }),
+                    ha(r),
+                    X(),
+                    ee(r),
+                    fe(r),
+                    x(),
+                    u());
+            }),
+            se.addEventListener('contextmenu', (d) => {
+                (d.preventDefault(), u(), o());
+                const l = wn(d),
+                    m = Ln(l.x, l.y, 18);
+                m >= 0 ? s(d.clientX, d.clientY, m) : v(d.clientX, d.clientY, l);
+            }),
+            document.addEventListener(
+                'mousedown',
+                (d) => {
+                    const l = document.getElementById('autoeq-graph-wrapper');
+                    (a !== null && n && !n.contains(d.target) && (!l || !l.contains(d.target)) && o(),
+                        c && i && !i.contains(d.target) && (!l || !l.contains(d.target)) && u());
+                },
+                { signal: t }
+            ),
+            se.addEventListener('dblclick', (d) => {
+                d.preventDefault();
+                const l = wn(d),
+                    m = Ie === 'parametric';
+                let r = Pe();
+                if (!r)
+                    if (Ie === 'autoeq') ((oe = []), (r = oe));
+                    else return;
+                let p = Ln(l.x, l.y, 18);
+                if (p < 0 && !m && !Ue && r.length > 0) {
+                    const b = se.getBoundingClientRect().width - 40 - 10;
+                    let w = 1 / 0;
+                    r.forEach((D, V) => {
+                        const O = Math.abs(l.x - (40 + Ft(D.freq, b)));
+                        O < 18 && O < w && ((w = O), (p = V));
+                    });
+                }
+                if (p >= 0)
+                    (r.splice(p, 1),
+                        r.forEach((E, b) => {
+                            E.id = b;
+                        }),
+                        (ye = null),
+                        (We = null));
+                else {
+                    if (r.length >= 32) return;
+                    const E = se.getBoundingClientRect(),
+                        b = 40,
+                        w = 10,
+                        D = 10,
+                        V = 30,
+                        O = E.width - b - w,
+                        te = E.height - D - V,
+                        ne = m ? 0 : 75,
+                        le = m ? St : It,
+                        re = ne - le,
+                        he = ne + le,
+                        Fe = Math.max(20, Math.min(2e4, Math.round(Ea(l.x - b, O)))),
+                        k = Math.max(-30, Math.min(30, Math.round((Zt(l.y - D, te, re, he) - ne) * 10) / 10));
+                    r.push({ id: r.length, type: 'peaking', freq: Fe, gain: k, q: 1, enabled: !0, channel: 'stereo' });
+                }
+                (ha(r), X(), ee(r), fe(r), x());
+            }),
+            se.addEventListener(
+                'wheel',
+                (d) => {
+                    if (wn(d).x <= 40 + 10) {
+                        d.preventDefault();
+                        const p = d.deltaY > 0 ? 2 : -2;
+                        (Ie === 'parametric'
+                            ? (St = Math.max(5, Math.min(60, St + p)))
+                            : (It = Math.max(5, Math.min(60, It + p))),
+                            x());
+                        return;
+                    }
+                    const r = Pe();
+                    if (We >= 0 && r && r[We]) {
+                        d.preventDefault();
+                        const p = r[We],
+                            E = d.deltaY > 0 ? -0.15 : 0.15;
+                        ((p.q = Math.max(0.1, Math.min(10, (p.q || 1) + E))), X(), ee(r), x(), fe(r));
+                    }
+                },
+                { passive: !1 }
+            ));
+        let g = -1;
+        (se.addEventListener(
+            'touchstart',
+            (d) => {
+                const l = d.touches[0],
+                    m = se.getBoundingClientRect(),
+                    r = { x: l.clientX - m.left, y: l.clientY - m.top };
+                ((g = Ln(r.x, r.y, 25)), g >= 0 && ((ye = g), d.preventDefault()));
+            },
+            { passive: !1 }
+        ),
+            document.addEventListener(
+                'touchmove',
+                (d) => {
+                    if (ye === null) return;
+                    const l = Pe();
+                    if (!l) return;
+                    const m = d.touches[0],
+                        r = se.getBoundingClientRect(),
+                        p = { x: m.clientX - r.left, y: m.clientY - r.top },
+                        E = 40,
+                        b = 10,
+                        w = 10,
+                        D = 30,
+                        V = r.width - E - b,
+                        O = r.height - w - D,
+                        te = Ie === 'parametric',
+                        ne = te ? 0 : 75,
+                        le = te ? St : It,
+                        re = ne - le,
+                        he = ne + le,
+                        Fe = Ea(p.x - E, V);
+                    if (((l[ye].freq = Math.max(20, Math.min(2e4, Fe))), te)) {
+                        const k = Zt(p.y - w, O, re, he);
+                        l[ye].gain = Math.max(-30, Math.min(30, Math.round(k * 10) / 10));
+                    } else {
+                        const k = kt(l[ye].freq, Ue || []),
+                            _ = Zt(p.y - w, O, re, he) - k;
+                        l[ye].gain = Math.max(-30, Math.min(30, l[ye].gain + _ * 0.3));
+                    }
+                    (X(),
+                        ee(l),
+                        Yt ||
+                            (Yt = requestAnimationFrame(() => {
+                                (x(), fe(l), (Yt = null));
+                            })),
+                        d.preventDefault());
+                },
+                { passive: !1, signal: t }
+            ),
+            document.addEventListener(
+                'touchend',
+                () => {
+                    ye !== null && ((ye = null), (g = -1));
+                },
+                { signal: t }
+            ),
+            Us &&
+                ((Nn = new ResizeObserver(() => {
+                    en();
+                })),
+                Nn.observe(Us)));
+    }
+    const fe = (e) => {
+            A7 &&
+                ((A7.innerHTML = ''),
+                !(!e || e.length === 0) &&
+                    e.forEach((t, n) => {
+                        const a = document.createElement('div');
+                        ((a.className = 'autoeq-band-control'), (a.dataset.band = n));
+                        const o = t.type || 'peaking',
+                            s = t.channel || 'stereo';
+                        ((a.innerHTML = `
                 <div class="autoeq-band-header">
-                    <span class="autoeq-band-number">${n+1}</span>
+                    <span class="autoeq-band-number">${n + 1}</span>
                     <select class="autoeq-type-select">
-                        <option value="peaking"${o==="peaking"?" selected":""}>PK</option>
-                        <option value="lowshelf"${o==="lowshelf"?" selected":""}>LSF</option>
-                        <option value="highshelf"${o==="highshelf"?" selected":""}>HSF</option>
+                        <option value="peaking"${o === 'peaking' ? ' selected' : ''}>PK</option>
+                        <option value="lowshelf"${o === 'lowshelf' ? ' selected' : ''}>LSF</option>
+                        <option value="highshelf"${o === 'highshelf' ? ' selected' : ''}>HSF</option>
                     </select>
                     <select class="autoeq-channel-select">
-                        <option value="stereo"${s==="stereo"?" selected":""}>ST</option>
-                        <option value="mid"${s==="mid"?" selected":""}>M</option>
-                        <option value="side"${s==="side"?" selected":""}>S</option>
+                        <option value="stereo"${s === 'stereo' ? ' selected' : ''}>ST</option>
+                        <option value="mid"${s === 'mid' ? ' selected' : ''}>M</option>
+                        <option value="side"${s === 'side' ? ' selected' : ''}>S</option>
                     </select>
                     <div class="autoeq-band-param">
                         <span class="autoeq-band-param-label">Freq</span>
@@ -4297,7 +6773,7 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
                     </div>
                     <div class="autoeq-band-param">
                         <span class="autoeq-band-param-label">Gain</span>
-                        <span class="autoeq-band-value autoeq-gain-val">${t.gain>0?"+":""}${t.gain.toFixed(1)} dB</span>
+                        <span class="autoeq-band-value autoeq-gain-val">${t.gain > 0 ? '+' : ''}${t.gain.toFixed(1)} dB</span>
                     </div>
                     <div class="autoeq-band-param">
                         <span class="autoeq-band-param-label">Q</span>
@@ -4309,39 +6785,2815 @@ import{d as Xe,s as pi,a as mn,b as _n,c as z1,l as Le,e as Lt,m as gn,f as $n,t
                     <input type="range" class="autoeq-band-slider autoeq-gain-slider" min="-30" max="30" step="0.1" value="${t.gain.toFixed(1)}" />
                     <input type="range" class="autoeq-band-slider autoeq-q-slider" min="0.1" max="10" step="0.01" value="${t.q.toFixed(2)}" />
                 </div>
-            `,A7.appendChild(a);const i=a.querySelector(".autoeq-freq-slider"),c=a.querySelector(".autoeq-gain-slider"),u=a.querySelector(".autoeq-q-slider"),v=a.querySelector(".autoeq-freq-val"),g=a.querySelector(".autoeq-gain-val"),d=a.querySelector(".autoeq-q-val");i.addEventListener("input",()=>{const r=Pe();!r||!r[n]||(r[n].freq=parseFloat(i.value),v.textContent=`${P7(r[n].freq)} Hz`,X(),ee(r),en())}),c.addEventListener("input",()=>{const r=Pe();!r||!r[n]||(r[n].gain=parseFloat(c.value),g.textContent=`${r[n].gain>0?"+":""}${r[n].gain.toFixed(1)} dB`,X(),ee(r),en())}),u.addEventListener("input",()=>{const r=Pe();!r||!r[n]||(r[n].q=parseFloat(u.value),d.textContent=r[n].q.toFixed(2),X(),ee(r),en())});const l=a.querySelector(".autoeq-type-select");l.addEventListener("change",()=>{const r=Pe();!r||!r[n]||(r[n].type=l.value,X(),ee(r),en())});const m=a.querySelector(".autoeq-channel-select");m.addEventListener("change",()=>{const r=Pe();!r||!r[n]||(r[n].channel=m.value,X(),ee(r),en())})}))},Zs=()=>{if(!H||H.length===0){const e=[];for(let t=0;t<10;t++){const n=20*Math.pow(1e3,t/9);e.push({id:t,type:"peaking",freq:Math.round(n),gain:0,q:1,enabled:!0,channel:"stereo"})}H=e,ee(H)}},e1=e=>{Os&&(Os.style.display=e?"flex":"none",e&&(Ie==="parametric"&&(Zs(),ee(H),fe(H)),requestAnimationFrame(x)))};if(va){const e=document.getElementById("autoeq-saved-grid");va.addEventListener("click",t=>{t.stopPropagation(),va.classList.toggle("collapsed"),e&&(e.style.display=va.classList.contains("collapsed")?"none":"flex")})}Vs&&Vs.addEventListener("click",()=>{Jt&&Jt.classList.toggle("collapsed"),x7&&(x7.style.display=x7.style.display==="none"?"flex":"none")});const t1=document.getElementById("autoeq-database-toggle"),An=document.getElementById("autoeq-database-collapse"),F7=document.getElementById("autoeq-database-body");t1&&t1.addEventListener("click",()=>{if(An&&An.classList.toggle("collapsed"),F7&&(F7.style.display=F7.style.display==="none"?"":"none"),An){const e=!An.classList.contains("collapsed");An.setAttribute("aria-expanded",String(e))}});const be=(e,t="")=>{w7&&(w7.textContent=e,w7.className="autoeq-status"+(t?" "+t:""))},tn=(e,t=80)=>{if(!e||e.length<=t)return e?[...e]:[];const n=[],a=e.length/t;for(let o=0;o<t;o++)n.push({...e[Math.floor(o*a)]});return n},n1=(e,t,n,a)=>{if(!e)return;const o=e.getContext("2d"),s=window.devicePixelRatio||1,i=e.getBoundingClientRect();if(i.width===0){new IntersectionObserver((d,l)=>{d[0].isIntersecting&&(l.disconnect(),n1(e,t,n,a))}).observe(e);return}e.width=i.width*s,e.height=(i.height||60)*s,o.scale(s,s);const c=i.width,u=i.height||60;o.clearRect(0,0,c,u);const v=(g,d)=>{if(!g||g.length<2)return;const l=g.map(b=>b.gain),m=Math.min(...l)-2,p=Math.max(...l)+2-m||1,E=o.createLinearGradient(0,0,c,0);d.forEach((b,w)=>E.addColorStop(w/(d.length-1),b)),o.beginPath(),o.moveTo(0,u);for(let b=0;b<g.length;b++){const w=Ft(g[b].freq,c),D=u-(g[b].gain-m)/p*u*.8-u*.1;o.lineTo(w,D)}o.lineTo(c,u),o.closePath(),o.fillStyle=E,o.globalAlpha=.4,o.fill(),o.globalAlpha=1,o.beginPath(),o.strokeStyle=E,o.lineWidth=1.5;for(let b=0;b<g.length;b++){const w=Ft(g[b].freq,c),D=u-(g[b].gain-m)/p*u*.8-u*.1;b===0?o.moveTo(w,D):o.lineTo(w,D)}o.stroke()};t&&v(t,["#3b82f6","#06b6d4","#8b5cf6"]),n&&v(n,["#f472b6","#a855f7","#6366f1"]),a&&v(a,["#22c55e","#06b6d4","#3b82f6"])},a1=["#f472b6","#fb923c","#facc15","#4ade80","#22d3ee","#818cf8","#c084fc","#f87171","#34d399","#60a5fa"],R7=(e,t,n)=>{if(!e||!t||t.length===0)return;const a=e.getContext("2d"),o=window.devicePixelRatio||1,s=e.getBoundingClientRect();if(s.width===0){new IntersectionObserver((m,r)=>{m[0].isIntersecting&&(r.disconnect(),R7(e,t,n))}).observe(e);return}const i=n||48e3,c=s.height||100;e.width=s.width*o,e.height=c*o,a.scale(o,o);const u=s.width;a.clearRect(0,0,u,c);const v=c/2,g=12;t.forEach((l,m)=>{if(!l.enabled||Math.abs(l.gain)<.1)return;const r=a1[m%a1.length],p=[];for(let b=20;b<=2e4;b*=1.04){const w=at(b,l,i);p.push({x:Ft(b,u),y:v-Math.max(-g,Math.min(g,w))/g*v*.9})}if(!p.length)return;a.beginPath(),a.moveTo(p[0].x,v),p.forEach(b=>a.lineTo(b.x,b.y)),a.lineTo(p[p.length-1].x,v),a.closePath();const E=a.createLinearGradient(0,0,u,0);E.addColorStop(0,r+"18"),E.addColorStop(.5,r+"55"),E.addColorStop(1,r+"18"),a.fillStyle=E,a.fill(),a.beginPath(),p.forEach((b,w)=>w===0?a.moveTo(b.x,b.y):a.lineTo(b.x,b.y)),a.strokeStyle=r,a.lineWidth=1.5,a.globalAlpha=.85,a.stroke(),a.globalAlpha=1}),a.beginPath();let d=!0;for(let l=20;l<=2e4;l*=1.04){let m=0;for(const E of t)E.enabled&&(m+=at(l,E,i));const r=Ft(l,u),p=v-Math.max(-g,Math.min(g,m))/g*v*.9;d?(a.moveTo(r,p),d=!1):a.lineTo(r,p)}a.strokeStyle="rgba(255,255,255,0.9)",a.lineWidth=2,a.stroke()},ba=()=>{if(!C7)return;const e=F.getAutoEQProfiles(),t=F.getActiveAutoEQProfile(),n=Object.keys(e);Qs&&(Qs.textContent=n.length),C7.innerHTML="",n.length!==0&&n.forEach(a=>{const o=e[a],s=document.createElement("div");s.className="autoeq-profile-card"+(a===t?" active":""),s.dataset.profileId=a;const i=document.createElement("canvas");i.className="autoeq-profile-preview",s.appendChild(i);const c=document.createElement("div");c.className="autoeq-profile-info",c.innerHTML=`
+            `),
+                            A7.appendChild(a));
+                        const i = a.querySelector('.autoeq-freq-slider'),
+                            c = a.querySelector('.autoeq-gain-slider'),
+                            u = a.querySelector('.autoeq-q-slider'),
+                            v = a.querySelector('.autoeq-freq-val'),
+                            g = a.querySelector('.autoeq-gain-val'),
+                            d = a.querySelector('.autoeq-q-val');
+                        (i.addEventListener('input', () => {
+                            const r = Pe();
+                            !r ||
+                                !r[n] ||
+                                ((r[n].freq = parseFloat(i.value)),
+                                (v.textContent = `${P7(r[n].freq)} Hz`),
+                                X(),
+                                ee(r),
+                                en());
+                        }),
+                            c.addEventListener('input', () => {
+                                const r = Pe();
+                                !r ||
+                                    !r[n] ||
+                                    ((r[n].gain = parseFloat(c.value)),
+                                    (g.textContent = `${r[n].gain > 0 ? '+' : ''}${r[n].gain.toFixed(1)} dB`),
+                                    X(),
+                                    ee(r),
+                                    en());
+                            }),
+                            u.addEventListener('input', () => {
+                                const r = Pe();
+                                !r ||
+                                    !r[n] ||
+                                    ((r[n].q = parseFloat(u.value)),
+                                    (d.textContent = r[n].q.toFixed(2)),
+                                    X(),
+                                    ee(r),
+                                    en());
+                            }));
+                        const l = a.querySelector('.autoeq-type-select');
+                        l.addEventListener('change', () => {
+                            const r = Pe();
+                            !r || !r[n] || ((r[n].type = l.value), X(), ee(r), en());
+                        });
+                        const m = a.querySelector('.autoeq-channel-select');
+                        m.addEventListener('change', () => {
+                            const r = Pe();
+                            !r || !r[n] || ((r[n].channel = m.value), X(), ee(r), en());
+                        });
+                    }));
+        },
+        Zs = () => {
+            if (!H || H.length === 0) {
+                const e = [];
+                for (let t = 0; t < 10; t++) {
+                    const n = 20 * Math.pow(1e3, t / 9);
+                    e.push({
+                        id: t,
+                        type: 'peaking',
+                        freq: Math.round(n),
+                        gain: 0,
+                        q: 1,
+                        enabled: !0,
+                        channel: 'stereo',
+                    });
+                }
+                ((H = e), ee(H));
+            }
+        },
+        e1 = (e) => {
+            Os &&
+                ((Os.style.display = e ? 'flex' : 'none'),
+                e && (Ie === 'parametric' && (Zs(), ee(H), fe(H)), requestAnimationFrame(x)));
+        };
+    if (va) {
+        const e = document.getElementById('autoeq-saved-grid');
+        va.addEventListener('click', (t) => {
+            (t.stopPropagation(),
+                va.classList.toggle('collapsed'),
+                e && (e.style.display = va.classList.contains('collapsed') ? 'none' : 'flex'));
+        });
+    }
+    Vs &&
+        Vs.addEventListener('click', () => {
+            (Jt && Jt.classList.toggle('collapsed'),
+                x7 && (x7.style.display = x7.style.display === 'none' ? 'flex' : 'none'));
+        });
+    const t1 = document.getElementById('autoeq-database-toggle'),
+        An = document.getElementById('autoeq-database-collapse'),
+        F7 = document.getElementById('autoeq-database-body');
+    t1 &&
+        t1.addEventListener('click', () => {
+            if (
+                (An && An.classList.toggle('collapsed'),
+                F7 && (F7.style.display = F7.style.display === 'none' ? '' : 'none'),
+                An)
+            ) {
+                const e = !An.classList.contains('collapsed');
+                An.setAttribute('aria-expanded', String(e));
+            }
+        });
+    const be = (e, t = '') => {
+            w7 && ((w7.textContent = e), (w7.className = 'autoeq-status' + (t ? ' ' + t : '')));
+        },
+        tn = (e, t = 80) => {
+            if (!e || e.length <= t) return e ? [...e] : [];
+            const n = [],
+                a = e.length / t;
+            for (let o = 0; o < t; o++) n.push({ ...e[Math.floor(o * a)] });
+            return n;
+        },
+        n1 = (e, t, n, a) => {
+            if (!e) return;
+            const o = e.getContext('2d'),
+                s = window.devicePixelRatio || 1,
+                i = e.getBoundingClientRect();
+            if (i.width === 0) {
+                new IntersectionObserver((d, l) => {
+                    d[0].isIntersecting && (l.disconnect(), n1(e, t, n, a));
+                }).observe(e);
+                return;
+            }
+            ((e.width = i.width * s), (e.height = (i.height || 60) * s), o.scale(s, s));
+            const c = i.width,
+                u = i.height || 60;
+            o.clearRect(0, 0, c, u);
+            const v = (g, d) => {
+                if (!g || g.length < 2) return;
+                const l = g.map((b) => b.gain),
+                    m = Math.min(...l) - 2,
+                    p = Math.max(...l) + 2 - m || 1,
+                    E = o.createLinearGradient(0, 0, c, 0);
+                (d.forEach((b, w) => E.addColorStop(w / (d.length - 1), b)), o.beginPath(), o.moveTo(0, u));
+                for (let b = 0; b < g.length; b++) {
+                    const w = Ft(g[b].freq, c),
+                        D = u - ((g[b].gain - m) / p) * u * 0.8 - u * 0.1;
+                    o.lineTo(w, D);
+                }
+                (o.lineTo(c, u),
+                    o.closePath(),
+                    (o.fillStyle = E),
+                    (o.globalAlpha = 0.4),
+                    o.fill(),
+                    (o.globalAlpha = 1),
+                    o.beginPath(),
+                    (o.strokeStyle = E),
+                    (o.lineWidth = 1.5));
+                for (let b = 0; b < g.length; b++) {
+                    const w = Ft(g[b].freq, c),
+                        D = u - ((g[b].gain - m) / p) * u * 0.8 - u * 0.1;
+                    b === 0 ? o.moveTo(w, D) : o.lineTo(w, D);
+                }
+                o.stroke();
+            };
+            (t && v(t, ['#3b82f6', '#06b6d4', '#8b5cf6']),
+                n && v(n, ['#f472b6', '#a855f7', '#6366f1']),
+                a && v(a, ['#22c55e', '#06b6d4', '#3b82f6']));
+        },
+        a1 = [
+            '#f472b6',
+            '#fb923c',
+            '#facc15',
+            '#4ade80',
+            '#22d3ee',
+            '#818cf8',
+            '#c084fc',
+            '#f87171',
+            '#34d399',
+            '#60a5fa',
+        ],
+        R7 = (e, t, n) => {
+            if (!e || !t || t.length === 0) return;
+            const a = e.getContext('2d'),
+                o = window.devicePixelRatio || 1,
+                s = e.getBoundingClientRect();
+            if (s.width === 0) {
+                new IntersectionObserver((m, r) => {
+                    m[0].isIntersecting && (r.disconnect(), R7(e, t, n));
+                }).observe(e);
+                return;
+            }
+            const i = n || 48e3,
+                c = s.height || 100;
+            ((e.width = s.width * o), (e.height = c * o), a.scale(o, o));
+            const u = s.width;
+            a.clearRect(0, 0, u, c);
+            const v = c / 2,
+                g = 12;
+            (t.forEach((l, m) => {
+                if (!l.enabled || Math.abs(l.gain) < 0.1) return;
+                const r = a1[m % a1.length],
+                    p = [];
+                for (let b = 20; b <= 2e4; b *= 1.04) {
+                    const w = at(b, l, i);
+                    p.push({ x: Ft(b, u), y: v - (Math.max(-g, Math.min(g, w)) / g) * v * 0.9 });
+                }
+                if (!p.length) return;
+                (a.beginPath(),
+                    a.moveTo(p[0].x, v),
+                    p.forEach((b) => a.lineTo(b.x, b.y)),
+                    a.lineTo(p[p.length - 1].x, v),
+                    a.closePath());
+                const E = a.createLinearGradient(0, 0, u, 0);
+                (E.addColorStop(0, r + '18'),
+                    E.addColorStop(0.5, r + '55'),
+                    E.addColorStop(1, r + '18'),
+                    (a.fillStyle = E),
+                    a.fill(),
+                    a.beginPath(),
+                    p.forEach((b, w) => (w === 0 ? a.moveTo(b.x, b.y) : a.lineTo(b.x, b.y))),
+                    (a.strokeStyle = r),
+                    (a.lineWidth = 1.5),
+                    (a.globalAlpha = 0.85),
+                    a.stroke(),
+                    (a.globalAlpha = 1));
+            }),
+                a.beginPath());
+            let d = !0;
+            for (let l = 20; l <= 2e4; l *= 1.04) {
+                let m = 0;
+                for (const E of t) E.enabled && (m += at(l, E, i));
+                const r = Ft(l, u),
+                    p = v - (Math.max(-g, Math.min(g, m)) / g) * v * 0.9;
+                d ? (a.moveTo(r, p), (d = !1)) : a.lineTo(r, p);
+            }
+            ((a.strokeStyle = 'rgba(255,255,255,0.9)'), (a.lineWidth = 2), a.stroke());
+        },
+        ba = () => {
+            if (!C7) return;
+            const e = F.getAutoEQProfiles(),
+                t = F.getActiveAutoEQProfile(),
+                n = Object.keys(e);
+            (Qs && (Qs.textContent = n.length),
+                (C7.innerHTML = ''),
+                n.length !== 0 &&
+                    n.forEach((a) => {
+                        const o = e[a],
+                            s = document.createElement('div');
+                        ((s.className = 'autoeq-profile-card' + (a === t ? ' active' : '')), (s.dataset.profileId = a));
+                        const i = document.createElement('canvas');
+                        ((i.className = 'autoeq-profile-preview'), s.appendChild(i));
+                        const c = document.createElement('div');
+                        ((c.className = 'autoeq-profile-info'),
+                            (c.innerHTML = `
                 <span class="autoeq-profile-active-icon">&#10003;</span>
-                <span class="autoeq-profile-name">${o.name||"Unnamed"}</span>
-                <span class="autoeq-profile-meta">${o.bandCount||"?"} bands &middot; ${o.targetLabel||""}</span>
-            `,s.appendChild(c);const u=document.createElement("button");u.className="autoeq-profile-delete",u.innerHTML="&#128465;",u.title="Delete profile",u.addEventListener("click",v=>{v.stopPropagation(),F.deleteAutoEQProfile(a),ba()}),s.appendChild(u),s.addEventListener("click",()=>{xi(a)}),C7.appendChild(s),requestAnimationFrame(()=>{R7(i,o.bands,o.sampleRate)})})},Ci=e=>{if(!oe||!je)return;const t=Ee?Ee.value:"harman_oe_2018",n=xt.find(s=>s.id===t),a={id:"autoeq_"+Date.now(),name:e||(Oe?Oe.name:"Custom"),headphoneName:Oe?Oe.name:"Custom",headphoneType:Oe?Oe.type:"over-ear",targetId:t,targetLabel:n?n.label:t,bandCount:(Ke&&Ke.value?parseInt(Ke.value,10):null)||oe.length||10,maxFreq:ot?parseInt(ot.value,10):16e3,sampleRate:Te?parseInt(Te.value,10):48e3,bands:oe.map(s=>({...s})),gains:W.getGains?W.getGains():[],preamp:F.getPreamp(),measurementData:tn(je),targetData:tn(n?.data),correctedData:tn(Ue),createdAt:Date.now()},o=F.saveAutoEQProfile(a);F.setActiveAutoEQProfile(o),ba(),be(`Profile "${e}" saved`,"success")},xi=e=>{const n=F.getAutoEQProfiles()[e];if(n){if(oe=n.bands.map(a=>({...a})),Ue=n.correctedData?[...n.correctedData]:null,je=n.measurementData?[...n.measurementData]:null,Oe={name:n.headphoneName,type:n.headphoneType},we){let a=we.querySelector(`option[value="${n.headphoneName}"]`);a||(a=document.createElement("option"),a.value=n.headphoneName,a.textContent=n.headphoneName.replace(/\s*\([^)]*\)\s*$/,""),we.appendChild(a)),we.value=n.headphoneName}Ee&&(Ee.value=n.targetId||"harman_oe_2018"),zs(n.bandCount,n.bands),ot&&(ot.value=n.maxFreq||16e3),Te&&(Te.value=n.sampleRate||48e3),ee(oe),F.setActiveAutoEQProfile(e),ba(),fe(oe),x(),be(`Loaded "${n.name}"`,"success")}};Ws&&Ws.addEventListener("click",()=>{const e=ya?ya.value.trim():"";if(!e){be("Enter a profile name","error");return}Ci(e),ya&&(ya.value="")});const ka=async e=>{be("Loading measurement...","");try{const t=await d8(e);if(je=t,Oe=e,we){let n=we.querySelector(`option[value="${e.name}"]`);n||(n=document.createElement("option"),n.value=e.name,n.textContent=e.name,we.appendChild(n)),we.value=e.name}Ee&&e.type==="in-ear"&&(Ee.value="harman_ie_2019"),_e&&(_e.disabled=!1),x(),be(`Loaded ${t.length} points for ${e.name}`,"success"),F.setLastHeadphone(e,t)}catch(t){be("Failed: "+t.message,"error")}},Ai=(e,t=!1)=>{if(!st)return;if(t||(st.innerHTML=""),e.length===0&&!t){st.innerHTML='<div style="padding: 1rem; text-align: center; color: var(--muted-foreground); font-size: 0.8rem;">No results found</div>';return}const n=new Map;e.forEach(a=>{const o=a.name.replace(/\s*\([^)]*\)\s*$/,"").trim()||a.name;n.has(o)||n.set(o,[]),n.get(o).push(a)}),n.forEach(async(a,o)=>{const s=document.createElement("div"),i=o[0]?.toUpperCase()||"#",c=/^[A-Z]$/.test(i)?i:"#";s.dataset.letter=c;const u=document.createElement("div");if(u.className="autoeq-db-item",u.dataset.name=o,u.innerHTML=`
+                <span class="autoeq-profile-name">${o.name || 'Unnamed'}</span>
+                <span class="autoeq-profile-meta">${o.bandCount || '?'} bands &middot; ${o.targetLabel || ''}</span>
+            `),
+                            s.appendChild(c));
+                        const u = document.createElement('button');
+                        ((u.className = 'autoeq-profile-delete'),
+                            (u.innerHTML = '&#128465;'),
+                            (u.title = 'Delete profile'),
+                            u.addEventListener('click', (v) => {
+                                (v.stopPropagation(), F.deleteAutoEQProfile(a), ba());
+                            }),
+                            s.appendChild(u),
+                            s.addEventListener('click', () => {
+                                xi(a);
+                            }),
+                            C7.appendChild(s),
+                            requestAnimationFrame(() => {
+                                R7(i, o.bands, o.sampleRate);
+                            }));
+                    }));
+        },
+        Ci = (e) => {
+            if (!oe || !je) return;
+            const t = Ee ? Ee.value : 'harman_oe_2018',
+                n = xt.find((s) => s.id === t),
+                a = {
+                    id: 'autoeq_' + Date.now(),
+                    name: e || (Oe ? Oe.name : 'Custom'),
+                    headphoneName: Oe ? Oe.name : 'Custom',
+                    headphoneType: Oe ? Oe.type : 'over-ear',
+                    targetId: t,
+                    targetLabel: n ? n.label : t,
+                    bandCount: (Ke && Ke.value ? parseInt(Ke.value, 10) : null) || oe.length || 10,
+                    maxFreq: ot ? parseInt(ot.value, 10) : 16e3,
+                    sampleRate: Te ? parseInt(Te.value, 10) : 48e3,
+                    bands: oe.map((s) => ({ ...s })),
+                    gains: W.getGains ? W.getGains() : [],
+                    preamp: F.getPreamp(),
+                    measurementData: tn(je),
+                    targetData: tn(n?.data),
+                    correctedData: tn(Ue),
+                    createdAt: Date.now(),
+                },
+                o = F.saveAutoEQProfile(a);
+            (F.setActiveAutoEQProfile(o), ba(), be(`Profile "${e}" saved`, 'success'));
+        },
+        xi = (e) => {
+            const n = F.getAutoEQProfiles()[e];
+            if (n) {
+                if (
+                    ((oe = n.bands.map((a) => ({ ...a }))),
+                    (Ue = n.correctedData ? [...n.correctedData] : null),
+                    (je = n.measurementData ? [...n.measurementData] : null),
+                    (Oe = { name: n.headphoneName, type: n.headphoneType }),
+                    we)
+                ) {
+                    let a = we.querySelector(`option[value="${n.headphoneName}"]`);
+                    (a ||
+                        ((a = document.createElement('option')),
+                        (a.value = n.headphoneName),
+                        (a.textContent = n.headphoneName.replace(/\s*\([^)]*\)\s*$/, '')),
+                        we.appendChild(a)),
+                        (we.value = n.headphoneName));
+                }
+                (Ee && (Ee.value = n.targetId || 'harman_oe_2018'),
+                    zs(n.bandCount, n.bands),
+                    ot && (ot.value = n.maxFreq || 16e3),
+                    Te && (Te.value = n.sampleRate || 48e3),
+                    ee(oe),
+                    F.setActiveAutoEQProfile(e),
+                    ba(),
+                    fe(oe),
+                    x(),
+                    be(`Loaded "${n.name}"`, 'success'));
+            }
+        };
+    Ws &&
+        Ws.addEventListener('click', () => {
+            const e = ya ? ya.value.trim() : '';
+            if (!e) {
+                be('Enter a profile name', 'error');
+                return;
+            }
+            (Ci(e), ya && (ya.value = ''));
+        });
+    const ka = async (e) => {
+            be('Loading measurement...', '');
+            try {
+                const t = await d8(e);
+                if (((je = t), (Oe = e), we)) {
+                    let n = we.querySelector(`option[value="${e.name}"]`);
+                    (n ||
+                        ((n = document.createElement('option')),
+                        (n.value = e.name),
+                        (n.textContent = e.name),
+                        we.appendChild(n)),
+                        (we.value = e.name));
+                }
+                (Ee && e.type === 'in-ear' && (Ee.value = 'harman_ie_2019'),
+                    _e && (_e.disabled = !1),
+                    x(),
+                    be(`Loaded ${t.length} points for ${e.name}`, 'success'),
+                    F.setLastHeadphone(e, t));
+            } catch (t) {
+                be('Failed: ' + t.message, 'error');
+            }
+        },
+        Ai = (e, t = !1) => {
+            if (!st) return;
+            if ((t || (st.innerHTML = ''), e.length === 0 && !t)) {
+                st.innerHTML =
+                    '<div style="padding: 1rem; text-align: center; color: var(--muted-foreground); font-size: 0.8rem;">No results found</div>';
+                return;
+            }
+            const n = new Map();
+            (e.forEach((a) => {
+                const o = a.name.replace(/\s*\([^)]*\)\s*$/, '').trim() || a.name;
+                (n.has(o) || n.set(o, []), n.get(o).push(a));
+            }),
+                n.forEach(async (a, o) => {
+                    const s = document.createElement('div'),
+                        i = o[0]?.toUpperCase() || '#',
+                        c = /^[A-Z]$/.test(i) ? i : '#';
+                    s.dataset.letter = c;
+                    const u = document.createElement('div');
+                    if (
+                        ((u.className = 'autoeq-db-item'),
+                        (u.dataset.name = o),
+                        (u.innerHTML = `
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
                 <div class="autoeq-db-item-info">
                     <span class="autoeq-db-item-name">${o}</span>
-                    <span class="autoeq-db-item-meta">${a.length} profile${a.length>1?"s":""}</span>
+                    <span class="autoeq-db-item-meta">${a.length} profile${a.length > 1 ? 's' : ''}</span>
                 </div>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="autoeq-db-item-chevron"><path d="m9 18 6-6-6-6"/></svg>
-            `,s.appendChild(u),a.length>1){const v=document.createElement("div");v.className="autoeq-db-sub-list";for(const g of a){const d=document.createElement("div");d.className="autoeq-db-sub-item";const l=await g.name.match(/\(([^)]+)\)\s*$/),m=l?l[1]:g.type;d.innerHTML=`<span>${g.name}</span><span class="sub-source">${m}</span>`,d.addEventListener("click",async r=>{r.stopPropagation(),await ka(g)}),v.appendChild(d)}s.appendChild(v),u.addEventListener("click",()=>{u.classList.toggle("expanded"),v.classList.toggle("visible")})}else u.addEventListener("click",()=>ka(a[0]));st.appendChild(s)})},Mi=()=>{const e=document.getElementById("autoeq-alpha-index");if(!e)return;e.innerHTML="","ABCDEFGHIJKLMNOPQRSTUVWXYZ#".split("").forEach(n=>{const a=document.createElement("button");a.textContent=n,a.addEventListener("click",()=>{const o=nn.findIndex(s=>{const i=s.name[0].toUpperCase();return n==="#"?!/[A-Z]/.test(i):i===n});if(!(o<0)){for(;Rt<=o+o1&&Rt<nn.length;)D7();requestAnimationFrame(()=>{const s=st?.querySelector(`[data-letter="${n}"]`);s&&s.scrollIntoView({behavior:"smooth",block:"start"})})}}),e.appendChild(a)})};let nn=[],Rt=0;const o1=80,D7=()=>{if(Rt>=nn.length)return;const e=Math.min(Rt+o1,nn.length),t=nn.slice(Rt,e);Ai(t,!0),Rt=e},_7=e=>{nn=e,Rt=0,st&&(st.innerHTML=""),D7()};st&&st.addEventListener("scroll",()=>{const e=st;e.scrollTop+e.clientHeight>=e.scrollHeight-60&&D7()});const s1=async()=>{if(At.length===0){be("Loading headphone database...","");try{At=await c8(),be(`Loaded ${At.length} headphones`,"success")}catch{be("Failed to load database","error");return}}Ks&&(Ks.textContent=`${At.length} models`),_7(At),Mi()};{const e=document.getElementById("autoeq-headphone-search");if(e&&!e._autoeqBound){e._autoeqBound=!0;let t=null;const n=async()=>{const a=e.value.trim();if(!a){_7(At);return}At.length===0&&await s1();const o=u8(a,At,"all",500);_7(o)};e.addEventListener("input",()=>{clearTimeout(t),t=setTimeout(n,300)})}}_e&&_e.addEventListener("click",()=>{je&&(be("Running AutoEQ...",""),_e.disabled=!0,setTimeout(()=>{try{const e=Ee?Ee.value:"harman_oe_2018",t=xt.find(c=>c.id===e);if(!t||!t.data||t.data.length===0){be("Invalid target curve","error"),_e.disabled=!1;return}const n=Ke?parseInt(Ke.value,10):10,a=ot?parseInt(ot.value,10):16e3,o=Te?parseInt(Te.value,10):48e3,s=es(je,t.data,n,a,20,5,o);if(!s||s.length===0){be("No correction needed","success"),_e.disabled=!1;return}oe=s,X(),ee(oe),x(),fe(oe);const i=Oe?Oe.name:"Custom";be(`Applied ${s.length} bands for ${i}`,"success"),_e.disabled=!1}catch(e){console.error("[AutoEQ] Algorithm failed:",e),be("Error: "+e.message,"error"),_e.disabled=!1}},50))}),js&&L7&&(js.addEventListener("click",()=>{L7.click()}),L7.addEventListener("change",e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=a=>{try{const o=xe(a.target.result);if(o.length===0){be("Invalid measurement file","error");return}je=o,Oe={name:t.name.replace(/\.(txt|csv)$/i,""),type:"over-ear"},_e&&(_e.disabled=!1),x(),be(`Imported ${o.length} points from ${t.name}`,"success")}catch{be("Failed to parse file","error")}},n.readAsText(t),e.target.value=""}));const i1=document.getElementById("autoeq-import-target-btn"),$7=document.getElementById("autoeq-import-target-file");i1&&$7&&(i1.addEventListener("click",()=>$7.click()),$7.addEventListener("change",e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=a=>{try{const o=xe(a.target.result);if(o.length===0){be("Invalid target file","error");return}const s="custom_target",i=t.name.replace(/\.(txt|csv)$/i,""),c=xt.findIndex(u=>u.id===s);if(c>-1?xt[c]={id:s,label:i,data:o}:xt.push({id:s,label:i,data:o}),Ee){let u=Ee.querySelector('option[value="custom_target"]');u||(u=document.createElement("option"),u.value=s,Ee.appendChild(u)),u.textContent=i,Ee.value=s}X(),x(),be(`Target "${i}" imported`,"success")}catch{be("Failed to parse target file","error")}},n.readAsText(t),e.target.value=""})),Hs&&Hs.addEventListener("click",()=>{if(!oe||oe.length===0){be("No EQ to export","error");return}let e=[`Preamp: ${gt} dB`];oe.forEach((s,i)=>{if(!s.enabled)return;const c=s.type==="peaking"?"PK":s.type==="lowshelf"?"LSC":"HSC";e.push(`Filter ${i+1}: ON ${c} Fc ${Math.round(s.freq)} Hz Gain ${s.gain.toFixed(1)} dB Q ${s.q.toFixed(2)}`)});const t=e.join(`
-`),n=new Blob([t],{type:"text/plain"}),a=URL.createObjectURL(n),o=document.createElement("a");o.href=a,o.download=`autoeq-${Oe?.name||"custom"}.txt`,o.click(),URL.revokeObjectURL(a),be("Exported","success")}),xn&&xn.addEventListener("change",()=>{if(Cn=xn.checked,Cn){const e=Pe();if(e&&e.length>0){const t=Math.max(0,...e.filter(a=>a.enabled).map(a=>a.gain)),n=t>0?-Math.round(t*10)/10:0;gt=n,F.setPreamp(n),W.setPreamp&&W.setPreamp(n),Ye&&(Ye.value=n),Je&&(Je.textContent=`${n} dB`)}}else gt=0,F.setPreamp(0),W.setPreamp&&W.setPreamp(0),Ye&&(Ye.value=0),Je&&(Je.textContent="0 dB")}),Ye&&(Ye.value=gt,Je&&(Je.textContent=`${gt} dB`),Ye.addEventListener("input",()=>{Cn&&(Cn=!1,xn&&(xn.checked=!1));const e=parseFloat(Ye.value);gt=e,F.setPreamp(e),Je&&(Je.textContent=`${e} dB`),W.setPreamp&&W.setPreamp(e)}));const ft={"2.0":["FL","FR"],5.1:["FL","FR","C","LFE","SL","SR"],7.1:["FL","FR","C","LFE","SL","SR","SBL","SBR"]},N7={FL:"Front L",FR:"Front R",C:"Center",LFE:"Sub",SL:"Surr L",SR:"Surr R",SBL:"Back L",SBR:"Back R"};let ke="2.0",ze="FL";const ae={};Object.keys(N7).forEach(e=>{ae[e]={measurement:null,targetId:"harman_room",bands:Array.from({length:10},(t,n)=>({id:n,type:"peaking",freq:Math.round(100*Math.pow(2,n)),gain:0,q:1.41,enabled:!0,channel:"stereo"})),preamp:0}});const l1=document.querySelectorAll(".autoeq-mode-btn"),r1="eq-active-mode";let Ie="autoeq";const qa=document.getElementById("speaker-eq-section"),G7=e=>{Ie=e,localStorage.setItem(r1,e),l1.forEach(m=>m.classList.toggle("active",m.dataset.mode===e));const t=document.querySelector(".autoeq-graph-section"),n=document.querySelector(".autoeq-controls-section"),a=document.getElementById("autoeq-saved-section"),o=document.getElementById("autoeq-database-section"),s=document.getElementById("autoeq-filters-section"),i=document.getElementById("autoeq-filters-content"),c=document.getElementById("autoeq-preset-row"),u=document.getElementById("autoeq-parametric-profiles"),v=document.getElementById("speaker-saved-section"),g=document.getElementById("graphic-eq-section");ye=null,We=null,t&&(t.style.display=e==="legacy"?"none":"");const d=document.querySelector(".autoeq-graph-legend");if(d&&(d.style.display=e==="autoeq"||e==="speaker"?"":"none"),_e&&(_e.style.display=e==="autoeq"?"":"none"),n&&(n.style.display="none"),a&&(a.style.display="none"),o&&(o.style.display="none"),s&&(s.style.display="none"),c&&(c.style.display="none"),u&&(u.style.display="none"),qa&&(qa.style.display="none"),v&&(v.style.display="none"),g&&(g.style.display="none"),e==="legacy"?(g&&(g.style.display=""),W.isEQEnabled=!1,W.toggleGraphicEQ(F.isEnabled()),F.setGraphicEqEnabled(!0)):(W.isEQEnabled=F.isEnabled(),W.toggleGraphicEQ(!1),F.setGraphicEqEnabled(!1)),e==="autoeq")n&&(n.style.display=""),a&&(a.style.display=""),o&&(o.style.display=""),s&&(s.style.display=""),oe&&oe.length>0&&(ee(oe),fe(oe)),X(),x();else if(e==="parametric"){if(s&&(s.style.display=""),i&&(i.style.display="flex"),Jt&&Jt.classList.remove("collapsed"),c&&(c.style.display=""),u&&(u.style.display=""),!H||H.length===0){const m=[];for(let r=0;r<10;r++){const p=20*Math.pow(1e3,r/9);m.push({id:r,type:"peaking",freq:Math.round(p),gain:0,q:1,enabled:!0})}H=m}ee(H),fe(H),Sa(),X(),x()}else if(e==="speaker"){qa&&(qa.style.display=""),v&&(v.style.display=""),s&&(s.style.display=""),i&&(i.style.display="flex"),Jt&&Jt.classList.remove("collapsed");const m=ae[ze];m&&m.bands.length>0&&(ee(m.bands),fe(m.bands)),nt(),Pa(),X(),x()}const l=document.getElementById("eq-howto-panel");if(l&&l.style.display!=="none"){const m={legacy:document.getElementById("eq-howto-legacy"),autoeq:document.getElementById("eq-howto-autoeq"),parametric:document.getElementById("eq-howto-parametric"),speaker:document.getElementById("eq-howto-speaker")};Object.values(m).forEach(r=>{r&&(r.style.display="none")}),m[e]&&(m[e].style.display="")}};l1.forEach(e=>{e.addEventListener("click",()=>G7(e.dataset.mode))});const c1=document.getElementById("eq-howto-btn"),Mn=document.getElementById("eq-howto-panel"),d1=document.getElementById("eq-howto-close"),u1={legacy:document.getElementById("eq-howto-legacy"),autoeq:document.getElementById("eq-howto-autoeq"),parametric:document.getElementById("eq-howto-parametric"),speaker:document.getElementById("eq-howto-speaker")},Pi=()=>{Object.values(u1).forEach(t=>{t&&(t.style.display="none")});const e=u1[Ie];e&&(e.style.display="")};c1&&Mn&&c1.addEventListener("click",()=>{const e=Mn.style.display!=="none";Mn.style.display=e?"none":"",e||Pi()}),d1&&Mn&&d1.addEventListener("click",()=>{Mn.style.display="none"}),Ee&&Ee.addEventListener("change",()=>{oe&&je&&X(),x()}),Ke&&Ke.addEventListener("change",()=>x()),ot&&ot.addEventListener("change",()=>x()),Te&&Te.addEventListener("change",()=>{oe&&je&&X(),x()});const Ti={shelf_warm:{name:"Warm",bands:[{id:0,type:"lowshelf",freq:200,gain:3,q:.7,enabled:!0,channel:"stereo"},{id:1,type:"highshelf",freq:6e3,gain:-2,q:.6,enabled:!0,channel:"stereo"},{id:2,type:"peaking",freq:3e3,gain:-1,q:1.2,enabled:!0,channel:"stereo"},{id:3,type:"peaking",freq:800,gain:.5,q:.8,enabled:!0,channel:"stereo"}]},shelf_bright:{name:"Bright & Airy",bands:[{id:0,type:"highshelf",freq:8e3,gain:3,q:.5,enabled:!0,channel:"stereo"},{id:1,type:"lowshelf",freq:150,gain:-1.5,q:.6,enabled:!0,channel:"stereo"},{id:2,type:"peaking",freq:5e3,gain:1,q:1.5,enabled:!0,channel:"stereo"},{id:3,type:"peaking",freq:2500,gain:.5,q:1,enabled:!0,channel:"stereo"}]},shelf_hifi:{name:"Hi-Fi",bands:[{id:0,type:"lowshelf",freq:80,gain:2.5,q:.7,enabled:!0,channel:"stereo"},{id:1,type:"highshelf",freq:1e4,gain:2,q:.5,enabled:!0,channel:"stereo"},{id:2,type:"peaking",freq:400,gain:-1,q:1,enabled:!0,channel:"stereo"},{id:3,type:"peaking",freq:3e3,gain:.5,q:1.5,enabled:!0,channel:"stereo"}]},shelf_dark:{name:"Dark & Smooth",bands:[{id:0,type:"highshelf",freq:5e3,gain:-3,q:.5,enabled:!0,channel:"stereo"},{id:1,type:"lowshelf",freq:150,gain:2,q:.7,enabled:!0,channel:"stereo"},{id:2,type:"peaking",freq:2500,gain:-1.5,q:1.2,enabled:!0,channel:"stereo"},{id:3,type:"peaking",freq:600,gain:.5,q:.8,enabled:!0,channel:"stereo"}]},shelf_radio:{name:"Radio Ready",bands:[{id:0,type:"lowshelf",freq:100,gain:2,q:.7,enabled:!0,channel:"stereo"},{id:1,type:"peaking",freq:3e3,gain:2,q:1.8,enabled:!0,channel:"stereo"},{id:2,type:"highshelf",freq:1e4,gain:1.5,q:.5,enabled:!0,channel:"stereo"},{id:3,type:"peaking",freq:500,gain:-1.5,q:1,enabled:!0,channel:"stereo"},{id:4,type:"peaking",freq:7e3,gain:-.5,q:2,enabled:!0,channel:"stereo"}]},ms_vocal_clarity:{name:"M/S Vocal Clarity",bands:[{id:0,type:"lowshelf",freq:100,gain:-3.5,q:.6,enabled:!0,channel:"side"},{id:1,type:"peaking",freq:3500,gain:2,q:2,enabled:!0,channel:"mid"},{id:2,type:"peaking",freq:350,gain:-1.5,q:1.2,enabled:!0,channel:"mid"},{id:3,type:"peaking",freq:3e3,gain:-1.5,q:1.5,enabled:!0,channel:"side"},{id:4,type:"highshelf",freq:12e3,gain:1.5,q:.5,enabled:!0,channel:"side"},{id:5,type:"peaking",freq:5e3,gain:1,q:2,enabled:!0,channel:"mid"}]},ms_wide_stereo:{name:"M/S Wide Stereo",bands:[{id:0,type:"lowshelf",freq:100,gain:-4,q:.6,enabled:!0,channel:"side"},{id:1,type:"peaking",freq:1200,gain:1.5,q:1,enabled:!0,channel:"side"},{id:2,type:"highshelf",freq:1e4,gain:2,q:.5,enabled:!0,channel:"side"},{id:3,type:"peaking",freq:5e3,gain:1,q:1.2,enabled:!0,channel:"side"},{id:4,type:"peaking",freq:800,gain:-1,q:1,enabled:!0,channel:"mid"},{id:5,type:"lowshelf",freq:60,gain:1,q:.7,enabled:!0,channel:"mid"}]},ms_mono_bass:{name:"M/S Mono Bass",bands:[{id:0,type:"lowshelf",freq:120,gain:-5,q:.5,enabled:!0,channel:"side"},{id:1,type:"peaking",freq:60,gain:2.5,q:.7,enabled:!0,channel:"mid"},{id:2,type:"peaking",freq:120,gain:1,q:1.2,enabled:!0,channel:"mid"},{id:3,type:"peaking",freq:400,gain:1,q:.8,enabled:!0,channel:"side"},{id:4,type:"highshelf",freq:1e4,gain:1,q:.7,enabled:!0,channel:"stereo"}]},ms_master_polish:{name:"M/S Master Polish",bands:[{id:0,type:"lowshelf",freq:100,gain:-3.5,q:.5,enabled:!0,channel:"side"},{id:1,type:"peaking",freq:60,gain:1.5,q:.7,enabled:!0,channel:"mid"},{id:2,type:"peaking",freq:350,gain:-1,q:1.2,enabled:!0,channel:"mid"},{id:3,type:"peaking",freq:3e3,gain:1.5,q:2,enabled:!0,channel:"mid"},{id:4,type:"peaking",freq:3e3,gain:-1,q:1.5,enabled:!0,channel:"side"},{id:5,type:"highshelf",freq:12e3,gain:2,q:.5,enabled:!0,channel:"side"},{id:6,type:"peaking",freq:7e3,gain:-.5,q:2,enabled:!0,channel:"stereo"},{id:7,type:"peaking",freq:500,gain:-.5,q:.8,enabled:!0,channel:"mid"}]},ms_rock_master:{name:"M/S Rock Master",bands:[{id:0,type:"lowshelf",freq:100,gain:-4,q:.5,enabled:!0,channel:"side"},{id:1,type:"peaking",freq:3500,gain:-2.5,q:2,enabled:!0,channel:"side"},{id:2,type:"peaking",freq:2500,gain:1.5,q:1.8,enabled:!0,channel:"mid"},{id:3,type:"peaking",freq:60,gain:1.5,q:.7,enabled:!0,channel:"mid"},{id:4,type:"highshelf",freq:1e4,gain:1.5,q:.5,enabled:!0,channel:"side"},{id:5,type:"peaking",freq:400,gain:-1,q:1,enabled:!0,channel:"mid"},{id:6,type:"peaking",freq:800,gain:1,q:1,enabled:!0,channel:"side"}]},ms_hiphop:{name:"M/S Hip-Hop",bands:[{id:0,type:"lowshelf",freq:60,gain:2.5,q:.5,enabled:!0,channel:"mid"},{id:1,type:"lowshelf",freq:100,gain:-4.5,q:.5,enabled:!0,channel:"side"},{id:2,type:"peaking",freq:3500,gain:1.5,q:2,enabled:!0,channel:"mid"},{id:3,type:"peaking",freq:7e3,gain:1.5,q:1,enabled:!0,channel:"side"},{id:4,type:"highshelf",freq:12e3,gain:1.5,q:.5,enabled:!0,channel:"side"},{id:5,type:"peaking",freq:300,gain:-1,q:1,enabled:!0,channel:"mid"},{id:6,type:"peaking",freq:500,gain:-.5,q:.8,enabled:!0,channel:"mid"}]}},Dt=document.getElementById("parametric-preset-select");Dt&&Dt.addEventListener("change",()=>{const e=Dt.value;if(!e)return;const t=Ti[e];if(t){H=t.bands.map(s=>({...s})),ha(H),ee(H),fe(H),X(),x();return}Zs();const n=H.length,o=X1(n)[e];o&&(H.forEach((s,i)=>{s.gain=o.gains[i]||0,s.channel="stereo",s.type="peaking"}),ee(H),fe(H),X(),x())});const O7="parametric-eq-profiles",an="parametric-eq-active-profile",Ia=()=>{try{return JSON.parse(localStorage.getItem(O7))||{}}catch{return{}}},Sa=()=>{const e=document.getElementById("parametric-saved-grid"),t=document.getElementById("parametric-saved-count");if(!e)return;const n=Ia(),a=localStorage.getItem(an),o=Object.keys(n);t&&(t.textContent=o.length),e.innerHTML="",o.forEach(s=>{const i=n[s],c=document.createElement("div");c.className="autoeq-profile-card"+(s===a?" active":""),c.dataset.profileId=s;const u=document.createElement("canvas");u.className="autoeq-profile-preview",u.style.height="80px",c.appendChild(u);const v=document.createElement("div");v.className="autoeq-profile-info",v.innerHTML=`
+            `),
+                        s.appendChild(u),
+                        a.length > 1)
+                    ) {
+                        const v = document.createElement('div');
+                        v.className = 'autoeq-db-sub-list';
+                        for (const g of a) {
+                            const d = document.createElement('div');
+                            d.className = 'autoeq-db-sub-item';
+                            const l = await g.name.match(/\(([^)]+)\)\s*$/),
+                                m = l ? l[1] : g.type;
+                            ((d.innerHTML = `<span>${g.name}</span><span class="sub-source">${m}</span>`),
+                                d.addEventListener('click', async (r) => {
+                                    (r.stopPropagation(), await ka(g));
+                                }),
+                                v.appendChild(d));
+                        }
+                        (s.appendChild(v),
+                            u.addEventListener('click', () => {
+                                (u.classList.toggle('expanded'), v.classList.toggle('visible'));
+                            }));
+                    } else u.addEventListener('click', () => ka(a[0]));
+                    st.appendChild(s);
+                }));
+        },
+        Mi = () => {
+            const e = document.getElementById('autoeq-alpha-index');
+            if (!e) return;
+            ((e.innerHTML = ''),
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('').forEach((n) => {
+                    const a = document.createElement('button');
+                    ((a.textContent = n),
+                        a.addEventListener('click', () => {
+                            const o = nn.findIndex((s) => {
+                                const i = s.name[0].toUpperCase();
+                                return n === '#' ? !/[A-Z]/.test(i) : i === n;
+                            });
+                            if (!(o < 0)) {
+                                for (; Rt <= o + o1 && Rt < nn.length; ) D7();
+                                requestAnimationFrame(() => {
+                                    const s = st?.querySelector(`[data-letter="${n}"]`);
+                                    s && s.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                });
+                            }
+                        }),
+                        e.appendChild(a));
+                }));
+        };
+    let nn = [],
+        Rt = 0;
+    const o1 = 80,
+        D7 = () => {
+            if (Rt >= nn.length) return;
+            const e = Math.min(Rt + o1, nn.length),
+                t = nn.slice(Rt, e);
+            (Ai(t, !0), (Rt = e));
+        },
+        _7 = (e) => {
+            ((nn = e), (Rt = 0), st && (st.innerHTML = ''), D7());
+        };
+    st &&
+        st.addEventListener('scroll', () => {
+            const e = st;
+            e.scrollTop + e.clientHeight >= e.scrollHeight - 60 && D7();
+        });
+    const s1 = async () => {
+        if (At.length === 0) {
+            be('Loading headphone database...', '');
+            try {
+                ((At = await c8()), be(`Loaded ${At.length} headphones`, 'success'));
+            } catch {
+                be('Failed to load database', 'error');
+                return;
+            }
+        }
+        (Ks && (Ks.textContent = `${At.length} models`), _7(At), Mi());
+    };
+    {
+        const e = document.getElementById('autoeq-headphone-search');
+        if (e && !e._autoeqBound) {
+            e._autoeqBound = !0;
+            let t = null;
+            const n = async () => {
+                const a = e.value.trim();
+                if (!a) {
+                    _7(At);
+                    return;
+                }
+                At.length === 0 && (await s1());
+                const o = u8(a, At, 'all', 500);
+                _7(o);
+            };
+            e.addEventListener('input', () => {
+                (clearTimeout(t), (t = setTimeout(n, 300)));
+            });
+        }
+    }
+    (_e &&
+        _e.addEventListener('click', () => {
+            je &&
+                (be('Running AutoEQ...', ''),
+                (_e.disabled = !0),
+                setTimeout(() => {
+                    try {
+                        const e = Ee ? Ee.value : 'harman_oe_2018',
+                            t = xt.find((c) => c.id === e);
+                        if (!t || !t.data || t.data.length === 0) {
+                            (be('Invalid target curve', 'error'), (_e.disabled = !1));
+                            return;
+                        }
+                        const n = Ke ? parseInt(Ke.value, 10) : 10,
+                            a = ot ? parseInt(ot.value, 10) : 16e3,
+                            o = Te ? parseInt(Te.value, 10) : 48e3,
+                            s = es(je, t.data, n, a, 20, 5, o);
+                        if (!s || s.length === 0) {
+                            (be('No correction needed', 'success'), (_e.disabled = !1));
+                            return;
+                        }
+                        ((oe = s), X(), ee(oe), x(), fe(oe));
+                        const i = Oe ? Oe.name : 'Custom';
+                        (be(`Applied ${s.length} bands for ${i}`, 'success'), (_e.disabled = !1));
+                    } catch (e) {
+                        (console.error('[AutoEQ] Algorithm failed:', e),
+                            be('Error: ' + e.message, 'error'),
+                            (_e.disabled = !1));
+                    }
+                }, 50));
+        }),
+        js &&
+            L7 &&
+            (js.addEventListener('click', () => {
+                L7.click();
+            }),
+            L7.addEventListener('change', (e) => {
+                const t = e.target.files[0];
+                if (!t) return;
+                const n = new FileReader();
+                ((n.onload = (a) => {
+                    try {
+                        const o = xe(a.target.result);
+                        if (o.length === 0) {
+                            be('Invalid measurement file', 'error');
+                            return;
+                        }
+                        ((je = o),
+                            (Oe = { name: t.name.replace(/\.(txt|csv)$/i, ''), type: 'over-ear' }),
+                            _e && (_e.disabled = !1),
+                            x(),
+                            be(`Imported ${o.length} points from ${t.name}`, 'success'));
+                    } catch {
+                        be('Failed to parse file', 'error');
+                    }
+                }),
+                    n.readAsText(t),
+                    (e.target.value = ''));
+            })));
+    const i1 = document.getElementById('autoeq-import-target-btn'),
+        $7 = document.getElementById('autoeq-import-target-file');
+    (i1 &&
+        $7 &&
+        (i1.addEventListener('click', () => $7.click()),
+        $7.addEventListener('change', (e) => {
+            const t = e.target.files[0];
+            if (!t) return;
+            const n = new FileReader();
+            ((n.onload = (a) => {
+                try {
+                    const o = xe(a.target.result);
+                    if (o.length === 0) {
+                        be('Invalid target file', 'error');
+                        return;
+                    }
+                    const s = 'custom_target',
+                        i = t.name.replace(/\.(txt|csv)$/i, ''),
+                        c = xt.findIndex((u) => u.id === s);
+                    if ((c > -1 ? (xt[c] = { id: s, label: i, data: o }) : xt.push({ id: s, label: i, data: o }), Ee)) {
+                        let u = Ee.querySelector('option[value="custom_target"]');
+                        (u || ((u = document.createElement('option')), (u.value = s), Ee.appendChild(u)),
+                            (u.textContent = i),
+                            (Ee.value = s));
+                    }
+                    (X(), x(), be(`Target "${i}" imported`, 'success'));
+                } catch {
+                    be('Failed to parse target file', 'error');
+                }
+            }),
+                n.readAsText(t),
+                (e.target.value = ''));
+        })),
+        Hs &&
+            Hs.addEventListener('click', () => {
+                if (!oe || oe.length === 0) {
+                    be('No EQ to export', 'error');
+                    return;
+                }
+                let e = [`Preamp: ${gt} dB`];
+                oe.forEach((s, i) => {
+                    if (!s.enabled) return;
+                    const c = s.type === 'peaking' ? 'PK' : s.type === 'lowshelf' ? 'LSC' : 'HSC';
+                    e.push(
+                        `Filter ${i + 1}: ON ${c} Fc ${Math.round(s.freq)} Hz Gain ${s.gain.toFixed(1)} dB Q ${s.q.toFixed(2)}`
+                    );
+                });
+                const t = e.join(`
+`),
+                    n = new Blob([t], { type: 'text/plain' }),
+                    a = URL.createObjectURL(n),
+                    o = document.createElement('a');
+                ((o.href = a),
+                    (o.download = `autoeq-${Oe?.name || 'custom'}.txt`),
+                    o.click(),
+                    URL.revokeObjectURL(a),
+                    be('Exported', 'success'));
+            }),
+        xn &&
+            xn.addEventListener('change', () => {
+                if (((Cn = xn.checked), Cn)) {
+                    const e = Pe();
+                    if (e && e.length > 0) {
+                        const t = Math.max(0, ...e.filter((a) => a.enabled).map((a) => a.gain)),
+                            n = t > 0 ? -Math.round(t * 10) / 10 : 0;
+                        ((gt = n),
+                            F.setPreamp(n),
+                            W.setPreamp && W.setPreamp(n),
+                            Ye && (Ye.value = n),
+                            Je && (Je.textContent = `${n} dB`));
+                    }
+                } else
+                    ((gt = 0),
+                        F.setPreamp(0),
+                        W.setPreamp && W.setPreamp(0),
+                        Ye && (Ye.value = 0),
+                        Je && (Je.textContent = '0 dB'));
+            }),
+        Ye &&
+            ((Ye.value = gt),
+            Je && (Je.textContent = `${gt} dB`),
+            Ye.addEventListener('input', () => {
+                Cn && ((Cn = !1), xn && (xn.checked = !1));
+                const e = parseFloat(Ye.value);
+                ((gt = e), F.setPreamp(e), Je && (Je.textContent = `${e} dB`), W.setPreamp && W.setPreamp(e));
+            })));
+    const ft = {
+            '2.0': ['FL', 'FR'],
+            5.1: ['FL', 'FR', 'C', 'LFE', 'SL', 'SR'],
+            7.1: ['FL', 'FR', 'C', 'LFE', 'SL', 'SR', 'SBL', 'SBR'],
+        },
+        N7 = {
+            FL: 'Front L',
+            FR: 'Front R',
+            C: 'Center',
+            LFE: 'Sub',
+            SL: 'Surr L',
+            SR: 'Surr R',
+            SBL: 'Back L',
+            SBR: 'Back R',
+        };
+    let ke = '2.0',
+        ze = 'FL';
+    const ae = {};
+    Object.keys(N7).forEach((e) => {
+        ae[e] = {
+            measurement: null,
+            targetId: 'harman_room',
+            bands: Array.from({ length: 10 }, (t, n) => ({
+                id: n,
+                type: 'peaking',
+                freq: Math.round(100 * Math.pow(2, n)),
+                gain: 0,
+                q: 1.41,
+                enabled: !0,
+                channel: 'stereo',
+            })),
+            preamp: 0,
+        };
+    });
+    const l1 = document.querySelectorAll('.autoeq-mode-btn'),
+        r1 = 'eq-active-mode';
+    let Ie = 'autoeq';
+    const qa = document.getElementById('speaker-eq-section'),
+        G7 = (e) => {
+            ((Ie = e),
+                localStorage.setItem(r1, e),
+                l1.forEach((m) => m.classList.toggle('active', m.dataset.mode === e)));
+            const t = document.querySelector('.autoeq-graph-section'),
+                n = document.querySelector('.autoeq-controls-section'),
+                a = document.getElementById('autoeq-saved-section'),
+                o = document.getElementById('autoeq-database-section'),
+                s = document.getElementById('autoeq-filters-section'),
+                i = document.getElementById('autoeq-filters-content'),
+                c = document.getElementById('autoeq-preset-row'),
+                u = document.getElementById('autoeq-parametric-profiles'),
+                v = document.getElementById('speaker-saved-section'),
+                g = document.getElementById('graphic-eq-section');
+            ((ye = null), (We = null), t && (t.style.display = e === 'legacy' ? 'none' : ''));
+            const d = document.querySelector('.autoeq-graph-legend');
+            if (
+                (d && (d.style.display = e === 'autoeq' || e === 'speaker' ? '' : 'none'),
+                _e && (_e.style.display = e === 'autoeq' ? '' : 'none'),
+                n && (n.style.display = 'none'),
+                a && (a.style.display = 'none'),
+                o && (o.style.display = 'none'),
+                s && (s.style.display = 'none'),
+                c && (c.style.display = 'none'),
+                u && (u.style.display = 'none'),
+                qa && (qa.style.display = 'none'),
+                v && (v.style.display = 'none'),
+                g && (g.style.display = 'none'),
+                e === 'legacy'
+                    ? (g && (g.style.display = ''),
+                      (W.isEQEnabled = !1),
+                      W.toggleGraphicEQ(F.isEnabled()),
+                      F.setGraphicEqEnabled(!0))
+                    : ((W.isEQEnabled = F.isEnabled()), W.toggleGraphicEQ(!1), F.setGraphicEqEnabled(!1)),
+                e === 'autoeq')
+            )
+                (n && (n.style.display = ''),
+                    a && (a.style.display = ''),
+                    o && (o.style.display = ''),
+                    s && (s.style.display = ''),
+                    oe && oe.length > 0 && (ee(oe), fe(oe)),
+                    X(),
+                    x());
+            else if (e === 'parametric') {
+                if (
+                    (s && (s.style.display = ''),
+                    i && (i.style.display = 'flex'),
+                    Jt && Jt.classList.remove('collapsed'),
+                    c && (c.style.display = ''),
+                    u && (u.style.display = ''),
+                    !H || H.length === 0)
+                ) {
+                    const m = [];
+                    for (let r = 0; r < 10; r++) {
+                        const p = 20 * Math.pow(1e3, r / 9);
+                        m.push({ id: r, type: 'peaking', freq: Math.round(p), gain: 0, q: 1, enabled: !0 });
+                    }
+                    H = m;
+                }
+                (ee(H), fe(H), Sa(), X(), x());
+            } else if (e === 'speaker') {
+                (qa && (qa.style.display = ''),
+                    v && (v.style.display = ''),
+                    s && (s.style.display = ''),
+                    i && (i.style.display = 'flex'),
+                    Jt && Jt.classList.remove('collapsed'));
+                const m = ae[ze];
+                (m && m.bands.length > 0 && (ee(m.bands), fe(m.bands)), nt(), Pa(), X(), x());
+            }
+            const l = document.getElementById('eq-howto-panel');
+            if (l && l.style.display !== 'none') {
+                const m = {
+                    legacy: document.getElementById('eq-howto-legacy'),
+                    autoeq: document.getElementById('eq-howto-autoeq'),
+                    parametric: document.getElementById('eq-howto-parametric'),
+                    speaker: document.getElementById('eq-howto-speaker'),
+                };
+                (Object.values(m).forEach((r) => {
+                    r && (r.style.display = 'none');
+                }),
+                    m[e] && (m[e].style.display = ''));
+            }
+        };
+    l1.forEach((e) => {
+        e.addEventListener('click', () => G7(e.dataset.mode));
+    });
+    const c1 = document.getElementById('eq-howto-btn'),
+        Mn = document.getElementById('eq-howto-panel'),
+        d1 = document.getElementById('eq-howto-close'),
+        u1 = {
+            legacy: document.getElementById('eq-howto-legacy'),
+            autoeq: document.getElementById('eq-howto-autoeq'),
+            parametric: document.getElementById('eq-howto-parametric'),
+            speaker: document.getElementById('eq-howto-speaker'),
+        },
+        Pi = () => {
+            Object.values(u1).forEach((t) => {
+                t && (t.style.display = 'none');
+            });
+            const e = u1[Ie];
+            e && (e.style.display = '');
+        };
+    (c1 &&
+        Mn &&
+        c1.addEventListener('click', () => {
+            const e = Mn.style.display !== 'none';
+            ((Mn.style.display = e ? 'none' : ''), e || Pi());
+        }),
+        d1 &&
+            Mn &&
+            d1.addEventListener('click', () => {
+                Mn.style.display = 'none';
+            }),
+        Ee &&
+            Ee.addEventListener('change', () => {
+                (oe && je && X(), x());
+            }),
+        Ke && Ke.addEventListener('change', () => x()),
+        ot && ot.addEventListener('change', () => x()),
+        Te &&
+            Te.addEventListener('change', () => {
+                (oe && je && X(), x());
+            }));
+    const Ti = {
+            shelf_warm: {
+                name: 'Warm',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 200, gain: 3, q: 0.7, enabled: !0, channel: 'stereo' },
+                    { id: 1, type: 'highshelf', freq: 6e3, gain: -2, q: 0.6, enabled: !0, channel: 'stereo' },
+                    { id: 2, type: 'peaking', freq: 3e3, gain: -1, q: 1.2, enabled: !0, channel: 'stereo' },
+                    { id: 3, type: 'peaking', freq: 800, gain: 0.5, q: 0.8, enabled: !0, channel: 'stereo' },
+                ],
+            },
+            shelf_bright: {
+                name: 'Bright & Airy',
+                bands: [
+                    { id: 0, type: 'highshelf', freq: 8e3, gain: 3, q: 0.5, enabled: !0, channel: 'stereo' },
+                    { id: 1, type: 'lowshelf', freq: 150, gain: -1.5, q: 0.6, enabled: !0, channel: 'stereo' },
+                    { id: 2, type: 'peaking', freq: 5e3, gain: 1, q: 1.5, enabled: !0, channel: 'stereo' },
+                    { id: 3, type: 'peaking', freq: 2500, gain: 0.5, q: 1, enabled: !0, channel: 'stereo' },
+                ],
+            },
+            shelf_hifi: {
+                name: 'Hi-Fi',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 80, gain: 2.5, q: 0.7, enabled: !0, channel: 'stereo' },
+                    { id: 1, type: 'highshelf', freq: 1e4, gain: 2, q: 0.5, enabled: !0, channel: 'stereo' },
+                    { id: 2, type: 'peaking', freq: 400, gain: -1, q: 1, enabled: !0, channel: 'stereo' },
+                    { id: 3, type: 'peaking', freq: 3e3, gain: 0.5, q: 1.5, enabled: !0, channel: 'stereo' },
+                ],
+            },
+            shelf_dark: {
+                name: 'Dark & Smooth',
+                bands: [
+                    { id: 0, type: 'highshelf', freq: 5e3, gain: -3, q: 0.5, enabled: !0, channel: 'stereo' },
+                    { id: 1, type: 'lowshelf', freq: 150, gain: 2, q: 0.7, enabled: !0, channel: 'stereo' },
+                    { id: 2, type: 'peaking', freq: 2500, gain: -1.5, q: 1.2, enabled: !0, channel: 'stereo' },
+                    { id: 3, type: 'peaking', freq: 600, gain: 0.5, q: 0.8, enabled: !0, channel: 'stereo' },
+                ],
+            },
+            shelf_radio: {
+                name: 'Radio Ready',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 100, gain: 2, q: 0.7, enabled: !0, channel: 'stereo' },
+                    { id: 1, type: 'peaking', freq: 3e3, gain: 2, q: 1.8, enabled: !0, channel: 'stereo' },
+                    { id: 2, type: 'highshelf', freq: 1e4, gain: 1.5, q: 0.5, enabled: !0, channel: 'stereo' },
+                    { id: 3, type: 'peaking', freq: 500, gain: -1.5, q: 1, enabled: !0, channel: 'stereo' },
+                    { id: 4, type: 'peaking', freq: 7e3, gain: -0.5, q: 2, enabled: !0, channel: 'stereo' },
+                ],
+            },
+            ms_vocal_clarity: {
+                name: 'M/S Vocal Clarity',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 100, gain: -3.5, q: 0.6, enabled: !0, channel: 'side' },
+                    { id: 1, type: 'peaking', freq: 3500, gain: 2, q: 2, enabled: !0, channel: 'mid' },
+                    { id: 2, type: 'peaking', freq: 350, gain: -1.5, q: 1.2, enabled: !0, channel: 'mid' },
+                    { id: 3, type: 'peaking', freq: 3e3, gain: -1.5, q: 1.5, enabled: !0, channel: 'side' },
+                    { id: 4, type: 'highshelf', freq: 12e3, gain: 1.5, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 5, type: 'peaking', freq: 5e3, gain: 1, q: 2, enabled: !0, channel: 'mid' },
+                ],
+            },
+            ms_wide_stereo: {
+                name: 'M/S Wide Stereo',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 100, gain: -4, q: 0.6, enabled: !0, channel: 'side' },
+                    { id: 1, type: 'peaking', freq: 1200, gain: 1.5, q: 1, enabled: !0, channel: 'side' },
+                    { id: 2, type: 'highshelf', freq: 1e4, gain: 2, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 3, type: 'peaking', freq: 5e3, gain: 1, q: 1.2, enabled: !0, channel: 'side' },
+                    { id: 4, type: 'peaking', freq: 800, gain: -1, q: 1, enabled: !0, channel: 'mid' },
+                    { id: 5, type: 'lowshelf', freq: 60, gain: 1, q: 0.7, enabled: !0, channel: 'mid' },
+                ],
+            },
+            ms_mono_bass: {
+                name: 'M/S Mono Bass',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 120, gain: -5, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 1, type: 'peaking', freq: 60, gain: 2.5, q: 0.7, enabled: !0, channel: 'mid' },
+                    { id: 2, type: 'peaking', freq: 120, gain: 1, q: 1.2, enabled: !0, channel: 'mid' },
+                    { id: 3, type: 'peaking', freq: 400, gain: 1, q: 0.8, enabled: !0, channel: 'side' },
+                    { id: 4, type: 'highshelf', freq: 1e4, gain: 1, q: 0.7, enabled: !0, channel: 'stereo' },
+                ],
+            },
+            ms_master_polish: {
+                name: 'M/S Master Polish',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 100, gain: -3.5, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 1, type: 'peaking', freq: 60, gain: 1.5, q: 0.7, enabled: !0, channel: 'mid' },
+                    { id: 2, type: 'peaking', freq: 350, gain: -1, q: 1.2, enabled: !0, channel: 'mid' },
+                    { id: 3, type: 'peaking', freq: 3e3, gain: 1.5, q: 2, enabled: !0, channel: 'mid' },
+                    { id: 4, type: 'peaking', freq: 3e3, gain: -1, q: 1.5, enabled: !0, channel: 'side' },
+                    { id: 5, type: 'highshelf', freq: 12e3, gain: 2, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 6, type: 'peaking', freq: 7e3, gain: -0.5, q: 2, enabled: !0, channel: 'stereo' },
+                    { id: 7, type: 'peaking', freq: 500, gain: -0.5, q: 0.8, enabled: !0, channel: 'mid' },
+                ],
+            },
+            ms_rock_master: {
+                name: 'M/S Rock Master',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 100, gain: -4, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 1, type: 'peaking', freq: 3500, gain: -2.5, q: 2, enabled: !0, channel: 'side' },
+                    { id: 2, type: 'peaking', freq: 2500, gain: 1.5, q: 1.8, enabled: !0, channel: 'mid' },
+                    { id: 3, type: 'peaking', freq: 60, gain: 1.5, q: 0.7, enabled: !0, channel: 'mid' },
+                    { id: 4, type: 'highshelf', freq: 1e4, gain: 1.5, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 5, type: 'peaking', freq: 400, gain: -1, q: 1, enabled: !0, channel: 'mid' },
+                    { id: 6, type: 'peaking', freq: 800, gain: 1, q: 1, enabled: !0, channel: 'side' },
+                ],
+            },
+            ms_hiphop: {
+                name: 'M/S Hip-Hop',
+                bands: [
+                    { id: 0, type: 'lowshelf', freq: 60, gain: 2.5, q: 0.5, enabled: !0, channel: 'mid' },
+                    { id: 1, type: 'lowshelf', freq: 100, gain: -4.5, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 2, type: 'peaking', freq: 3500, gain: 1.5, q: 2, enabled: !0, channel: 'mid' },
+                    { id: 3, type: 'peaking', freq: 7e3, gain: 1.5, q: 1, enabled: !0, channel: 'side' },
+                    { id: 4, type: 'highshelf', freq: 12e3, gain: 1.5, q: 0.5, enabled: !0, channel: 'side' },
+                    { id: 5, type: 'peaking', freq: 300, gain: -1, q: 1, enabled: !0, channel: 'mid' },
+                    { id: 6, type: 'peaking', freq: 500, gain: -0.5, q: 0.8, enabled: !0, channel: 'mid' },
+                ],
+            },
+        },
+        Dt = document.getElementById('parametric-preset-select');
+    Dt &&
+        Dt.addEventListener('change', () => {
+            const e = Dt.value;
+            if (!e) return;
+            const t = Ti[e];
+            if (t) {
+                ((H = t.bands.map((s) => ({ ...s }))), ha(H), ee(H), fe(H), X(), x());
+                return;
+            }
+            Zs();
+            const n = H.length,
+                o = X1(n)[e];
+            o &&
+                (H.forEach((s, i) => {
+                    ((s.gain = o.gains[i] || 0), (s.channel = 'stereo'), (s.type = 'peaking'));
+                }),
+                ee(H),
+                fe(H),
+                X(),
+                x());
+        });
+    const O7 = 'parametric-eq-profiles',
+        an = 'parametric-eq-active-profile',
+        Ia = () => {
+            try {
+                return JSON.parse(localStorage.getItem(O7)) || {};
+            } catch {
+                return {};
+            }
+        },
+        Sa = () => {
+            const e = document.getElementById('parametric-saved-grid'),
+                t = document.getElementById('parametric-saved-count');
+            if (!e) return;
+            const n = Ia(),
+                a = localStorage.getItem(an),
+                o = Object.keys(n);
+            (t && (t.textContent = o.length),
+                (e.innerHTML = ''),
+                o.forEach((s) => {
+                    const i = n[s],
+                        c = document.createElement('div');
+                    ((c.className = 'autoeq-profile-card' + (s === a ? ' active' : '')), (c.dataset.profileId = s));
+                    const u = document.createElement('canvas');
+                    ((u.className = 'autoeq-profile-preview'), (u.style.height = '80px'), c.appendChild(u));
+                    const v = document.createElement('div');
+                    ((v.className = 'autoeq-profile-info'),
+                        (v.innerHTML = `
                 <span class="autoeq-profile-active-icon">&#10003;</span>
-                <span class="autoeq-profile-name">${i.name||"Unnamed"}</span>
-                <span class="autoeq-profile-meta">${i.bandCount||"?"} bands</span>
-            `,c.appendChild(v);const g=document.createElement("button");g.className="autoeq-profile-delete",g.innerHTML="&#128465;",g.title="Delete profile",g.addEventListener("click",d=>{d.stopPropagation();const l=Ia();delete l[s],localStorage.setItem(O7,JSON.stringify(l)),localStorage.getItem(an)===s&&localStorage.removeItem(an),Sa()}),c.appendChild(g),c.addEventListener("click",()=>{H=i.bands.map(d=>({...d})),ee(H),fe(H),X(),x(),localStorage.setItem(an,s),Dt&&(Dt.value=""),Sa()}),e.appendChild(c),requestAnimationFrame(()=>{R7(u,i.bands)})})},m1=document.getElementById("parametric-save-btn"),Ba=document.getElementById("parametric-profile-name");m1&&m1.addEventListener("click",()=>{if(!H||H.length===0)return;const e=Ba?Ba.value.trim():"";if(!e)return;const t=Ia(),n="peq_"+Date.now();t[n]={name:e,bands:H.map(a=>({...a})),bandCount:H.length,preamp:F.getPreamp(),createdAt:Date.now()},localStorage.setItem(O7,JSON.stringify(t)),localStorage.setItem(an,n),Ba&&(Ba.value=""),Sa()});const g1=document.getElementById("parametric-export-btn"),f1=document.getElementById("parametric-import-btn"),U7=document.getElementById("parametric-import-file");g1&&g1.addEventListener("click",()=>{if(!H||H.length===0)return;const t=[`Preamp: ${F.getPreamp().toFixed(1)} dB`];H.forEach((i,c)=>{const u=i.type==="lowshelf"?"LS":i.type==="highshelf"?"HS":"PK";t.push(`Filter ${c+1}: ON ${u} Fc ${Math.round(i.freq)} Hz Gain ${i.gain.toFixed(1)} dB Q ${i.q.toFixed(2)}`)});const n=t.join(`
-`),a=new Blob([n],{type:"text/plain"}),o=URL.createObjectURL(a),s=document.createElement("a");s.href=o,s.download="parametric-eq.txt",s.click(),URL.revokeObjectURL(o)}),f1&&U7&&(f1.addEventListener("click",()=>U7.click()),U7.addEventListener("change",e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=a=>{try{const o=a.target.result,s=[];let i=0;const c=o.split(`
-`);for(const u of c){const v=u.match(/Preamp:\s*([-\d.]+)\s*dB/i);if(v){i=parseFloat(v[1]);continue}const g=u.match(/Filter\s+\d+:\s*ON\s+(\w+)\s+Fc\s+([\d.]+)\s*Hz\s+Gain\s+([-\d.]+)\s*dB\s+Q\s+([\d.]+)/i);if(g){const d={PK:"peaking",LS:"lowshelf",LSC:"lowshelf",LSF:"lowshelf",HS:"highshelf",HSC:"highshelf",HSF:"highshelf"};s.push({id:s.length,type:d[g[1].toUpperCase()]||"peaking",freq:parseFloat(g[2]),gain:parseFloat(g[3]),q:parseFloat(g[4]),enabled:!0})}}if(s.length===0)return;H=s,ee(H),F.setPreamp(i),Ye&&(Ye.value=i),Je&&(Je.textContent=`${i} dB`),fe(H),X(),x(),Dt&&(Dt.value="")}catch(o){console.error("[PEQ Import] Failed:",o)}},n.readAsText(t),e.target.value=""}));const pt=document.getElementById("speaker-config-select"),z7=document.getElementById("speaker-channel-tabs"),Se=document.getElementById("speaker-measurement-status"),p1=document.getElementById("speaker-import-measurement-btn"),H7=document.getElementById("speaker-import-measurement-file"),wa=document.getElementById("speaker-clear-measurement-btn"),Bt=document.getElementById("speaker-target-select"),h1=document.getElementById("speaker-import-target-btn"),j7=document.getElementById("speaker-import-target-file"),La=document.getElementById("speaker-band-count"),ht=document.getElementById("speaker-bass-cutoff"),y1=document.getElementById("speaker-bass-cutoff-value"),yt=document.getElementById("speaker-room-limit"),v1=document.getElementById("speaker-room-limit-value"),it=document.getElementById("speaker-autoeq-btn"),ie=document.getElementById("speaker-eq-status"),E1=document.getElementById("speaker-export-btn"),lt=()=>ae[ze],nt=()=>{if(!z7)return;const e=ft[ke];z7.innerHTML="",e.forEach(t=>{const n=document.createElement("button");n.className="speaker-channel-tab"+(t===ze?" active":""),n.textContent=t,n.title=N7[t],ae[t].measurement&&n.classList.add("has-data"),n.addEventListener("click",()=>{ze=t,nt(),vt();const a=lt();ee(a.bands),fe(a.bands),x()}),z7.appendChild(n)})},vt=()=>{const e=lt();Se&&(Se.textContent=e.measurement?`${e.measurement.length} pts`:"No measurement",Se.classList.toggle("loaded",!!e.measurement)),wa&&(wa.style.display=e.measurement?"":"none"),it&&(it.disabled=!e.measurement),Bt&&(Bt.value=e.targetId)};pt&&pt.addEventListener("change",()=>{ke=pt.value;const e=ft[ke];e.includes(ze)||(ze=e[0]),nt(),vt()}),p1&&H7&&(p1.addEventListener("click",()=>H7.click()),H7.addEventListener("change",e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=a=>{const o=xe(a.target.result);o.length>0&&(lt().measurement=o,vt(),nt(),x())},n.readAsText(t),e.target.value=""})),wa&&wa.addEventListener("click",()=>{lt().measurement=null,vt(),nt(),x()});const wt=document.getElementById("speaker-measure-btn");wt&&wt.addEventListener("click",async()=>{wt.disabled=!0,Se&&(Se.textContent="Requesting mic...",Se.classList.remove("loaded"));let e,t;try{t=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:!1,noiseSuppression:!1,autoGainControl:!1}}),e=new(window.AudioContext||window.webkitAudioContext)({sampleRate:48e3});const n=e.sampleRate,a=5,o=n*a,s=e.createBuffer(1,o,n),i=s.getChannelData(0);let c=0,u=0,v=0,g=0,d=0,l=0,m=0;for(let _=0;_<o;_++){const q=Math.random()*2-1;c=.99886*c+q*.0555179,u=.99332*u+q*.0750759,v=.969*v+q*.153852,g=.8665*g+q*.3104856,d=.55*d+q*.5329522,l=-.7616*l-q*.016898;let U=c+u+v+g+d+l+m+q*.5362;m=q*.115926;let Q=1;const Y=_/n;Y<.1?Q=Y/.1:Y>a-.1&&(Q=(a-Y)/.1),i[_]=U*.04*Q}const r=e.createBufferSource();r.buffer=s,r.connect(e.destination);const p=e.createMediaStreamSource(t),E=e.createAnalyser();E.fftSize=8192,E.smoothingTimeConstant=.3,p.connect(E);const b=E.frequencyBinCount,w=n/E.fftSize,D=new Float32Array(b),V=new Float64Array(b);let O=0;r.start();const te=e.currentTime;if(await new Promise(_=>{const q=()=>{const U=e.currentTime-te;if(U>=a){_();return}const Q=Math.round(U/a*100);if(Se&&(Se.textContent=`Measuring... ${Q}%`),U>.3){E.getFloatFrequencyData(D);for(let Y=0;Y<b;Y++){const ce=D[Y];ce!==-1/0&&(V[Y]+=ce)}O++}requestAnimationFrame(q)};requestAnimationFrame(q)}),r.stop(),O===0)throw new Error("No frames captured");for(let _=0;_<b;_++)V[_]/=O;const ne=[],le=24;let re=20;for(;re<=2e4;){const _=Math.round(re/w);if(_>=0&&_<b){const q=Math.max(0,_-2),U=Math.min(b-1,_+2);let Q=0,Y=0;for(let ce=q;ce<=U;ce++)Q+=V[ce],Y++;ne.push({freq:re,gain:Q/Y})}re*=Math.pow(2,1/le)}const he=ne.filter(_=>_.freq>=500&&_.freq<=2e3),k=75-(he.length>0?he.reduce((_,q)=>_+q.gain,0)/he.length:0),A=ne.map(_=>({freq:_.freq,gain:_.gain+k}));lt().measurement=A,vt(),nt(),X(),x(),Se&&(Se.textContent=`${A.length} pts (measured)`)}catch(n){console.error("[Speaker Measure]",n),Se&&(Se.textContent=n.name==="NotAllowedError"?"Mic denied":"Measure failed")}finally{t&&t.getTracks().forEach(n=>n.stop()),e&&e.state!=="closed"&&e.close().catch(()=>{}),wt.disabled=!1}});const Ca=document.getElementById("speaker-measure-all-btn");Ca&&Ca.addEventListener("click",async()=>{Ca.disabled=!0,wt&&(wt.disabled=!0),Se&&(Se.textContent="Requesting mic...",Se.classList.remove("loaded"));let e,t;try{t=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:!1,noiseSuppression:!1,autoGainControl:!1}}),e=new(window.AudioContext||window.webkitAudioContext)({sampleRate:48e3});const n=e.sampleRate,a=5,o=n*a,s=e.createBuffer(1,o,n),i=s.getChannelData(0);let c=0,u=0,v=0,g=0,d=0,l=0,m=0;for(let q=0;q<o;q++){const U=Math.random()*2-1;c=.99886*c+U*.0555179,u=.99332*u+U*.0750759,v=.969*v+U*.153852,g=.8665*g+U*.3104856,d=.55*d+U*.5329522,l=-.7616*l-U*.016898;let Q=c+u+v+g+d+l+m+U*.5362;m=U*.115926;let Y=1;const ce=q/n;ce<.1?Y=ce/.1:ce>a-.1&&(Y=(a-ce)/.1),i[q]=Q*.04*Y}const r=e.createBufferSource();r.buffer=s,r.connect(e.destination);const p=e.createMediaStreamSource(t),E=e.createAnalyser();E.fftSize=8192,E.smoothingTimeConstant=.3,p.connect(E);const b=E.frequencyBinCount,w=n/E.fftSize,D=new Float32Array(b),V=new Float64Array(b);let O=0;r.start();const te=e.currentTime;if(await new Promise(q=>{const U=()=>{const Q=e.currentTime-te;if(Q>=a){q();return}const Y=Math.round(Q/a*100);if(Se&&(Se.textContent=`Measuring all... ${Y}%`),Q>.3){E.getFloatFrequencyData(D);for(let ce=0;ce<b;ce++){const $e=D[ce];$e!==-1/0&&(V[ce]+=$e)}O++}requestAnimationFrame(U)};requestAnimationFrame(U)}),r.stop(),O===0)throw new Error("No frames captured");for(let q=0;q<b;q++)V[q]/=O;const ne=[],le=24;let re=20;for(;re<=2e4;){const q=Math.round(re/w);if(q>=0&&q<b){const U=Math.max(0,q-2),Q=Math.min(b-1,q+2);let Y=0,ce=0;for(let $e=U;$e<=Q;$e++)Y+=V[$e],ce++;ne.push({freq:re,gain:Y/ce})}re*=Math.pow(2,1/le)}const he=ne.filter(q=>q.freq>=500&&q.freq<=2e3),k=75-(he.length>0?he.reduce((q,U)=>q+U.gain,0)/he.length:0),A=ne.map(q=>({freq:q.freq,gain:q.gain+k})),_=ft[ke];_.forEach(q=>{ae[q].measurement=A.map(U=>({...U}))}),vt(),nt(),X(),x(),Se&&(Se.textContent=`${A.length} pts → ${_.length} channels`)}catch(n){console.error("[Speaker Measure All]",n),Se&&(Se.textContent=n.name==="NotAllowedError"?"Mic denied":"Measure failed")}finally{t&&t.getTracks().forEach(n=>n.stop()),e&&e.state!=="closed"&&e.close().catch(()=>{}),Ca.disabled=!1,wt&&(wt.disabled=!1)}});const xa=document.getElementById("speaker-autoeq-all-btn");xa&&xa.addEventListener("click",()=>{const t=ft[ke].filter(n=>ae[n].measurement);t.length!==0&&(xa.disabled=!0,it&&(it.disabled=!0),ie&&(ie.textContent="Running all..."),setTimeout(()=>{const n=La?parseInt(La.value,10):10,a=ht?parseInt(ht.value,10):40,o=yt?parseInt(yt.value,10):500;t.forEach(i=>{const c=ae[i],v=bt.find(l=>l.id===c.targetId)?.data||[],g=es(c.measurement,v,n,o,a,3);let d=0;for(let l=20;l<=2e4;l*=1.1){let m=0;g.forEach(r=>{r.enabled&&(m+=at(l,r))}),m>d&&(d=m)}c.bands=g,c.preamp=d>0?parseFloat((-d-.1).toFixed(1)):0});const s=lt();ee(s.bands),fe(s.bands),vt(),nt(),X(),x(),xa.disabled=!1,it&&(it.disabled=!s.measurement),ie&&(ie.textContent=`${t.length} channels optimized`),setTimeout(()=>{ie&&(ie.textContent="")},3e3)},100))}),Bt&&Bt.addEventListener("change",()=>{lt().targetId=Bt.value,x()}),h1&&j7&&(h1.addEventListener("click",()=>j7.click()),j7.addEventListener("change",e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=a=>{const o=xe(a.target.result);if(o.length===0)return;const s="custom_speaker_target",i=t.name.replace(/\.(txt|csv)$/i,""),c=bt.findIndex(v=>v.id===s);c>-1?bt[c]={id:s,label:i,data:o}:bt.push({id:s,label:i,data:o});let u=Bt.querySelector('option[value="custom_speaker_target"]');u||(u=document.createElement("option"),u.value=s,Bt.appendChild(u)),u.textContent=i,Bt.value=s,lt().targetId=s,x()},n.readAsText(t),e.target.value=""})),ht&&ht.addEventListener("input",()=>{y1&&(y1.textContent=`${ht.value} Hz`),x()}),yt&&yt.addEventListener("input",()=>{v1&&(v1.textContent=`${yt.value} Hz`),x()}),it&&it.addEventListener("click",()=>{const e=lt();e.measurement&&(it.disabled=!0,ie&&(ie.textContent="Running..."),setTimeout(()=>{const n=bt.find(g=>g.id===e.targetId)?.data||[],a=La?parseInt(La.value,10):10,o=ht?parseInt(ht.value,10):40,s=yt?parseInt(yt.value,10):500,i=Te?parseInt(Te.value,10):48e3,c=es(e.measurement,n,a,s,o,3,i);let u=0;for(let g=20;g<=2e4;g*=1.1){let d=0;c.forEach(l=>{l.enabled&&(d+=at(g,l,i))}),d>u&&(u=d)}const v=u>0?parseFloat((-u-.1).toFixed(1)):0;e.bands=c,e.preamp=v,ee(c),fe(c),vt(),nt(),X(),x(),it.disabled=!1,ie&&(ie.textContent=`${ze} optimized`),setTimeout(()=>{ie&&(ie.textContent="")},3e3)},100))}),E1&&E1.addEventListener("click",()=>{const e=ft[ke],t={config:ke,channels:e.map(s=>{const i=ae[s];return{id:s,label:N7[s],preamp:i.preamp,filters:i.bands.filter(c=>c.enabled).map(c=>({type:c.type,freq:c.freq,gain:c.gain,q:c.q}))}})},n=new Blob([JSON.stringify(t,null,2)],{type:"application/json"}),a=URL.createObjectURL(n),o=document.createElement("a");o.href=a,o.download=`SpeakerEQ_${ke}_${new Date().toISOString().slice(0,10)}.json`,o.click(),URL.revokeObjectURL(a)});const b1=document.getElementById("speaker-import-btn"),Aa=document.getElementById("speaker-import-file");b1&&Aa&&(b1.addEventListener("click",()=>Aa.click()),Aa.addEventListener("change",async e=>{const t=e.target.files[0];if(t){try{const n=await t.text(),a=JSON.parse(n);if(!a.config||!Array.isArray(a.channels))throw new Error("Invalid JSON format");a.config!==ke&&(ke=a.config,pt&&(pt.value=ke)),a.channels.forEach(o=>{ae[o.id]&&(ae[o.id].preamp=o.preamp||0,ae[o.id].bands=o.filters.map(s=>({enabled:!0,type:s.type,freq:s.freq,gain:s.gain,q:s.q})))}),ze=ft[ke][0],nt(),G7("speaker"),ie&&(ie.textContent=`Loaded: ${a.channels.length} channels`),setTimeout(()=>{ie&&(ie.textContent="")},2e3)}catch(n){ie&&(ie.textContent=`Error: ${n.message}`)}Aa.value=""}}));const Q7="speaker-eq-profiles",on="speaker-eq-active-profile";let Ma=null;const Pn=()=>Ma||{},Fi=async()=>{try{const e=localStorage.getItem("speaker-eq-profiles");if(e){const t=JSON.parse(e);t&&Object.keys(t).length>0&&await Xe.saveSetting(Q7,t),localStorage.removeItem("speaker-eq-profiles")}}catch{}try{Ma=await Xe.getSetting(Q7)||{}}catch{Ma={}}},k1=async e=>{Ma=e,await Xe.saveSetting(Q7,e)};await Fi();const Pa=()=>{const e=document.getElementById("speaker-saved-grid"),t=document.getElementById("speaker-saved-count");if(!e)return;const n=Pn(),a=localStorage.getItem(on),o=Object.keys(n);t&&(t.textContent=o.length),e.innerHTML="",o.length!==0&&o.forEach(s=>{const i=n[s],c=document.createElement("div");c.className="autoeq-profile-card"+(s===a?" active":"");const u=document.createElement("canvas");u.className="autoeq-profile-preview",u.style.height="80px",c.appendChild(u);const v=i.channels?i.channels.length:0,g=document.createElement("div");g.className="autoeq-profile-info",g.innerHTML=`
+                <span class="autoeq-profile-name">${i.name || 'Unnamed'}</span>
+                <span class="autoeq-profile-meta">${i.bandCount || '?'} bands</span>
+            `),
+                        c.appendChild(v));
+                    const g = document.createElement('button');
+                    ((g.className = 'autoeq-profile-delete'),
+                        (g.innerHTML = '&#128465;'),
+                        (g.title = 'Delete profile'),
+                        g.addEventListener('click', (d) => {
+                            d.stopPropagation();
+                            const l = Ia();
+                            (delete l[s],
+                                localStorage.setItem(O7, JSON.stringify(l)),
+                                localStorage.getItem(an) === s && localStorage.removeItem(an),
+                                Sa());
+                        }),
+                        c.appendChild(g),
+                        c.addEventListener('click', () => {
+                            ((H = i.bands.map((d) => ({ ...d }))),
+                                ee(H),
+                                fe(H),
+                                X(),
+                                x(),
+                                localStorage.setItem(an, s),
+                                Dt && (Dt.value = ''),
+                                Sa());
+                        }),
+                        e.appendChild(c),
+                        requestAnimationFrame(() => {
+                            R7(u, i.bands);
+                        }));
+                }));
+        },
+        m1 = document.getElementById('parametric-save-btn'),
+        Ba = document.getElementById('parametric-profile-name');
+    m1 &&
+        m1.addEventListener('click', () => {
+            if (!H || H.length === 0) return;
+            const e = Ba ? Ba.value.trim() : '';
+            if (!e) return;
+            const t = Ia(),
+                n = 'peq_' + Date.now();
+            ((t[n] = {
+                name: e,
+                bands: H.map((a) => ({ ...a })),
+                bandCount: H.length,
+                preamp: F.getPreamp(),
+                createdAt: Date.now(),
+            }),
+                localStorage.setItem(O7, JSON.stringify(t)),
+                localStorage.setItem(an, n),
+                Ba && (Ba.value = ''),
+                Sa());
+        });
+    const g1 = document.getElementById('parametric-export-btn'),
+        f1 = document.getElementById('parametric-import-btn'),
+        U7 = document.getElementById('parametric-import-file');
+    (g1 &&
+        g1.addEventListener('click', () => {
+            if (!H || H.length === 0) return;
+            const t = [`Preamp: ${F.getPreamp().toFixed(1)} dB`];
+            H.forEach((i, c) => {
+                const u = i.type === 'lowshelf' ? 'LS' : i.type === 'highshelf' ? 'HS' : 'PK';
+                t.push(
+                    `Filter ${c + 1}: ON ${u} Fc ${Math.round(i.freq)} Hz Gain ${i.gain.toFixed(1)} dB Q ${i.q.toFixed(2)}`
+                );
+            });
+            const n = t.join(`
+`),
+                a = new Blob([n], { type: 'text/plain' }),
+                o = URL.createObjectURL(a),
+                s = document.createElement('a');
+            ((s.href = o), (s.download = 'parametric-eq.txt'), s.click(), URL.revokeObjectURL(o));
+        }),
+        f1 &&
+            U7 &&
+            (f1.addEventListener('click', () => U7.click()),
+            U7.addEventListener('change', (e) => {
+                const t = e.target.files[0];
+                if (!t) return;
+                const n = new FileReader();
+                ((n.onload = (a) => {
+                    try {
+                        const o = a.target.result,
+                            s = [];
+                        let i = 0;
+                        const c = o.split(`
+`);
+                        for (const u of c) {
+                            const v = u.match(/Preamp:\s*([-\d.]+)\s*dB/i);
+                            if (v) {
+                                i = parseFloat(v[1]);
+                                continue;
+                            }
+                            const g = u.match(
+                                /Filter\s+\d+:\s*ON\s+(\w+)\s+Fc\s+([\d.]+)\s*Hz\s+Gain\s+([-\d.]+)\s*dB\s+Q\s+([\d.]+)/i
+                            );
+                            if (g) {
+                                const d = {
+                                    PK: 'peaking',
+                                    LS: 'lowshelf',
+                                    LSC: 'lowshelf',
+                                    LSF: 'lowshelf',
+                                    HS: 'highshelf',
+                                    HSC: 'highshelf',
+                                    HSF: 'highshelf',
+                                };
+                                s.push({
+                                    id: s.length,
+                                    type: d[g[1].toUpperCase()] || 'peaking',
+                                    freq: parseFloat(g[2]),
+                                    gain: parseFloat(g[3]),
+                                    q: parseFloat(g[4]),
+                                    enabled: !0,
+                                });
+                            }
+                        }
+                        if (s.length === 0) return;
+                        ((H = s),
+                            ee(H),
+                            F.setPreamp(i),
+                            Ye && (Ye.value = i),
+                            Je && (Je.textContent = `${i} dB`),
+                            fe(H),
+                            X(),
+                            x(),
+                            Dt && (Dt.value = ''));
+                    } catch (o) {
+                        console.error('[PEQ Import] Failed:', o);
+                    }
+                }),
+                    n.readAsText(t),
+                    (e.target.value = ''));
+            })));
+    const pt = document.getElementById('speaker-config-select'),
+        z7 = document.getElementById('speaker-channel-tabs'),
+        Se = document.getElementById('speaker-measurement-status'),
+        p1 = document.getElementById('speaker-import-measurement-btn'),
+        H7 = document.getElementById('speaker-import-measurement-file'),
+        wa = document.getElementById('speaker-clear-measurement-btn'),
+        Bt = document.getElementById('speaker-target-select'),
+        h1 = document.getElementById('speaker-import-target-btn'),
+        j7 = document.getElementById('speaker-import-target-file'),
+        La = document.getElementById('speaker-band-count'),
+        ht = document.getElementById('speaker-bass-cutoff'),
+        y1 = document.getElementById('speaker-bass-cutoff-value'),
+        yt = document.getElementById('speaker-room-limit'),
+        v1 = document.getElementById('speaker-room-limit-value'),
+        it = document.getElementById('speaker-autoeq-btn'),
+        ie = document.getElementById('speaker-eq-status'),
+        E1 = document.getElementById('speaker-export-btn'),
+        lt = () => ae[ze],
+        nt = () => {
+            if (!z7) return;
+            const e = ft[ke];
+            ((z7.innerHTML = ''),
+                e.forEach((t) => {
+                    const n = document.createElement('button');
+                    ((n.className = 'speaker-channel-tab' + (t === ze ? ' active' : '')),
+                        (n.textContent = t),
+                        (n.title = N7[t]),
+                        ae[t].measurement && n.classList.add('has-data'),
+                        n.addEventListener('click', () => {
+                            ((ze = t), nt(), vt());
+                            const a = lt();
+                            (ee(a.bands), fe(a.bands), x());
+                        }),
+                        z7.appendChild(n));
+                }));
+        },
+        vt = () => {
+            const e = lt();
+            (Se &&
+                ((Se.textContent = e.measurement ? `${e.measurement.length} pts` : 'No measurement'),
+                Se.classList.toggle('loaded', !!e.measurement)),
+                wa && (wa.style.display = e.measurement ? '' : 'none'),
+                it && (it.disabled = !e.measurement),
+                Bt && (Bt.value = e.targetId));
+        };
+    (pt &&
+        pt.addEventListener('change', () => {
+            ke = pt.value;
+            const e = ft[ke];
+            (e.includes(ze) || (ze = e[0]), nt(), vt());
+        }),
+        p1 &&
+            H7 &&
+            (p1.addEventListener('click', () => H7.click()),
+            H7.addEventListener('change', (e) => {
+                const t = e.target.files[0];
+                if (!t) return;
+                const n = new FileReader();
+                ((n.onload = (a) => {
+                    const o = xe(a.target.result);
+                    o.length > 0 && ((lt().measurement = o), vt(), nt(), x());
+                }),
+                    n.readAsText(t),
+                    (e.target.value = ''));
+            })),
+        wa &&
+            wa.addEventListener('click', () => {
+                ((lt().measurement = null), vt(), nt(), x());
+            }));
+    const wt = document.getElementById('speaker-measure-btn');
+    wt &&
+        wt.addEventListener('click', async () => {
+            ((wt.disabled = !0), Se && ((Se.textContent = 'Requesting mic...'), Se.classList.remove('loaded')));
+            let e, t;
+            try {
+                ((t = await navigator.mediaDevices.getUserMedia({
+                    audio: { echoCancellation: !1, noiseSuppression: !1, autoGainControl: !1 },
+                })),
+                    (e = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 48e3 })));
+                const n = e.sampleRate,
+                    a = 5,
+                    o = n * a,
+                    s = e.createBuffer(1, o, n),
+                    i = s.getChannelData(0);
+                let c = 0,
+                    u = 0,
+                    v = 0,
+                    g = 0,
+                    d = 0,
+                    l = 0,
+                    m = 0;
+                for (let _ = 0; _ < o; _++) {
+                    const q = Math.random() * 2 - 1;
+                    ((c = 0.99886 * c + q * 0.0555179),
+                        (u = 0.99332 * u + q * 0.0750759),
+                        (v = 0.969 * v + q * 0.153852),
+                        (g = 0.8665 * g + q * 0.3104856),
+                        (d = 0.55 * d + q * 0.5329522),
+                        (l = -0.7616 * l - q * 0.016898));
+                    let U = c + u + v + g + d + l + m + q * 0.5362;
+                    m = q * 0.115926;
+                    let Q = 1;
+                    const Y = _ / n;
+                    (Y < 0.1 ? (Q = Y / 0.1) : Y > a - 0.1 && (Q = (a - Y) / 0.1), (i[_] = U * 0.04 * Q));
+                }
+                const r = e.createBufferSource();
+                ((r.buffer = s), r.connect(e.destination));
+                const p = e.createMediaStreamSource(t),
+                    E = e.createAnalyser();
+                ((E.fftSize = 8192), (E.smoothingTimeConstant = 0.3), p.connect(E));
+                const b = E.frequencyBinCount,
+                    w = n / E.fftSize,
+                    D = new Float32Array(b),
+                    V = new Float64Array(b);
+                let O = 0;
+                r.start();
+                const te = e.currentTime;
+                if (
+                    (await new Promise((_) => {
+                        const q = () => {
+                            const U = e.currentTime - te;
+                            if (U >= a) {
+                                _();
+                                return;
+                            }
+                            const Q = Math.round((U / a) * 100);
+                            if ((Se && (Se.textContent = `Measuring... ${Q}%`), U > 0.3)) {
+                                E.getFloatFrequencyData(D);
+                                for (let Y = 0; Y < b; Y++) {
+                                    const ce = D[Y];
+                                    ce !== -1 / 0 && (V[Y] += ce);
+                                }
+                                O++;
+                            }
+                            requestAnimationFrame(q);
+                        };
+                        requestAnimationFrame(q);
+                    }),
+                    r.stop(),
+                    O === 0)
+                )
+                    throw new Error('No frames captured');
+                for (let _ = 0; _ < b; _++) V[_] /= O;
+                const ne = [],
+                    le = 24;
+                let re = 20;
+                for (; re <= 2e4; ) {
+                    const _ = Math.round(re / w);
+                    if (_ >= 0 && _ < b) {
+                        const q = Math.max(0, _ - 2),
+                            U = Math.min(b - 1, _ + 2);
+                        let Q = 0,
+                            Y = 0;
+                        for (let ce = q; ce <= U; ce++) ((Q += V[ce]), Y++);
+                        ne.push({ freq: re, gain: Q / Y });
+                    }
+                    re *= Math.pow(2, 1 / le);
+                }
+                const he = ne.filter((_) => _.freq >= 500 && _.freq <= 2e3),
+                    k = 75 - (he.length > 0 ? he.reduce((_, q) => _ + q.gain, 0) / he.length : 0),
+                    A = ne.map((_) => ({ freq: _.freq, gain: _.gain + k }));
+                ((lt().measurement = A), vt(), nt(), X(), x(), Se && (Se.textContent = `${A.length} pts (measured)`));
+            } catch (n) {
+                (console.error('[Speaker Measure]', n),
+                    Se && (Se.textContent = n.name === 'NotAllowedError' ? 'Mic denied' : 'Measure failed'));
+            } finally {
+                (t && t.getTracks().forEach((n) => n.stop()),
+                    e && e.state !== 'closed' && e.close().catch(() => {}),
+                    (wt.disabled = !1));
+            }
+        });
+    const Ca = document.getElementById('speaker-measure-all-btn');
+    Ca &&
+        Ca.addEventListener('click', async () => {
+            ((Ca.disabled = !0),
+                wt && (wt.disabled = !0),
+                Se && ((Se.textContent = 'Requesting mic...'), Se.classList.remove('loaded')));
+            let e, t;
+            try {
+                ((t = await navigator.mediaDevices.getUserMedia({
+                    audio: { echoCancellation: !1, noiseSuppression: !1, autoGainControl: !1 },
+                })),
+                    (e = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 48e3 })));
+                const n = e.sampleRate,
+                    a = 5,
+                    o = n * a,
+                    s = e.createBuffer(1, o, n),
+                    i = s.getChannelData(0);
+                let c = 0,
+                    u = 0,
+                    v = 0,
+                    g = 0,
+                    d = 0,
+                    l = 0,
+                    m = 0;
+                for (let q = 0; q < o; q++) {
+                    const U = Math.random() * 2 - 1;
+                    ((c = 0.99886 * c + U * 0.0555179),
+                        (u = 0.99332 * u + U * 0.0750759),
+                        (v = 0.969 * v + U * 0.153852),
+                        (g = 0.8665 * g + U * 0.3104856),
+                        (d = 0.55 * d + U * 0.5329522),
+                        (l = -0.7616 * l - U * 0.016898));
+                    let Q = c + u + v + g + d + l + m + U * 0.5362;
+                    m = U * 0.115926;
+                    let Y = 1;
+                    const ce = q / n;
+                    (ce < 0.1 ? (Y = ce / 0.1) : ce > a - 0.1 && (Y = (a - ce) / 0.1), (i[q] = Q * 0.04 * Y));
+                }
+                const r = e.createBufferSource();
+                ((r.buffer = s), r.connect(e.destination));
+                const p = e.createMediaStreamSource(t),
+                    E = e.createAnalyser();
+                ((E.fftSize = 8192), (E.smoothingTimeConstant = 0.3), p.connect(E));
+                const b = E.frequencyBinCount,
+                    w = n / E.fftSize,
+                    D = new Float32Array(b),
+                    V = new Float64Array(b);
+                let O = 0;
+                r.start();
+                const te = e.currentTime;
+                if (
+                    (await new Promise((q) => {
+                        const U = () => {
+                            const Q = e.currentTime - te;
+                            if (Q >= a) {
+                                q();
+                                return;
+                            }
+                            const Y = Math.round((Q / a) * 100);
+                            if ((Se && (Se.textContent = `Measuring all... ${Y}%`), Q > 0.3)) {
+                                E.getFloatFrequencyData(D);
+                                for (let ce = 0; ce < b; ce++) {
+                                    const $e = D[ce];
+                                    $e !== -1 / 0 && (V[ce] += $e);
+                                }
+                                O++;
+                            }
+                            requestAnimationFrame(U);
+                        };
+                        requestAnimationFrame(U);
+                    }),
+                    r.stop(),
+                    O === 0)
+                )
+                    throw new Error('No frames captured');
+                for (let q = 0; q < b; q++) V[q] /= O;
+                const ne = [],
+                    le = 24;
+                let re = 20;
+                for (; re <= 2e4; ) {
+                    const q = Math.round(re / w);
+                    if (q >= 0 && q < b) {
+                        const U = Math.max(0, q - 2),
+                            Q = Math.min(b - 1, q + 2);
+                        let Y = 0,
+                            ce = 0;
+                        for (let $e = U; $e <= Q; $e++) ((Y += V[$e]), ce++);
+                        ne.push({ freq: re, gain: Y / ce });
+                    }
+                    re *= Math.pow(2, 1 / le);
+                }
+                const he = ne.filter((q) => q.freq >= 500 && q.freq <= 2e3),
+                    k = 75 - (he.length > 0 ? he.reduce((q, U) => q + U.gain, 0) / he.length : 0),
+                    A = ne.map((q) => ({ freq: q.freq, gain: q.gain + k })),
+                    _ = ft[ke];
+                (_.forEach((q) => {
+                    ae[q].measurement = A.map((U) => ({ ...U }));
+                }),
+                    vt(),
+                    nt(),
+                    X(),
+                    x(),
+                    Se && (Se.textContent = `${A.length} pts → ${_.length} channels`));
+            } catch (n) {
+                (console.error('[Speaker Measure All]', n),
+                    Se && (Se.textContent = n.name === 'NotAllowedError' ? 'Mic denied' : 'Measure failed'));
+            } finally {
+                (t && t.getTracks().forEach((n) => n.stop()),
+                    e && e.state !== 'closed' && e.close().catch(() => {}),
+                    (Ca.disabled = !1),
+                    wt && (wt.disabled = !1));
+            }
+        });
+    const xa = document.getElementById('speaker-autoeq-all-btn');
+    (xa &&
+        xa.addEventListener('click', () => {
+            const t = ft[ke].filter((n) => ae[n].measurement);
+            t.length !== 0 &&
+                ((xa.disabled = !0),
+                it && (it.disabled = !0),
+                ie && (ie.textContent = 'Running all...'),
+                setTimeout(() => {
+                    const n = La ? parseInt(La.value, 10) : 10,
+                        a = ht ? parseInt(ht.value, 10) : 40,
+                        o = yt ? parseInt(yt.value, 10) : 500;
+                    t.forEach((i) => {
+                        const c = ae[i],
+                            v = bt.find((l) => l.id === c.targetId)?.data || [],
+                            g = es(c.measurement, v, n, o, a, 3);
+                        let d = 0;
+                        for (let l = 20; l <= 2e4; l *= 1.1) {
+                            let m = 0;
+                            (g.forEach((r) => {
+                                r.enabled && (m += at(l, r));
+                            }),
+                                m > d && (d = m));
+                        }
+                        ((c.bands = g), (c.preamp = d > 0 ? parseFloat((-d - 0.1).toFixed(1)) : 0));
+                    });
+                    const s = lt();
+                    (ee(s.bands),
+                        fe(s.bands),
+                        vt(),
+                        nt(),
+                        X(),
+                        x(),
+                        (xa.disabled = !1),
+                        it && (it.disabled = !s.measurement),
+                        ie && (ie.textContent = `${t.length} channels optimized`),
+                        setTimeout(() => {
+                            ie && (ie.textContent = '');
+                        }, 3e3));
+                }, 100));
+        }),
+        Bt &&
+            Bt.addEventListener('change', () => {
+                ((lt().targetId = Bt.value), x());
+            }),
+        h1 &&
+            j7 &&
+            (h1.addEventListener('click', () => j7.click()),
+            j7.addEventListener('change', (e) => {
+                const t = e.target.files[0];
+                if (!t) return;
+                const n = new FileReader();
+                ((n.onload = (a) => {
+                    const o = xe(a.target.result);
+                    if (o.length === 0) return;
+                    const s = 'custom_speaker_target',
+                        i = t.name.replace(/\.(txt|csv)$/i, ''),
+                        c = bt.findIndex((v) => v.id === s);
+                    c > -1 ? (bt[c] = { id: s, label: i, data: o }) : bt.push({ id: s, label: i, data: o });
+                    let u = Bt.querySelector('option[value="custom_speaker_target"]');
+                    (u || ((u = document.createElement('option')), (u.value = s), Bt.appendChild(u)),
+                        (u.textContent = i),
+                        (Bt.value = s),
+                        (lt().targetId = s),
+                        x());
+                }),
+                    n.readAsText(t),
+                    (e.target.value = ''));
+            })),
+        ht &&
+            ht.addEventListener('input', () => {
+                (y1 && (y1.textContent = `${ht.value} Hz`), x());
+            }),
+        yt &&
+            yt.addEventListener('input', () => {
+                (v1 && (v1.textContent = `${yt.value} Hz`), x());
+            }),
+        it &&
+            it.addEventListener('click', () => {
+                const e = lt();
+                e.measurement &&
+                    ((it.disabled = !0),
+                    ie && (ie.textContent = 'Running...'),
+                    setTimeout(() => {
+                        const n = bt.find((g) => g.id === e.targetId)?.data || [],
+                            a = La ? parseInt(La.value, 10) : 10,
+                            o = ht ? parseInt(ht.value, 10) : 40,
+                            s = yt ? parseInt(yt.value, 10) : 500,
+                            i = Te ? parseInt(Te.value, 10) : 48e3,
+                            c = es(e.measurement, n, a, s, o, 3, i);
+                        let u = 0;
+                        for (let g = 20; g <= 2e4; g *= 1.1) {
+                            let d = 0;
+                            (c.forEach((l) => {
+                                l.enabled && (d += at(g, l, i));
+                            }),
+                                d > u && (u = d));
+                        }
+                        const v = u > 0 ? parseFloat((-u - 0.1).toFixed(1)) : 0;
+                        ((e.bands = c),
+                            (e.preamp = v),
+                            ee(c),
+                            fe(c),
+                            vt(),
+                            nt(),
+                            X(),
+                            x(),
+                            (it.disabled = !1),
+                            ie && (ie.textContent = `${ze} optimized`),
+                            setTimeout(() => {
+                                ie && (ie.textContent = '');
+                            }, 3e3));
+                    }, 100));
+            }),
+        E1 &&
+            E1.addEventListener('click', () => {
+                const e = ft[ke],
+                    t = {
+                        config: ke,
+                        channels: e.map((s) => {
+                            const i = ae[s];
+                            return {
+                                id: s,
+                                label: N7[s],
+                                preamp: i.preamp,
+                                filters: i.bands
+                                    .filter((c) => c.enabled)
+                                    .map((c) => ({ type: c.type, freq: c.freq, gain: c.gain, q: c.q })),
+                            };
+                        }),
+                    },
+                    n = new Blob([JSON.stringify(t, null, 2)], { type: 'application/json' }),
+                    a = URL.createObjectURL(n),
+                    o = document.createElement('a');
+                ((o.href = a),
+                    (o.download = `SpeakerEQ_${ke}_${new Date().toISOString().slice(0, 10)}.json`),
+                    o.click(),
+                    URL.revokeObjectURL(a));
+            }));
+    const b1 = document.getElementById('speaker-import-btn'),
+        Aa = document.getElementById('speaker-import-file');
+    b1 &&
+        Aa &&
+        (b1.addEventListener('click', () => Aa.click()),
+        Aa.addEventListener('change', async (e) => {
+            const t = e.target.files[0];
+            if (t) {
+                try {
+                    const n = await t.text(),
+                        a = JSON.parse(n);
+                    if (!a.config || !Array.isArray(a.channels)) throw new Error('Invalid JSON format');
+                    (a.config !== ke && ((ke = a.config), pt && (pt.value = ke)),
+                        a.channels.forEach((o) => {
+                            ae[o.id] &&
+                                ((ae[o.id].preamp = o.preamp || 0),
+                                (ae[o.id].bands = o.filters.map((s) => ({
+                                    enabled: !0,
+                                    type: s.type,
+                                    freq: s.freq,
+                                    gain: s.gain,
+                                    q: s.q,
+                                }))));
+                        }),
+                        (ze = ft[ke][0]),
+                        nt(),
+                        G7('speaker'),
+                        ie && (ie.textContent = `Loaded: ${a.channels.length} channels`),
+                        setTimeout(() => {
+                            ie && (ie.textContent = '');
+                        }, 2e3));
+                } catch (n) {
+                    ie && (ie.textContent = `Error: ${n.message}`);
+                }
+                Aa.value = '';
+            }
+        }));
+    const Q7 = 'speaker-eq-profiles',
+        on = 'speaker-eq-active-profile';
+    let Ma = null;
+    const Pn = () => Ma || {},
+        Fi = async () => {
+            try {
+                const e = localStorage.getItem('speaker-eq-profiles');
+                if (e) {
+                    const t = JSON.parse(e);
+                    (t && Object.keys(t).length > 0 && (await Xe.saveSetting(Q7, t)),
+                        localStorage.removeItem('speaker-eq-profiles'));
+                }
+            } catch {}
+            try {
+                Ma = (await Xe.getSetting(Q7)) || {};
+            } catch {
+                Ma = {};
+            }
+        },
+        k1 = async (e) => {
+            ((Ma = e), await Xe.saveSetting(Q7, e));
+        };
+    await Fi();
+    const Pa = () => {
+            const e = document.getElementById('speaker-saved-grid'),
+                t = document.getElementById('speaker-saved-count');
+            if (!e) return;
+            const n = Pn(),
+                a = localStorage.getItem(on),
+                o = Object.keys(n);
+            (t && (t.textContent = o.length),
+                (e.innerHTML = ''),
+                o.length !== 0 &&
+                    o.forEach((s) => {
+                        const i = n[s],
+                            c = document.createElement('div');
+                        c.className = 'autoeq-profile-card' + (s === a ? ' active' : '');
+                        const u = document.createElement('canvas');
+                        ((u.className = 'autoeq-profile-preview'), (u.style.height = '80px'), c.appendChild(u));
+                        const v = i.channels ? i.channels.length : 0,
+                            g = document.createElement('div');
+                        ((g.className = 'autoeq-profile-info'),
+                            (g.innerHTML = `
                 <span class="autoeq-profile-active-icon">&#10003;</span>
-                <span class="autoeq-profile-name">${i.name||"Unnamed"}</span>
+                <span class="autoeq-profile-name">${i.name || 'Unnamed'}</span>
                 <span class="autoeq-profile-meta">${i.config} &middot; ${v} ch</span>
-            `,c.appendChild(g);const d=document.createElement("button");d.className="autoeq-profile-delete",d.innerHTML="&#128465;",d.title="Delete profile",d.addEventListener("click",async l=>{l.stopPropagation();const m=Pn();delete m[s],await k1(m),localStorage.getItem(on)===s&&localStorage.removeItem(on),Pa()}),c.appendChild(d),c.addEventListener("click",()=>{Ri(s)}),e.appendChild(c),requestAnimationFrame(()=>{const l=i.channels?.[0];if(l&&l.measurementPreview){const m=bt.find(r=>r.id===(l.targetId||"harman_room"));n1(u,l.measurementPreview,m?.data?tn(m.data):null,l.correctedPreview||null)}})})},Ri=e=>{const n=Pn()[e];if(!n)return;n.config&&n.config!==ke&&(ke=n.config,pt&&(pt.value=ke)),n.channels&&n.channels.forEach(o=>{ae[o.id]&&(ae[o.id].measurement=o.measurement||null,ae[o.id].targetId=o.targetId||"harman_room",ae[o.id].preamp=o.preamp||0,ae[o.id].bands=o.bands?o.bands.map(s=>({...s})):ae[o.id].bands)}),ze=ft[ke][0];const a=lt();ee(a.bands),fe(a.bands),vt(),nt(),X(),x(),localStorage.setItem(on,e),Pa(),ie&&(ie.textContent=`Loaded "${n.name}"`),setTimeout(()=>{ie&&(ie.textContent="")},2e3)},q1=document.getElementById("speaker-save-btn"),W7=document.getElementById("speaker-profile-name");q1&&q1.addEventListener("click",async()=>{try{const e=W7?.value.trim()||`Speaker ${ke}`,t=ft[ke],n=Pn(),a="spk_"+Date.now();n[a]={name:e,config:ke,channels:t.map(o=>{const s=ae[o];return{id:o,targetId:s.targetId,preamp:s.preamp,bands:s.bands.map(i=>({...i})),measurement:s.measurement?s.measurement.map(i=>({freq:i.freq,gain:parseFloat(i.gain.toFixed(1))})):null,measurementPreview:s.measurement?tn(s.measurement):null,correctedPreview:Ue&&o===ze?tn(Ue):null}}),createdAt:Date.now()},await k1(n),localStorage.setItem(on,a),W7&&(W7.value=""),Pa(),ie&&(ie.textContent=`Saved "${e}"`),setTimeout(()=>{ie&&(ie.textContent="")},2e3)}catch(e){console.error("[Speaker Save]",e),ie&&(ie.textContent=`Save failed: ${e.message}`)}});const Ta=document.getElementById("speaker-saved-collapse"),I1=document.getElementById("speaker-saved-grid");Ta&&I1&&Ta.addEventListener("click",()=>{Ta.classList.toggle("collapsed"),I1.style.display=Ta.classList.contains("collapsed")?"none":""});const S1=document.getElementById("autoeq-add-band-btn"),B1=document.getElementById("autoeq-remove-band-btn"),w1=document.getElementById("autoeq-reset-bands-btn");S1&&S1.addEventListener("click",()=>{let e=Pe();e||(e=[],ha(e)),!(e.length>=32)&&(e.push({id:e.length,type:"peaking",freq:1e3,gain:0,q:1,enabled:!0,channel:"stereo"}),ee(e),fe(e),X(),x())}),B1&&B1.addEventListener("click",()=>{const e=Pe();!e||e.length<=1||(e.pop(),ee(e),fe(e),X(),x())}),w1&&w1.addEventListener("click",()=>{const e=Pe();e&&(e.forEach(t=>{t.gain=0}),ee(e),fe(e),X(),x())}),pa&&(pa.checked=F.isEnabled(),e1(pa.checked),pa.addEventListener("change",e=>{const t=e.target.checked;F.setEnabled(t),e1(t),Ie==="legacy"?(W.isEQEnabled=!1,W.toggleGraphicEQ(t)):(W.toggleEQ(t),W.toggleGraphicEQ(!1))})),ba();const L1=document.getElementById("autoeq-preset-row"),C1=document.getElementById("autoeq-parametric-profiles");L1&&(L1.style.display="none"),C1&&(C1.style.display="none"),await s1();const Fa=F.getActiveAutoEQProfile();if(!Fa){const e=F.getLastHeadphone();if(e){if(je=e.measurementData,Oe=e.entry,we){let t=we.querySelector(`option[value="${e.entry.name}"]`);t||(t=document.createElement("option"),t.value=e.entry.name,t.textContent=e.entry.name.replace(/\s*\([^)]*\)\s*$/,""),we.appendChild(t)),we.value=e.entry.name}_e&&(_e.disabled=!1),requestAnimationFrame(x)}else On.length>0&&await ka(On[0])}if(F.isEnabled()&&requestAnimationFrame(x),Fa){const e=F.getAutoEQProfiles();if(e[Fa]){const t=e[Fa];if(oe=t.bands?.map(n=>({...n}))||null,Ue=t.correctedData?[...t.correctedData]:null,je=t.measurementData?[...t.measurementData]:null,Oe={name:t.headphoneName,type:t.headphoneType},we){let n=we.querySelector(`option[value="${t.headphoneName}"]`);n||(n=document.createElement("option"),n.value=t.headphoneName,n.textContent=t.headphoneName.replace(/\s*\([^)]*\)\s*$/,""),we.appendChild(n)),we.value=t.headphoneName}Ee&&(Ee.value=t.targetId||"harman_oe_2018"),zs(t.bandCount,t.bands),ot&&(ot.value=t.maxFreq||16e3),Te&&(Te.value=t.sampleRate||48e3),_e&&(_e.disabled=!1),oe&&fe(oe),requestAnimationFrame(x)}}const x1=localStorage.getItem(an);if(x1){const t=Ia()[x1];t&&t.bands&&(H=t.bands.map(n=>({...n})))}const A1=localStorage.getItem(on);if(A1){const t=Pn()[A1];t&&(t.config&&(ke=t.config,pt&&(pt.value=ke)),t.channels&&t.channels.forEach(n=>{ae[n.id]&&(ae[n.id].measurement=n.measurement||null,ae[n.id].targetId=n.targetId||"harman_room",ae[n.id].preamp=n.preamp||0,ae[n.id].bands=n.bands?n.bands.map(a=>({...a})):ae[n.id].bands)}),ze=ft[ke][0])}const K7=localStorage.getItem(r1);K7&&["autoeq","parametric","speaker","legacy"].includes(K7)&&G7(K7);const V7=document.getElementById("now-playing-mode");V7&&(V7.value=Z1.getMode(),V7.addEventListener("change",e=>{Z1.setMode(e.target.value)}));const Y7=document.getElementById("fullscreen-cover-click-action");Y7&&(Y7.value=ei.getAction(),Y7.addEventListener("change",e=>{ei.setAction(e.target.value)}));const J7=document.getElementById("close-modals-on-navigation-toggle");J7&&(J7.checked=Ua.shouldCloseOnNavigation(),J7.addEventListener("change",e=>{Ua.setCloseOnNavigation(e.target.checked)}));const X7=document.getElementById("intercept-back-to-close-modals-toggle");X7&&(X7.checked=Ua.shouldInterceptBackToClose(),X7.addEventListener("change",e=>{Ua.setInterceptBackToClose(e.target.checked)}));const Z7=document.getElementById("compact-artist-toggle");Z7&&(Z7.checked=za.isCompactArtist(),Z7.addEventListener("change",e=>{za.setCompactArtist(e.target.checked)}));const eo=document.getElementById("artist-banners-toggle");eo&&(eo.checked=ti.isEnabled(),eo.addEventListener("change",e=>{ti.setEnabled(e.target.checked)}));const to=document.getElementById("compact-album-toggle");to&&(to.checked=za.isCompactAlbum(),to.addEventListener("change",e=>{za.setCompactAlbum(e.target.checked)}));const no=document.getElementById("write-artists-separately-toggle");no&&(no.checked=me.writeArtistsSeparately,no.addEventListener("change",e=>{me.writeArtistsSeparately=e.target.checked}));const ao=document.getElementById("download-lyrics-toggle");ao&&(ao.checked=ni.shouldDownloadLyrics(),ao.addEventListener("change",e=>{ni.setDownloadLyrics(e.target.checked)}));const oo=document.getElementById("romaji-lyrics-toggle");oo&&(oo.checked=localStorage.getItem("lyricsRomajiMode")==="true",oo.addEventListener("change",e=>{localStorage.setItem("lyricsRomajiMode",e.target.checked?"true":"false")}));const so=document.getElementById("album-background-toggle");so&&(so.checked=ai.isEnabled(),so.addEventListener("change",e=>{ai.setEnabled(e.target.checked)}));const io=document.getElementById("dynamic-color-toggle");io&&(io.checked=oi.isEnabled(),io.addEventListener("change",e=>{oi.setEnabled(e.target.checked),e.target.checked||window.dispatchEvent(new CustomEvent("reset-dynamic-color"))}));const lo=document.getElementById("fullscreen-cover-no-round-toggle");lo&&(lo.checked=si.isEnabled(),lo.addEventListener("change",e=>{si.setEnabled(e.target.checked),window.dispatchEvent(new CustomEvent("fullscreen-cover-settings-changed"))}));const ro=document.getElementById("fullscreen-cover-vanilla-tilt-toggle");ro&&(ro.checked=ii.isEnabled(),ro.addEventListener("change",e=>{ii.setEnabled(e.target.checked),window.dispatchEvent(new CustomEvent("fullscreen-cover-settings-changed"))}));const co=document.getElementById("fullscreen-cover-tilt-distance");co&&(co.value=li.getValue(),co.addEventListener("input",e=>{li.setValue(parseInt(e.target.value)),window.dispatchEvent(new CustomEvent("fullscreen-cover-settings-changed"))}));const uo=document.getElementById("fullscreen-cover-tilt-speed");uo&&(uo.value=ri.getValue(),uo.addEventListener("input",e=>{ri.setValue(parseInt(e.target.value)),window.dispatchEvent(new CustomEvent("fullscreen-cover-settings-changed"))}));const mo=document.getElementById("waveform-toggle");mo&&(mo.checked=ci.isEnabled(),mo.addEventListener("change",e=>{ci.setEnabled(e.target.checked),window.dispatchEvent(new CustomEvent("waveform-toggle",{detail:{enabled:e.target.checked}}))}));const _t=document.getElementById("visualizer-sensitivity-slider"),go=document.getElementById("visualizer-sensitivity-value");if(_t&&go){const e=Ce.getSensitivity();_t.value=e,go.textContent=`${(e*100).toFixed(0)}%`,_t.addEventListener("input",t=>{const n=parseFloat(t.target.value);Ce.setSensitivity(n),go.textContent=`${(n*100).toFixed(0)}%`})}const fo=document.getElementById("visualizer-dimming-slider"),po=document.getElementById("visualizer-dimming-value");if(fo&&po){const e=Ce.getDimAmount();fo.value=e,po.textContent=`${(e*100).toFixed(0)}%`,fo.addEventListener("input",t=>{const n=parseFloat(t.target.value);Ce.setDimAmount(n),po.textContent=`${(n*100).toFixed(0)}%`,window.dispatchEvent(new CustomEvent("visualizer-dim-change",{detail:{dimAmount:n}}))})}const ho=document.getElementById("smart-intensity-toggle");if(ho){const e=Ce.isSmartIntensityEnabled();ho.checked=e;const t=n=>{_t&&(_t.disabled=n,_t.parentElement.style.opacity=n?"0.5":"1",_t.parentElement.style.pointerEvents=n?"none":"auto")};t(e),ho.addEventListener("change",n=>{Ce.setSmartIntensity(n.target.checked),t(n.target.checked)})}const sn=document.getElementById("visualizer-enabled-toggle"),M1=document.getElementById("visualizer-mode-setting"),P1=document.getElementById("visualizer-smart-intensity-setting"),T1=document.getElementById("visualizer-sensitivity-setting"),F1=document.getElementById("visualizer-preset-setting"),ln=document.getElementById("visualizer-preset-select"),R1=document.getElementById("butterchurn-cycle-setting"),D1=document.getElementById("butterchurn-duration-setting"),_1=document.getElementById("butterchurn-randomize-setting"),$1=document.getElementById("butterchurn-specific-preset-setting"),yo=document.getElementById("butterchurn-specific-preset-select"),Tn=document.getElementById("butterchurn-cycle-toggle"),vo=document.getElementById("butterchurn-duration-input"),Eo=document.getElementById("butterchurn-randomize-toggle"),rn=async()=>{const e=sn?sn.checked:!1,t=ln?ln.value==="butterchurn":!1,n=e&&t;R1&&(R1.style.display=n?"flex":"none"),$1&&($1.style.display=n?"flex":"none");const a=Tn?Tn.checked:!1,o=n&&a;D1&&(D1.style.display=o?"flex":"none"),_1&&(_1.style.display=o?"flex":"none");const{keys:s}=await fi(),i=yo;if(i&&s.length>0){const c=Array.from(i.options).map(g=>g.value);if(c.length===1&&c[0]===""||c.length!==s.length||!s.every(g=>c.includes(g))){const g=i.value;i.innerHTML="",s.forEach(d=>{const l=document.createElement("option");l.value=d,l.textContent=d,i.appendChild(l)}),s.includes(g)?i.value=g:i.selectedIndex=0}}},N1=async e=>{const t=e?"flex":"none";M1&&(M1.style.display=t),P1&&(P1.style.display=t),T1&&(T1.style.display=t),F1&&(F1.style.display=t),await rn()};ln&&(ln.value=Ce.getPreset()),sn&&(sn.checked=Ce.isEnabled(),await N1(sn.checked),sn.addEventListener("change",async e=>{Ce.setEnabled(e.target.checked),await N1(e.target.checked)})),ln&&ln.addEventListener("change",async e=>{const t=e.target.value;Ce.setPreset(t),P&&P.visualizer&&P.visualizer.setPreset(t),await rn(),window.location.reload()}),Tn&&(Tn.checked=Ce.isButterchurnCycleEnabled(),Tn.addEventListener("change",async e=>{Ce.setButterchurnCycleEnabled(e.target.checked),await rn()})),vo&&(vo.value=Ce.getButterchurnCycleDuration(),vo.addEventListener("change",e=>{let t=parseInt(e.target.value,10);(isNaN(t)||t<5)&&(t=5),t>300&&(t=300),e.target.value=t,Ce.setButterchurnCycleDuration(t)})),Eo&&(Eo.checked=Ce.isButterchurnRandomizeEnabled(),Eo.addEventListener("change",e=>{Ce.setButterchurnRandomizeEnabled(e.target.checked)})),yo&&yo.addEventListener("change",e=>{P&&P.visualizer&&P.visualizer.presets.butterchurn&&P.visualizer.presets.butterchurn.loadPreset(e.target.value)}),window.addEventListener("butterchurn-presets-loaded",async()=>{console.log("[Settings] Butterchurn presets loaded event received"),await rn()});const{keys:Di}=await fi();Di.length>0&&(console.log("[Settings] Presets already cached, updating dropdown immediately"),await rn());const bo=document.getElementById("settings-tab-appearance");bo&&new MutationObserver(async t=>{for(const n of t)n.type==="attributes"&&n.attributeName==="class"&&bo.classList.contains("active")&&(console.log("[Settings] Appearance tab became active, refreshing presets"),await rn())}).observe(bo,{attributes:!0});const ko=document.getElementById("cd-album-cover-toggle");ko&&(ko.checked=Ce.isCdAlbumCoverEnabled(),ko.addEventListener("change",e=>{Ce.setCdAlbumCoverEnabled(e.target.checked),window.dispatchEvent(new CustomEvent("fullscreen-cover-settings-changed"))}));const qo=document.getElementById("settings-tab-downloads");qo&&new MutationObserver(async t=>{for(const n of t)n.type==="attributes"&&n.attributeName==="class"&&qo.classList.contains("active")&&(console.log("[Settings] Downloads tab became active, updating setting visibility"),c7(),await bn())}).observe(qo,{attributes:!0});const Io=document.getElementById("visualizer-mode-select");Io&&(Io.value=Ce.getMode(),Io.addEventListener("change",e=>{Ce.setMode(e.target.value)}));const So=document.getElementById("show-recommended-songs-toggle");So&&(So.checked=Qe.shouldShowRecommendedSongs(),So.addEventListener("change",e=>{Qe.setShowRecommendedSongs(e.target.checked)}));const Bo=document.getElementById("show-recommended-albums-toggle");Bo&&(Bo.checked=Qe.shouldShowRecommendedAlbums(),Bo.addEventListener("change",e=>{Qe.setShowRecommendedAlbums(e.target.checked)}));const wo=document.getElementById("show-recommended-artists-toggle");wo&&(wo.checked=Qe.shouldShowRecommendedArtists(),wo.addEventListener("change",e=>{Qe.setShowRecommendedArtists(e.target.checked)}));const Lo=document.getElementById("show-jump-back-in-toggle");Lo&&(Lo.checked=Qe.shouldShowJumpBackIn(),Lo.addEventListener("change",e=>{Qe.setShowJumpBackIn(e.target.checked)}));const Co=document.getElementById("show-editors-picks-toggle");Co&&(Co.checked=Qe.shouldShowEditorsPicks(),Co.addEventListener("change",e=>{Qe.setShowEditorsPicks(e.target.checked)}));const xo=document.getElementById("shuffle-editors-picks-toggle");xo&&(xo.checked=Qe.shouldShuffleEditorsPicks(),xo.addEventListener("change",e=>{Qe.setShuffleEditorsPicks(e.target.checked)}));const Ra=document.getElementById("editors-picks-source-select");if(Ra){async function e(){try{const n=await fetch("/monochrome-unlocked/editors-picks-old/index.json");n.ok&&(await n.json()).forEach(o=>{const s=document.createElement("option");s.value=o.file,s.textContent=o.label,Ra.appendChild(s)})}catch(n){console.warn("Could not load editors-picks-old index:",n)}const t=Qe.getEditorsPicksSource();Ra.value=t}await e(),Ra.addEventListener("change",t=>{Qe.setEditorsPicksSource(t.target.value),window.dispatchEvent(new CustomEvent("refresh-home-editors-picks"))})}const Da=document.getElementById("sidebar-show-home-toggle");Da&&(Da.checked=K.shouldShowHome(),Da.addEventListener("change",e=>{K.setShowHome(e.target.checked),K.applySidebarVisibility()}));const Ao=document.getElementById("sidebar-show-library-toggle");Ao&&(Ao.checked=K.shouldShowLibrary(),Ao.addEventListener("change",e=>{K.setShowLibrary(e.target.checked),K.applySidebarVisibility()}));const Mo=document.getElementById("sidebar-show-recent-toggle");Mo&&(Mo.checked=K.shouldShowRecent(),Mo.addEventListener("change",e=>{K.setShowRecent(e.target.checked),K.applySidebarVisibility()}));const Po=document.getElementById("sidebar-show-unreleased-toggle");Po&&(Po.checked=K.shouldShowUnreleased(),Po.addEventListener("change",e=>{K.setShowUnreleased(e.target.checked),K.applySidebarVisibility()}));const To=document.getElementById("sidebar-show-donate-toggle");To&&(To.checked=K.shouldShowDonate(),To.addEventListener("change",e=>{K.setShowDonate(e.target.checked),K.applySidebarVisibility()}));const Fo=document.getElementById("sidebar-show-settings-toggle");Fo&&(Fo.checked=!0,Fo.disabled=!0,K.setShowSettings(!0));const Ro=document.getElementById("sidebar-show-about-bottom-toggle");Ro&&(Ro.checked=K.shouldShowAbout(),Ro.addEventListener("change",e=>{K.setShowAbout(e.target.checked),K.applySidebarVisibility()}));const Do=document.getElementById("sidebar-show-discordbtn-toggle");Do&&(Do.checked=K.shouldShowDiscord(),Do.addEventListener("change",e=>{K.setShowDiscord(e.target.checked),K.applySidebarVisibility()}));const _o=document.getElementById("sidebar-show-party-toggle");_o&&(_o.checked=K.shouldShowParty(),_o.addEventListener("change",e=>{K.setShowParty(e.target.checked),K.applySidebarVisibility()}));const $o=document.getElementById("sidebar-show-githubbtn-toggle");$o&&($o.checked=K.shouldShowGithub(),$o.addEventListener("change",e=>{K.setShowGithub(e.target.checked),K.applySidebarVisibility()})),K.applySidebarVisibility();const $t=Da?.closest(".settings-group");if($t){const e=l=>l?l.replace("sidebar-nav-","sidebar-show-")+"-toggle":"";K.DEFAULT_ORDER.map(l=>({sidebarId:l,toggleId:e(l)})).forEach(({toggleId:l,sidebarId:m})=>{const p=document.getElementById(l)?.closest(".setting-item");p&&(p.dataset.sidebarId=m,p.classList.add("sidebar-setting-item"),p.draggable=!0)});const n=$t.querySelector(".sidebar-settings-main"),a=$t.querySelector(".sidebar-settings-bottom"),o=()=>[...n?.querySelectorAll(".sidebar-setting-item[data-sidebar-id]")??[],...a?.querySelectorAll(".sidebar-setting-item[data-sidebar-id]")??[]];(()=>{const l=K.getOrder(),m=K.getBottomNavIds(),r=l.filter(w=>!m.includes(w)),p=l.filter(w=>m.includes(w)),E=o(),b=new Map(E.map(w=>[w.dataset.sidebarId,w]));r.forEach(w=>{const D=b.get(w);D&&n&&n.appendChild(D)}),p.forEach(w=>{const D=b.get(w);D&&a&&a.appendChild(D)})})();let i=null;const c=()=>{const l=o().map(m=>m.dataset.sidebarId);K.setOrder(l),K.applySidebarVisibility()},u=l=>{const m=l.target.closest(".sidebar-setting-item");m&&(i=m,i.classList.add("dragging"),l.dataTransfer&&(l.dataTransfer.effectAllowed="move",l.dataTransfer.setData("text/plain",m.dataset.sidebarId||"")))},v=()=>{i&&(i.classList.remove("dragging"),i=null,c())},g=(l,m)=>l.filter(p=>p!==i).reduce((p,E)=>{const b=E.getBoundingClientRect(),w=m-b.top-b.height/2;return w<0&&w>p.offset?{offset:w,element:E}:p},{offset:Number.NEGATIVE_INFINITY}).element,d=l=>{if(l.preventDefault(),!i)return;const m=i.parentElement;if(m!==n&&m!==a)return;const r=Array.from(m.querySelectorAll(".sidebar-setting-item[data-sidebar-id]")),p=g(r,l.clientY);p!==i&&(p?m.insertBefore(i,p):m.appendChild(i))};$t.addEventListener("dragstart",u),$t.addEventListener("dragend",v),$t.addEventListener("dragover",d),$t.addEventListener("drop",l=>l.preventDefault())}const No=document.getElementById("filename-template");No&&(No.value=me.filenameTemplate,No.addEventListener("change",e=>{me.filenameTemplate=String(e.target.value)}));const Go=document.getElementById("zip-folder-template");Go&&(Go.value=me.folderTemplate,Go.addEventListener("change",e=>{me.folderTemplate=String(e.target.value)}));const Oo=document.getElementById("generate-m3u-toggle");Oo&&(Oo.checked=He.shouldGenerateM3U(),Oo.addEventListener("change",e=>{He.setGenerateM3U(e.target.checked)}));const Uo=document.getElementById("generate-m3u8-toggle");Uo&&(Uo.checked=He.shouldGenerateM3U8(),Uo.addEventListener("change",e=>{He.setGenerateM3U8(e.target.checked)}));const zo=document.getElementById("generate-cue-toggle");zo&&(zo.checked=He.shouldGenerateCUE(),zo.addEventListener("change",e=>{He.setGenerateCUE(e.target.checked)}));const Ho=document.getElementById("generate-nfo-toggle");Ho&&(Ho.checked=He.shouldGenerateNFO(),Ho.addEventListener("change",e=>{He.setGenerateNFO(e.target.checked)}));const jo=document.getElementById("generate-json-toggle");jo&&(jo.checked=He.shouldGenerateJSON(),jo.addEventListener("change",e=>{He.setGenerateJSON(e.target.checked)}));const Qo=document.getElementById("relative-paths-toggle");Qo&&(Qo.checked=He.shouldUseRelativePaths(),Qo.addEventListener("change",e=>{He.setUseRelativePaths(e.target.checked)}));const Wo=document.getElementById("separate-discs-zip-toggle");Wo&&(Wo.checked=He.shouldSeparateDiscsInZip(),Wo.addEventListener("change",e=>{He.setSeparateDiscsInZip(e.target.checked)})),document.getElementById("refresh-speed-test-btn")?.addEventListener("click",async()=>{const e=document.getElementById("refresh-speed-test-btn"),t=e.textContent;e.textContent="Testing...",e.disabled=!0;try{await I.settings.refreshInstances(),P.renderApiSettings(),e.textContent="Done!",setTimeout(()=>{e.textContent=t,e.disabled=!1},1500)}catch(n){console.error("Failed to refresh speed tests:",n),e.textContent="Error",setTimeout(()=>{e.textContent=t,e.disabled=!1},1500)}}),document.getElementById("api-instance-list")?.addEventListener("click",async e=>{const t=e.target.closest("button");if(!t)return;const n=t.closest("li"),a=t.dataset.type||n?.dataset.type||"api";if(t.classList.contains("add-instance")){const i=prompt(`Enter custom ${a.toUpperCase()} instance URL (e.g. https://my-instance.com):`);if(i&&i.trim()){let c=i.trim();c.startsWith("http")||(c="https://"+c),I.settings.addUserInstance(a,c),P.renderApiSettings()}return}if(t.classList.contains("delete-instance")){const i=n.dataset.url;i&&confirm(`Delete custom instance ${i}?`)&&(I.settings.removeUserInstance(a,i),P.renderApiSettings());return}const o=parseInt(n?.dataset.index,10);if(isNaN(o))return;const s=await I.settings.getInstances(a);t.classList.contains("move-up")&&o>0?[s[o],s[o-1]]=[s[o-1],s[o]]:t.classList.contains("move-down")&&o<s.length-1&&([s[o],s[o+1]]=[s[o+1],s[o]]),I.settings.saveInstances(s,a),P.renderApiSettings()}),document.getElementById("clear-cache-btn")?.addEventListener("click",async()=>{const e=document.getElementById("clear-cache-btn"),t=e.textContent;e.textContent="Clearing...",e.disabled=!0;try{await I.clearCache(),e.textContent="Cleared!",setTimeout(()=>{e.textContent=t,e.disabled=!1,window.location.hash.includes("settings")&&P.renderApiSettings()},1500)}catch(n){console.error("Failed to clear cache:",n),e.textContent="Error",setTimeout(()=>{e.textContent=t,e.disabled=!1},1500)}}),document.getElementById("auth-clear-cloud-btn")?.addEventListener("click",async()=>{if(confirm("Are you sure you want to delete ALL your data from the cloud? This cannot be undone."))try{await ji.clearCloudData(),alert("Cloud data cleared successfully."),await mn.signOut()}catch(e){console.error("Failed to clear cloud data:",e),alert("Failed to clear cloud data: "+e.message)}}),document.getElementById("export-library-btn")?.addEventListener("click",async()=>{const e=await Xe.exportData(),t=new Blob([JSON.stringify(e,null,2)],{type:"application/json"}),n=URL.createObjectURL(t),a=document.createElement("a");a.href=n,a.download=`monochrome-library-${new Date().toISOString().split("T")[0]}.json`,a.click(),URL.revokeObjectURL(n)});const G1=document.getElementById("import-library-input");document.getElementById("import-library-btn")?.addEventListener("click",()=>{G1.click()}),G1?.addEventListener("change",async e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=async a=>{try{const o=JSON.parse(a.target.result);await Xe.importData(o,!0),alert("Library imported successfully!"),window.location.reload()}catch(o){console.error("Import failed:",o),alert("Failed to import library. Please check the file format.")}},n.readAsText(t)}),document.getElementById("export-settings-btn")?.addEventListener("click",()=>{const e={};for(let o=0;o<localStorage.length;o++){const s=localStorage.key(o);if(s&&s.startsWith("monochrome-"))try{e[s]=JSON.parse(localStorage.getItem(s))}catch{e[s]=localStorage.getItem(s)}}const t=new Blob([JSON.stringify(e,null,2)],{type:"application/json"}),n=URL.createObjectURL(t),a=document.createElement("a");a.href=n,a.download=`monochrome-settings-${new Date().toISOString().split("T")[0]}.json`,a.click(),URL.revokeObjectURL(n)});const O1=document.getElementById("import-settings-input");document.getElementById("import-settings-btn")?.addEventListener("click",()=>{O1.click()}),O1?.addEventListener("change",async e=>{const t=e.target.files[0];if(!t)return;const n=new FileReader;n.onload=async a=>{try{const o=JSON.parse(a.target.result);for(const[s,i]of Object.entries(o))s.startsWith("monochrome-")&&localStorage.setItem(s,typeof i=="string"?i:JSON.stringify(i));alert("Settings imported successfully! Please reload the app."),window.location.reload()}catch(o){console.error("Import failed:",o),alert("Failed to import settings. Please check the file format.")}},n.readAsText(t)});const Ko=document.getElementById("custom-db-btn"),_a=document.getElementById("custom-db-modal"),cn=document.getElementById("custom-pb-url"),Fn=document.getElementById("custom-appwrite-endpoint"),Rn=document.getElementById("custom-appwrite-project"),_i=document.getElementById("custom-db-save"),$i=document.getElementById("custom-db-reset"),Ni=document.getElementById("custom-db-cancel");if(Ko&&_a){const e=!!(window.__APPWRITE_ENDPOINT__||window.__APPWRITE_PROJECT_ID__),t=!!window.__POCKETBASE_URL__;if(e&&t){const a=Ko.closest(".setting-item");a&&(a.style.display="none")}t&&cn&&(cn.closest("div[style]").style.display="none"),e&&(Fn&&(Fn.closest("div[style]").style.display="none"),Rn&&(Rn.closest("div[style]").style.display="none")),Ko.addEventListener("click",()=>{const a=localStorage.getItem("monochrome-pocketbase-url")||"",o=localStorage.getItem("monochrome-appwrite-endpoint")||"",s=localStorage.getItem("monochrome-appwrite-project")||"";!t&&cn&&(cn.value=a),e||(Fn&&(Fn.value=o),Rn&&(Rn.value=s)),_a.classList.add("active")});const n=()=>{_a.classList.remove("active")};Ni.addEventListener("click",n),_a.querySelector(".modal-overlay").addEventListener("click",n),_i.addEventListener("click",()=>{if(!t&&cn){const a=cn.value.trim();a?localStorage.setItem("monochrome-pocketbase-url",a):localStorage.removeItem("monochrome-pocketbase-url")}if(!e){const a=Fn?.value.trim(),o=Rn?.value.trim();a?localStorage.setItem("monochrome-appwrite-endpoint",a):localStorage.removeItem("monochrome-appwrite-endpoint"),o?localStorage.setItem("monochrome-appwrite-project",o):localStorage.removeItem("monochrome-appwrite-project")}alert("Settings saved. Reloading..."),window.location.reload()}),$i.addEventListener("click",()=>{confirm("Reset custom database settings to default?")&&(localStorage.removeItem("monochrome-pocketbase-url"),localStorage.removeItem("monochrome-appwrite-endpoint"),localStorage.removeItem("monochrome-appwrite-project"),alert("Settings reset. Reloading..."),window.location.reload())})}const Vo=document.getElementById("pwa-auto-update-toggle");Vo&&(Vo.checked=di.isAutoUpdateEnabled(),Vo.addEventListener("change",e=>{di.setAutoUpdateEnabled(e.target.checked)}));const Yo=document.getElementById("analytics-toggle");Yo&&(Yo.checked=ui.isEnabled(),Yo.addEventListener("change",e=>{ui.setEnabled(e.target.checked)}));const U1=document.getElementById("reset-local-data-btn");U1&&U1.addEventListener("click",async()=>{if(confirm(`WARNING: This will clear all local data including settings, cache, and library.
+            `),
+                            c.appendChild(g));
+                        const d = document.createElement('button');
+                        ((d.className = 'autoeq-profile-delete'),
+                            (d.innerHTML = '&#128465;'),
+                            (d.title = 'Delete profile'),
+                            d.addEventListener('click', async (l) => {
+                                l.stopPropagation();
+                                const m = Pn();
+                                (delete m[s],
+                                    await k1(m),
+                                    localStorage.getItem(on) === s && localStorage.removeItem(on),
+                                    Pa());
+                            }),
+                            c.appendChild(d),
+                            c.addEventListener('click', () => {
+                                Ri(s);
+                            }),
+                            e.appendChild(c),
+                            requestAnimationFrame(() => {
+                                const l = i.channels?.[0];
+                                if (l && l.measurementPreview) {
+                                    const m = bt.find((r) => r.id === (l.targetId || 'harman_room'));
+                                    n1(
+                                        u,
+                                        l.measurementPreview,
+                                        m?.data ? tn(m.data) : null,
+                                        l.correctedPreview || null
+                                    );
+                                }
+                            }));
+                    }));
+        },
+        Ri = (e) => {
+            const n = Pn()[e];
+            if (!n) return;
+            (n.config && n.config !== ke && ((ke = n.config), pt && (pt.value = ke)),
+                n.channels &&
+                    n.channels.forEach((o) => {
+                        ae[o.id] &&
+                            ((ae[o.id].measurement = o.measurement || null),
+                            (ae[o.id].targetId = o.targetId || 'harman_room'),
+                            (ae[o.id].preamp = o.preamp || 0),
+                            (ae[o.id].bands = o.bands ? o.bands.map((s) => ({ ...s })) : ae[o.id].bands));
+                    }),
+                (ze = ft[ke][0]));
+            const a = lt();
+            (ee(a.bands),
+                fe(a.bands),
+                vt(),
+                nt(),
+                X(),
+                x(),
+                localStorage.setItem(on, e),
+                Pa(),
+                ie && (ie.textContent = `Loaded "${n.name}"`),
+                setTimeout(() => {
+                    ie && (ie.textContent = '');
+                }, 2e3));
+        },
+        q1 = document.getElementById('speaker-save-btn'),
+        W7 = document.getElementById('speaker-profile-name');
+    q1 &&
+        q1.addEventListener('click', async () => {
+            try {
+                const e = W7?.value.trim() || `Speaker ${ke}`,
+                    t = ft[ke],
+                    n = Pn(),
+                    a = 'spk_' + Date.now();
+                ((n[a] = {
+                    name: e,
+                    config: ke,
+                    channels: t.map((o) => {
+                        const s = ae[o];
+                        return {
+                            id: o,
+                            targetId: s.targetId,
+                            preamp: s.preamp,
+                            bands: s.bands.map((i) => ({ ...i })),
+                            measurement: s.measurement
+                                ? s.measurement.map((i) => ({ freq: i.freq, gain: parseFloat(i.gain.toFixed(1)) }))
+                                : null,
+                            measurementPreview: s.measurement ? tn(s.measurement) : null,
+                            correctedPreview: Ue && o === ze ? tn(Ue) : null,
+                        };
+                    }),
+                    createdAt: Date.now(),
+                }),
+                    await k1(n),
+                    localStorage.setItem(on, a),
+                    W7 && (W7.value = ''),
+                    Pa(),
+                    ie && (ie.textContent = `Saved "${e}"`),
+                    setTimeout(() => {
+                        ie && (ie.textContent = '');
+                    }, 2e3));
+            } catch (e) {
+                (console.error('[Speaker Save]', e), ie && (ie.textContent = `Save failed: ${e.message}`));
+            }
+        });
+    const Ta = document.getElementById('speaker-saved-collapse'),
+        I1 = document.getElementById('speaker-saved-grid');
+    Ta &&
+        I1 &&
+        Ta.addEventListener('click', () => {
+            (Ta.classList.toggle('collapsed'), (I1.style.display = Ta.classList.contains('collapsed') ? 'none' : ''));
+        });
+    const S1 = document.getElementById('autoeq-add-band-btn'),
+        B1 = document.getElementById('autoeq-remove-band-btn'),
+        w1 = document.getElementById('autoeq-reset-bands-btn');
+    (S1 &&
+        S1.addEventListener('click', () => {
+            let e = Pe();
+            (e || ((e = []), ha(e)),
+                !(e.length >= 32) &&
+                    (e.push({
+                        id: e.length,
+                        type: 'peaking',
+                        freq: 1e3,
+                        gain: 0,
+                        q: 1,
+                        enabled: !0,
+                        channel: 'stereo',
+                    }),
+                    ee(e),
+                    fe(e),
+                    X(),
+                    x()));
+        }),
+        B1 &&
+            B1.addEventListener('click', () => {
+                const e = Pe();
+                !e || e.length <= 1 || (e.pop(), ee(e), fe(e), X(), x());
+            }),
+        w1 &&
+            w1.addEventListener('click', () => {
+                const e = Pe();
+                e &&
+                    (e.forEach((t) => {
+                        t.gain = 0;
+                    }),
+                    ee(e),
+                    fe(e),
+                    X(),
+                    x());
+            }),
+        pa &&
+            ((pa.checked = F.isEnabled()),
+            e1(pa.checked),
+            pa.addEventListener('change', (e) => {
+                const t = e.target.checked;
+                (F.setEnabled(t),
+                    e1(t),
+                    Ie === 'legacy'
+                        ? ((W.isEQEnabled = !1), W.toggleGraphicEQ(t))
+                        : (W.toggleEQ(t), W.toggleGraphicEQ(!1)));
+            })),
+        ba());
+    const L1 = document.getElementById('autoeq-preset-row'),
+        C1 = document.getElementById('autoeq-parametric-profiles');
+    (L1 && (L1.style.display = 'none'), C1 && (C1.style.display = 'none'), await s1());
+    const Fa = F.getActiveAutoEQProfile();
+    if (!Fa) {
+        const e = F.getLastHeadphone();
+        if (e) {
+            if (((je = e.measurementData), (Oe = e.entry), we)) {
+                let t = we.querySelector(`option[value="${e.entry.name}"]`);
+                (t ||
+                    ((t = document.createElement('option')),
+                    (t.value = e.entry.name),
+                    (t.textContent = e.entry.name.replace(/\s*\([^)]*\)\s*$/, '')),
+                    we.appendChild(t)),
+                    (we.value = e.entry.name));
+            }
+            (_e && (_e.disabled = !1), requestAnimationFrame(x));
+        } else On.length > 0 && (await ka(On[0]));
+    }
+    if ((F.isEnabled() && requestAnimationFrame(x), Fa)) {
+        const e = F.getAutoEQProfiles();
+        if (e[Fa]) {
+            const t = e[Fa];
+            if (
+                ((oe = t.bands?.map((n) => ({ ...n })) || null),
+                (Ue = t.correctedData ? [...t.correctedData] : null),
+                (je = t.measurementData ? [...t.measurementData] : null),
+                (Oe = { name: t.headphoneName, type: t.headphoneType }),
+                we)
+            ) {
+                let n = we.querySelector(`option[value="${t.headphoneName}"]`);
+                (n ||
+                    ((n = document.createElement('option')),
+                    (n.value = t.headphoneName),
+                    (n.textContent = t.headphoneName.replace(/\s*\([^)]*\)\s*$/, '')),
+                    we.appendChild(n)),
+                    (we.value = t.headphoneName));
+            }
+            (Ee && (Ee.value = t.targetId || 'harman_oe_2018'),
+                zs(t.bandCount, t.bands),
+                ot && (ot.value = t.maxFreq || 16e3),
+                Te && (Te.value = t.sampleRate || 48e3),
+                _e && (_e.disabled = !1),
+                oe && fe(oe),
+                requestAnimationFrame(x));
+        }
+    }
+    const x1 = localStorage.getItem(an);
+    if (x1) {
+        const t = Ia()[x1];
+        t && t.bands && (H = t.bands.map((n) => ({ ...n })));
+    }
+    const A1 = localStorage.getItem(on);
+    if (A1) {
+        const t = Pn()[A1];
+        t &&
+            (t.config && ((ke = t.config), pt && (pt.value = ke)),
+            t.channels &&
+                t.channels.forEach((n) => {
+                    ae[n.id] &&
+                        ((ae[n.id].measurement = n.measurement || null),
+                        (ae[n.id].targetId = n.targetId || 'harman_room'),
+                        (ae[n.id].preamp = n.preamp || 0),
+                        (ae[n.id].bands = n.bands ? n.bands.map((a) => ({ ...a })) : ae[n.id].bands));
+                }),
+            (ze = ft[ke][0]));
+    }
+    const K7 = localStorage.getItem(r1);
+    K7 && ['autoeq', 'parametric', 'speaker', 'legacy'].includes(K7) && G7(K7);
+    const V7 = document.getElementById('now-playing-mode');
+    V7 &&
+        ((V7.value = Z1.getMode()),
+        V7.addEventListener('change', (e) => {
+            Z1.setMode(e.target.value);
+        }));
+    const Y7 = document.getElementById('fullscreen-cover-click-action');
+    Y7 &&
+        ((Y7.value = ei.getAction()),
+        Y7.addEventListener('change', (e) => {
+            ei.setAction(e.target.value);
+        }));
+    const J7 = document.getElementById('close-modals-on-navigation-toggle');
+    J7 &&
+        ((J7.checked = Ua.shouldCloseOnNavigation()),
+        J7.addEventListener('change', (e) => {
+            Ua.setCloseOnNavigation(e.target.checked);
+        }));
+    const X7 = document.getElementById('intercept-back-to-close-modals-toggle');
+    X7 &&
+        ((X7.checked = Ua.shouldInterceptBackToClose()),
+        X7.addEventListener('change', (e) => {
+            Ua.setInterceptBackToClose(e.target.checked);
+        }));
+    const Z7 = document.getElementById('compact-artist-toggle');
+    Z7 &&
+        ((Z7.checked = za.isCompactArtist()),
+        Z7.addEventListener('change', (e) => {
+            za.setCompactArtist(e.target.checked);
+        }));
+    const eo = document.getElementById('artist-banners-toggle');
+    eo &&
+        ((eo.checked = ti.isEnabled()),
+        eo.addEventListener('change', (e) => {
+            ti.setEnabled(e.target.checked);
+        }));
+    const to = document.getElementById('compact-album-toggle');
+    to &&
+        ((to.checked = za.isCompactAlbum()),
+        to.addEventListener('change', (e) => {
+            za.setCompactAlbum(e.target.checked);
+        }));
+    const no = document.getElementById('write-artists-separately-toggle');
+    no &&
+        ((no.checked = me.writeArtistsSeparately),
+        no.addEventListener('change', (e) => {
+            me.writeArtistsSeparately = e.target.checked;
+        }));
+    const ao = document.getElementById('download-lyrics-toggle');
+    ao &&
+        ((ao.checked = ni.shouldDownloadLyrics()),
+        ao.addEventListener('change', (e) => {
+            ni.setDownloadLyrics(e.target.checked);
+        }));
+    const oo = document.getElementById('romaji-lyrics-toggle');
+    oo &&
+        ((oo.checked = localStorage.getItem('lyricsRomajiMode') === 'true'),
+        oo.addEventListener('change', (e) => {
+            localStorage.setItem('lyricsRomajiMode', e.target.checked ? 'true' : 'false');
+        }));
+    const so = document.getElementById('album-background-toggle');
+    so &&
+        ((so.checked = ai.isEnabled()),
+        so.addEventListener('change', (e) => {
+            ai.setEnabled(e.target.checked);
+        }));
+    const io = document.getElementById('dynamic-color-toggle');
+    io &&
+        ((io.checked = oi.isEnabled()),
+        io.addEventListener('change', (e) => {
+            (oi.setEnabled(e.target.checked),
+                e.target.checked || window.dispatchEvent(new CustomEvent('reset-dynamic-color')));
+        }));
+    const lo = document.getElementById('fullscreen-cover-no-round-toggle');
+    lo &&
+        ((lo.checked = si.isEnabled()),
+        lo.addEventListener('change', (e) => {
+            (si.setEnabled(e.target.checked),
+                window.dispatchEvent(new CustomEvent('fullscreen-cover-settings-changed')));
+        }));
+    const ro = document.getElementById('fullscreen-cover-vanilla-tilt-toggle');
+    ro &&
+        ((ro.checked = ii.isEnabled()),
+        ro.addEventListener('change', (e) => {
+            (ii.setEnabled(e.target.checked),
+                window.dispatchEvent(new CustomEvent('fullscreen-cover-settings-changed')));
+        }));
+    const co = document.getElementById('fullscreen-cover-tilt-distance');
+    co &&
+        ((co.value = li.getValue()),
+        co.addEventListener('input', (e) => {
+            (li.setValue(parseInt(e.target.value)),
+                window.dispatchEvent(new CustomEvent('fullscreen-cover-settings-changed')));
+        }));
+    const uo = document.getElementById('fullscreen-cover-tilt-speed');
+    uo &&
+        ((uo.value = ri.getValue()),
+        uo.addEventListener('input', (e) => {
+            (ri.setValue(parseInt(e.target.value)),
+                window.dispatchEvent(new CustomEvent('fullscreen-cover-settings-changed')));
+        }));
+    const mo = document.getElementById('waveform-toggle');
+    mo &&
+        ((mo.checked = ci.isEnabled()),
+        mo.addEventListener('change', (e) => {
+            (ci.setEnabled(e.target.checked),
+                window.dispatchEvent(new CustomEvent('waveform-toggle', { detail: { enabled: e.target.checked } })));
+        }));
+    const _t = document.getElementById('visualizer-sensitivity-slider'),
+        go = document.getElementById('visualizer-sensitivity-value');
+    if (_t && go) {
+        const e = Ce.getSensitivity();
+        ((_t.value = e),
+            (go.textContent = `${(e * 100).toFixed(0)}%`),
+            _t.addEventListener('input', (t) => {
+                const n = parseFloat(t.target.value);
+                (Ce.setSensitivity(n), (go.textContent = `${(n * 100).toFixed(0)}%`));
+            }));
+    }
+    const fo = document.getElementById('visualizer-dimming-slider'),
+        po = document.getElementById('visualizer-dimming-value');
+    if (fo && po) {
+        const e = Ce.getDimAmount();
+        ((fo.value = e),
+            (po.textContent = `${(e * 100).toFixed(0)}%`),
+            fo.addEventListener('input', (t) => {
+                const n = parseFloat(t.target.value);
+                (Ce.setDimAmount(n),
+                    (po.textContent = `${(n * 100).toFixed(0)}%`),
+                    window.dispatchEvent(new CustomEvent('visualizer-dim-change', { detail: { dimAmount: n } })));
+            }));
+    }
+    const ho = document.getElementById('smart-intensity-toggle');
+    if (ho) {
+        const e = Ce.isSmartIntensityEnabled();
+        ho.checked = e;
+        const t = (n) => {
+            _t &&
+                ((_t.disabled = n),
+                (_t.parentElement.style.opacity = n ? '0.5' : '1'),
+                (_t.parentElement.style.pointerEvents = n ? 'none' : 'auto'));
+        };
+        (t(e),
+            ho.addEventListener('change', (n) => {
+                (Ce.setSmartIntensity(n.target.checked), t(n.target.checked));
+            }));
+    }
+    const sn = document.getElementById('visualizer-enabled-toggle'),
+        M1 = document.getElementById('visualizer-mode-setting'),
+        P1 = document.getElementById('visualizer-smart-intensity-setting'),
+        T1 = document.getElementById('visualizer-sensitivity-setting'),
+        F1 = document.getElementById('visualizer-preset-setting'),
+        ln = document.getElementById('visualizer-preset-select'),
+        R1 = document.getElementById('butterchurn-cycle-setting'),
+        D1 = document.getElementById('butterchurn-duration-setting'),
+        _1 = document.getElementById('butterchurn-randomize-setting'),
+        $1 = document.getElementById('butterchurn-specific-preset-setting'),
+        yo = document.getElementById('butterchurn-specific-preset-select'),
+        Tn = document.getElementById('butterchurn-cycle-toggle'),
+        vo = document.getElementById('butterchurn-duration-input'),
+        Eo = document.getElementById('butterchurn-randomize-toggle'),
+        rn = async () => {
+            const e = sn ? sn.checked : !1,
+                t = ln ? ln.value === 'butterchurn' : !1,
+                n = e && t;
+            (R1 && (R1.style.display = n ? 'flex' : 'none'), $1 && ($1.style.display = n ? 'flex' : 'none'));
+            const a = Tn ? Tn.checked : !1,
+                o = n && a;
+            (D1 && (D1.style.display = o ? 'flex' : 'none'), _1 && (_1.style.display = o ? 'flex' : 'none'));
+            const { keys: s } = await fi(),
+                i = yo;
+            if (i && s.length > 0) {
+                const c = Array.from(i.options).map((g) => g.value);
+                if ((c.length === 1 && c[0] === '') || c.length !== s.length || !s.every((g) => c.includes(g))) {
+                    const g = i.value;
+                    ((i.innerHTML = ''),
+                        s.forEach((d) => {
+                            const l = document.createElement('option');
+                            ((l.value = d), (l.textContent = d), i.appendChild(l));
+                        }),
+                        s.includes(g) ? (i.value = g) : (i.selectedIndex = 0));
+                }
+            }
+        },
+        N1 = async (e) => {
+            const t = e ? 'flex' : 'none';
+            (M1 && (M1.style.display = t),
+                P1 && (P1.style.display = t),
+                T1 && (T1.style.display = t),
+                F1 && (F1.style.display = t),
+                await rn());
+        };
+    (ln && (ln.value = Ce.getPreset()),
+        sn &&
+            ((sn.checked = Ce.isEnabled()),
+            await N1(sn.checked),
+            sn.addEventListener('change', async (e) => {
+                (Ce.setEnabled(e.target.checked), await N1(e.target.checked));
+            })),
+        ln &&
+            ln.addEventListener('change', async (e) => {
+                const t = e.target.value;
+                (Ce.setPreset(t), P && P.visualizer && P.visualizer.setPreset(t), await rn(), window.location.reload());
+            }),
+        Tn &&
+            ((Tn.checked = Ce.isButterchurnCycleEnabled()),
+            Tn.addEventListener('change', async (e) => {
+                (Ce.setButterchurnCycleEnabled(e.target.checked), await rn());
+            })),
+        vo &&
+            ((vo.value = Ce.getButterchurnCycleDuration()),
+            vo.addEventListener('change', (e) => {
+                let t = parseInt(e.target.value, 10);
+                ((isNaN(t) || t < 5) && (t = 5),
+                    t > 300 && (t = 300),
+                    (e.target.value = t),
+                    Ce.setButterchurnCycleDuration(t));
+            })),
+        Eo &&
+            ((Eo.checked = Ce.isButterchurnRandomizeEnabled()),
+            Eo.addEventListener('change', (e) => {
+                Ce.setButterchurnRandomizeEnabled(e.target.checked);
+            })),
+        yo &&
+            yo.addEventListener('change', (e) => {
+                P &&
+                    P.visualizer &&
+                    P.visualizer.presets.butterchurn &&
+                    P.visualizer.presets.butterchurn.loadPreset(e.target.value);
+            }),
+        window.addEventListener('butterchurn-presets-loaded', async () => {
+            (console.log('[Settings] Butterchurn presets loaded event received'), await rn());
+        }));
+    const { keys: Di } = await fi();
+    Di.length > 0 && (console.log('[Settings] Presets already cached, updating dropdown immediately'), await rn());
+    const bo = document.getElementById('settings-tab-appearance');
+    bo &&
+        new MutationObserver(async (t) => {
+            for (const n of t)
+                n.type === 'attributes' &&
+                    n.attributeName === 'class' &&
+                    bo.classList.contains('active') &&
+                    (console.log('[Settings] Appearance tab became active, refreshing presets'), await rn());
+        }).observe(bo, { attributes: !0 });
+    const ko = document.getElementById('cd-album-cover-toggle');
+    ko &&
+        ((ko.checked = Ce.isCdAlbumCoverEnabled()),
+        ko.addEventListener('change', (e) => {
+            (Ce.setCdAlbumCoverEnabled(e.target.checked),
+                window.dispatchEvent(new CustomEvent('fullscreen-cover-settings-changed')));
+        }));
+    const qo = document.getElementById('settings-tab-downloads');
+    qo &&
+        new MutationObserver(async (t) => {
+            for (const n of t)
+                n.type === 'attributes' &&
+                    n.attributeName === 'class' &&
+                    qo.classList.contains('active') &&
+                    (console.log('[Settings] Downloads tab became active, updating setting visibility'),
+                    c7(),
+                    await bn());
+        }).observe(qo, { attributes: !0 });
+    const Io = document.getElementById('visualizer-mode-select');
+    Io &&
+        ((Io.value = Ce.getMode()),
+        Io.addEventListener('change', (e) => {
+            Ce.setMode(e.target.value);
+        }));
+    const So = document.getElementById('show-recommended-songs-toggle');
+    So &&
+        ((So.checked = Qe.shouldShowRecommendedSongs()),
+        So.addEventListener('change', (e) => {
+            Qe.setShowRecommendedSongs(e.target.checked);
+        }));
+    const Bo = document.getElementById('show-recommended-albums-toggle');
+    Bo &&
+        ((Bo.checked = Qe.shouldShowRecommendedAlbums()),
+        Bo.addEventListener('change', (e) => {
+            Qe.setShowRecommendedAlbums(e.target.checked);
+        }));
+    const wo = document.getElementById('show-recommended-artists-toggle');
+    wo &&
+        ((wo.checked = Qe.shouldShowRecommendedArtists()),
+        wo.addEventListener('change', (e) => {
+            Qe.setShowRecommendedArtists(e.target.checked);
+        }));
+    const Lo = document.getElementById('show-jump-back-in-toggle');
+    Lo &&
+        ((Lo.checked = Qe.shouldShowJumpBackIn()),
+        Lo.addEventListener('change', (e) => {
+            Qe.setShowJumpBackIn(e.target.checked);
+        }));
+    const Co = document.getElementById('show-editors-picks-toggle');
+    Co &&
+        ((Co.checked = Qe.shouldShowEditorsPicks()),
+        Co.addEventListener('change', (e) => {
+            Qe.setShowEditorsPicks(e.target.checked);
+        }));
+    const xo = document.getElementById('shuffle-editors-picks-toggle');
+    xo &&
+        ((xo.checked = Qe.shouldShuffleEditorsPicks()),
+        xo.addEventListener('change', (e) => {
+            Qe.setShuffleEditorsPicks(e.target.checked);
+        }));
+    const Ra = document.getElementById('editors-picks-source-select');
+    if (Ra) {
+        async function e() {
+            try {
+                const n = await fetch('/monochrome-unlocked/editors-picks-old/index.json');
+                n.ok &&
+                    (await n.json()).forEach((o) => {
+                        const s = document.createElement('option');
+                        ((s.value = o.file), (s.textContent = o.label), Ra.appendChild(s));
+                    });
+            } catch (n) {
+                console.warn('Could not load editors-picks-old index:', n);
+            }
+            const t = Qe.getEditorsPicksSource();
+            Ra.value = t;
+        }
+        (await e(),
+            Ra.addEventListener('change', (t) => {
+                (Qe.setEditorsPicksSource(t.target.value),
+                    window.dispatchEvent(new CustomEvent('refresh-home-editors-picks')));
+            }));
+    }
+    const Da = document.getElementById('sidebar-show-home-toggle');
+    Da &&
+        ((Da.checked = K.shouldShowHome()),
+        Da.addEventListener('change', (e) => {
+            (K.setShowHome(e.target.checked), K.applySidebarVisibility());
+        }));
+    const Ao = document.getElementById('sidebar-show-library-toggle');
+    Ao &&
+        ((Ao.checked = K.shouldShowLibrary()),
+        Ao.addEventListener('change', (e) => {
+            (K.setShowLibrary(e.target.checked), K.applySidebarVisibility());
+        }));
+    const Mo = document.getElementById('sidebar-show-recent-toggle');
+    Mo &&
+        ((Mo.checked = K.shouldShowRecent()),
+        Mo.addEventListener('change', (e) => {
+            (K.setShowRecent(e.target.checked), K.applySidebarVisibility());
+        }));
+    const Po = document.getElementById('sidebar-show-unreleased-toggle');
+    Po &&
+        ((Po.checked = K.shouldShowUnreleased()),
+        Po.addEventListener('change', (e) => {
+            (K.setShowUnreleased(e.target.checked), K.applySidebarVisibility());
+        }));
+    const To = document.getElementById('sidebar-show-donate-toggle');
+    To &&
+        ((To.checked = K.shouldShowDonate()),
+        To.addEventListener('change', (e) => {
+            (K.setShowDonate(e.target.checked), K.applySidebarVisibility());
+        }));
+    const Fo = document.getElementById('sidebar-show-settings-toggle');
+    Fo && ((Fo.checked = !0), (Fo.disabled = !0), K.setShowSettings(!0));
+    const Ro = document.getElementById('sidebar-show-about-bottom-toggle');
+    Ro &&
+        ((Ro.checked = K.shouldShowAbout()),
+        Ro.addEventListener('change', (e) => {
+            (K.setShowAbout(e.target.checked), K.applySidebarVisibility());
+        }));
+    const Do = document.getElementById('sidebar-show-discordbtn-toggle');
+    Do &&
+        ((Do.checked = K.shouldShowDiscord()),
+        Do.addEventListener('change', (e) => {
+            (K.setShowDiscord(e.target.checked), K.applySidebarVisibility());
+        }));
+    const _o = document.getElementById('sidebar-show-party-toggle');
+    _o &&
+        ((_o.checked = K.shouldShowParty()),
+        _o.addEventListener('change', (e) => {
+            (K.setShowParty(e.target.checked), K.applySidebarVisibility());
+        }));
+    const $o = document.getElementById('sidebar-show-githubbtn-toggle');
+    ($o &&
+        (($o.checked = K.shouldShowGithub()),
+        $o.addEventListener('change', (e) => {
+            (K.setShowGithub(e.target.checked), K.applySidebarVisibility());
+        })),
+        K.applySidebarVisibility());
+    const $t = Da?.closest('.settings-group');
+    if ($t) {
+        const e = (l) => (l ? l.replace('sidebar-nav-', 'sidebar-show-') + '-toggle' : '');
+        K.DEFAULT_ORDER.map((l) => ({ sidebarId: l, toggleId: e(l) })).forEach(({ toggleId: l, sidebarId: m }) => {
+            const p = document.getElementById(l)?.closest('.setting-item');
+            p && ((p.dataset.sidebarId = m), p.classList.add('sidebar-setting-item'), (p.draggable = !0));
+        });
+        const n = $t.querySelector('.sidebar-settings-main'),
+            a = $t.querySelector('.sidebar-settings-bottom'),
+            o = () => [
+                ...(n?.querySelectorAll('.sidebar-setting-item[data-sidebar-id]') ?? []),
+                ...(a?.querySelectorAll('.sidebar-setting-item[data-sidebar-id]') ?? []),
+            ];
+        (() => {
+            const l = K.getOrder(),
+                m = K.getBottomNavIds(),
+                r = l.filter((w) => !m.includes(w)),
+                p = l.filter((w) => m.includes(w)),
+                E = o(),
+                b = new Map(E.map((w) => [w.dataset.sidebarId, w]));
+            (r.forEach((w) => {
+                const D = b.get(w);
+                D && n && n.appendChild(D);
+            }),
+                p.forEach((w) => {
+                    const D = b.get(w);
+                    D && a && a.appendChild(D);
+                }));
+        })();
+        let i = null;
+        const c = () => {
+                const l = o().map((m) => m.dataset.sidebarId);
+                (K.setOrder(l), K.applySidebarVisibility());
+            },
+            u = (l) => {
+                const m = l.target.closest('.sidebar-setting-item');
+                m &&
+                    ((i = m),
+                    i.classList.add('dragging'),
+                    l.dataTransfer &&
+                        ((l.dataTransfer.effectAllowed = 'move'),
+                        l.dataTransfer.setData('text/plain', m.dataset.sidebarId || '')));
+            },
+            v = () => {
+                i && (i.classList.remove('dragging'), (i = null), c());
+            },
+            g = (l, m) =>
+                l
+                    .filter((p) => p !== i)
+                    .reduce(
+                        (p, E) => {
+                            const b = E.getBoundingClientRect(),
+                                w = m - b.top - b.height / 2;
+                            return w < 0 && w > p.offset ? { offset: w, element: E } : p;
+                        },
+                        { offset: Number.NEGATIVE_INFINITY }
+                    ).element,
+            d = (l) => {
+                if ((l.preventDefault(), !i)) return;
+                const m = i.parentElement;
+                if (m !== n && m !== a) return;
+                const r = Array.from(m.querySelectorAll('.sidebar-setting-item[data-sidebar-id]')),
+                    p = g(r, l.clientY);
+                p !== i && (p ? m.insertBefore(i, p) : m.appendChild(i));
+            };
+        ($t.addEventListener('dragstart', u),
+            $t.addEventListener('dragend', v),
+            $t.addEventListener('dragover', d),
+            $t.addEventListener('drop', (l) => l.preventDefault()));
+    }
+    const No = document.getElementById('filename-template');
+    No &&
+        ((No.value = me.filenameTemplate),
+        No.addEventListener('change', (e) => {
+            me.filenameTemplate = String(e.target.value);
+        }));
+    const Go = document.getElementById('zip-folder-template');
+    Go &&
+        ((Go.value = me.folderTemplate),
+        Go.addEventListener('change', (e) => {
+            me.folderTemplate = String(e.target.value);
+        }));
+    const Oo = document.getElementById('generate-m3u-toggle');
+    Oo &&
+        ((Oo.checked = He.shouldGenerateM3U()),
+        Oo.addEventListener('change', (e) => {
+            He.setGenerateM3U(e.target.checked);
+        }));
+    const Uo = document.getElementById('generate-m3u8-toggle');
+    Uo &&
+        ((Uo.checked = He.shouldGenerateM3U8()),
+        Uo.addEventListener('change', (e) => {
+            He.setGenerateM3U8(e.target.checked);
+        }));
+    const zo = document.getElementById('generate-cue-toggle');
+    zo &&
+        ((zo.checked = He.shouldGenerateCUE()),
+        zo.addEventListener('change', (e) => {
+            He.setGenerateCUE(e.target.checked);
+        }));
+    const Ho = document.getElementById('generate-nfo-toggle');
+    Ho &&
+        ((Ho.checked = He.shouldGenerateNFO()),
+        Ho.addEventListener('change', (e) => {
+            He.setGenerateNFO(e.target.checked);
+        }));
+    const jo = document.getElementById('generate-json-toggle');
+    jo &&
+        ((jo.checked = He.shouldGenerateJSON()),
+        jo.addEventListener('change', (e) => {
+            He.setGenerateJSON(e.target.checked);
+        }));
+    const Qo = document.getElementById('relative-paths-toggle');
+    Qo &&
+        ((Qo.checked = He.shouldUseRelativePaths()),
+        Qo.addEventListener('change', (e) => {
+            He.setUseRelativePaths(e.target.checked);
+        }));
+    const Wo = document.getElementById('separate-discs-zip-toggle');
+    (Wo &&
+        ((Wo.checked = He.shouldSeparateDiscsInZip()),
+        Wo.addEventListener('change', (e) => {
+            He.setSeparateDiscsInZip(e.target.checked);
+        })),
+        document.getElementById('refresh-speed-test-btn')?.addEventListener('click', async () => {
+            const e = document.getElementById('refresh-speed-test-btn'),
+                t = e.textContent;
+            ((e.textContent = 'Testing...'), (e.disabled = !0));
+            try {
+                (await I.settings.refreshInstances(),
+                    P.renderApiSettings(),
+                    (e.textContent = 'Done!'),
+                    setTimeout(() => {
+                        ((e.textContent = t), (e.disabled = !1));
+                    }, 1500));
+            } catch (n) {
+                (console.error('Failed to refresh speed tests:', n),
+                    (e.textContent = 'Error'),
+                    setTimeout(() => {
+                        ((e.textContent = t), (e.disabled = !1));
+                    }, 1500));
+            }
+        }),
+        document.getElementById('api-instance-list')?.addEventListener('click', async (e) => {
+            const t = e.target.closest('button');
+            if (!t) return;
+            const n = t.closest('li'),
+                a = t.dataset.type || n?.dataset.type || 'api';
+            if (t.classList.contains('add-instance')) {
+                const i = prompt(`Enter custom ${a.toUpperCase()} instance URL (e.g. https://my-instance.com):`);
+                if (i && i.trim()) {
+                    let c = i.trim();
+                    (c.startsWith('http') || (c = 'https://' + c),
+                        I.settings.addUserInstance(a, c),
+                        P.renderApiSettings());
+                }
+                return;
+            }
+            if (t.classList.contains('delete-instance')) {
+                const i = n.dataset.url;
+                i &&
+                    confirm(`Delete custom instance ${i}?`) &&
+                    (I.settings.removeUserInstance(a, i), P.renderApiSettings());
+                return;
+            }
+            const o = parseInt(n?.dataset.index, 10);
+            if (isNaN(o)) return;
+            const s = await I.settings.getInstances(a);
+            (t.classList.contains('move-up') && o > 0
+                ? ([s[o], s[o - 1]] = [s[o - 1], s[o]])
+                : t.classList.contains('move-down') && o < s.length - 1 && ([s[o], s[o + 1]] = [s[o + 1], s[o]]),
+                I.settings.saveInstances(s, a),
+                P.renderApiSettings());
+        }),
+        document.getElementById('clear-cache-btn')?.addEventListener('click', async () => {
+            const e = document.getElementById('clear-cache-btn'),
+                t = e.textContent;
+            ((e.textContent = 'Clearing...'), (e.disabled = !0));
+            try {
+                (await I.clearCache(),
+                    (e.textContent = 'Cleared!'),
+                    setTimeout(() => {
+                        ((e.textContent = t),
+                            (e.disabled = !1),
+                            window.location.hash.includes('settings') && P.renderApiSettings());
+                    }, 1500));
+            } catch (n) {
+                (console.error('Failed to clear cache:', n),
+                    (e.textContent = 'Error'),
+                    setTimeout(() => {
+                        ((e.textContent = t), (e.disabled = !1));
+                    }, 1500));
+            }
+        }),
+        document.getElementById('auth-clear-cloud-btn')?.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to delete ALL your data from the cloud? This cannot be undone.'))
+                try {
+                    (await ji.clearCloudData(), alert('Cloud data cleared successfully.'), await mn.signOut());
+                } catch (e) {
+                    (console.error('Failed to clear cloud data:', e),
+                        alert('Failed to clear cloud data: ' + e.message));
+                }
+        }),
+        document.getElementById('export-library-btn')?.addEventListener('click', async () => {
+            const e = await Xe.exportData(),
+                t = new Blob([JSON.stringify(e, null, 2)], { type: 'application/json' }),
+                n = URL.createObjectURL(t),
+                a = document.createElement('a');
+            ((a.href = n),
+                (a.download = `monochrome-library-${new Date().toISOString().split('T')[0]}.json`),
+                a.click(),
+                URL.revokeObjectURL(n));
+        }));
+    const G1 = document.getElementById('import-library-input');
+    (document.getElementById('import-library-btn')?.addEventListener('click', () => {
+        G1.click();
+    }),
+        G1?.addEventListener('change', async (e) => {
+            const t = e.target.files[0];
+            if (!t) return;
+            const n = new FileReader();
+            ((n.onload = async (a) => {
+                try {
+                    const o = JSON.parse(a.target.result);
+                    (await Xe.importData(o, !0), alert('Library imported successfully!'), window.location.reload());
+                } catch (o) {
+                    (console.error('Import failed:', o),
+                        alert('Failed to import library. Please check the file format.'));
+                }
+            }),
+                n.readAsText(t));
+        }),
+        document.getElementById('export-settings-btn')?.addEventListener('click', () => {
+            const e = {};
+            for (let o = 0; o < localStorage.length; o++) {
+                const s = localStorage.key(o);
+                if (s && s.startsWith('monochrome-'))
+                    try {
+                        e[s] = JSON.parse(localStorage.getItem(s));
+                    } catch {
+                        e[s] = localStorage.getItem(s);
+                    }
+            }
+            const t = new Blob([JSON.stringify(e, null, 2)], { type: 'application/json' }),
+                n = URL.createObjectURL(t),
+                a = document.createElement('a');
+            ((a.href = n),
+                (a.download = `monochrome-settings-${new Date().toISOString().split('T')[0]}.json`),
+                a.click(),
+                URL.revokeObjectURL(n));
+        }));
+    const O1 = document.getElementById('import-settings-input');
+    (document.getElementById('import-settings-btn')?.addEventListener('click', () => {
+        O1.click();
+    }),
+        O1?.addEventListener('change', async (e) => {
+            const t = e.target.files[0];
+            if (!t) return;
+            const n = new FileReader();
+            ((n.onload = async (a) => {
+                try {
+                    const o = JSON.parse(a.target.result);
+                    for (const [s, i] of Object.entries(o))
+                        s.startsWith('monochrome-') &&
+                            localStorage.setItem(s, typeof i == 'string' ? i : JSON.stringify(i));
+                    (alert('Settings imported successfully! Please reload the app.'), window.location.reload());
+                } catch (o) {
+                    (console.error('Import failed:', o),
+                        alert('Failed to import settings. Please check the file format.'));
+                }
+            }),
+                n.readAsText(t));
+        }));
+    const Ko = document.getElementById('custom-db-btn'),
+        _a = document.getElementById('custom-db-modal'),
+        cn = document.getElementById('custom-pb-url'),
+        Fn = document.getElementById('custom-appwrite-endpoint'),
+        Rn = document.getElementById('custom-appwrite-project'),
+        _i = document.getElementById('custom-db-save'),
+        $i = document.getElementById('custom-db-reset'),
+        Ni = document.getElementById('custom-db-cancel');
+    if (Ko && _a) {
+        const e = !!(window.__APPWRITE_ENDPOINT__ || window.__APPWRITE_PROJECT_ID__),
+            t = !!window.__POCKETBASE_URL__;
+        if (e && t) {
+            const a = Ko.closest('.setting-item');
+            a && (a.style.display = 'none');
+        }
+        (t && cn && (cn.closest('div[style]').style.display = 'none'),
+            e &&
+                (Fn && (Fn.closest('div[style]').style.display = 'none'),
+                Rn && (Rn.closest('div[style]').style.display = 'none')),
+            Ko.addEventListener('click', () => {
+                const a = localStorage.getItem('monochrome-pocketbase-url') || '',
+                    o = localStorage.getItem('monochrome-appwrite-endpoint') || '',
+                    s = localStorage.getItem('monochrome-appwrite-project') || '';
+                (!t && cn && (cn.value = a),
+                    e || (Fn && (Fn.value = o), Rn && (Rn.value = s)),
+                    _a.classList.add('active'));
+            }));
+        const n = () => {
+            _a.classList.remove('active');
+        };
+        (Ni.addEventListener('click', n),
+            _a.querySelector('.modal-overlay').addEventListener('click', n),
+            _i.addEventListener('click', () => {
+                if (!t && cn) {
+                    const a = cn.value.trim();
+                    a
+                        ? localStorage.setItem('monochrome-pocketbase-url', a)
+                        : localStorage.removeItem('monochrome-pocketbase-url');
+                }
+                if (!e) {
+                    const a = Fn?.value.trim(),
+                        o = Rn?.value.trim();
+                    (a
+                        ? localStorage.setItem('monochrome-appwrite-endpoint', a)
+                        : localStorage.removeItem('monochrome-appwrite-endpoint'),
+                        o
+                            ? localStorage.setItem('monochrome-appwrite-project', o)
+                            : localStorage.removeItem('monochrome-appwrite-project'));
+                }
+                (alert('Settings saved. Reloading...'), window.location.reload());
+            }),
+            $i.addEventListener('click', () => {
+                confirm('Reset custom database settings to default?') &&
+                    (localStorage.removeItem('monochrome-pocketbase-url'),
+                    localStorage.removeItem('monochrome-appwrite-endpoint'),
+                    localStorage.removeItem('monochrome-appwrite-project'),
+                    alert('Settings reset. Reloading...'),
+                    window.location.reload());
+            }));
+    }
+    const Vo = document.getElementById('pwa-auto-update-toggle');
+    Vo &&
+        ((Vo.checked = di.isAutoUpdateEnabled()),
+        Vo.addEventListener('change', (e) => {
+            di.setAutoUpdateEnabled(e.target.checked);
+        }));
+    const Yo = document.getElementById('analytics-toggle');
+    Yo &&
+        ((Yo.checked = ui.isEnabled()),
+        Yo.addEventListener('change', (e) => {
+            ui.setEnabled(e.target.checked);
+        }));
+    const U1 = document.getElementById('reset-local-data-btn');
+    (U1 &&
+        U1.addEventListener('click', async () => {
+            if (
+                confirm(`WARNING: This will clear all local data including settings, cache, and library.
 
 Are you sure you want to continue?
 
-(Cloud-synced data will not be affected)`))try{const e=[];Object.keys(localStorage).forEach(n=>{e.includes(n)||localStorage.removeItem(n)});try{const n=["favorites_tracks","favorites_videos","favorites_albums","favorites_artists","favorites_playlists","favorites_mixes","history_tracks","user_playlists","user_folders","settings","pinned_items"];for(const a of n)try{await Xe.performTransaction(a,"readwrite",o=>o.clear())}catch{}}catch(n){console.log("Could not clear IndexedDB stores:",n);try{const a=indexedDB.deleteDatabase("MonochromeDB");await new Promise((o,s)=>{a.onsuccess=o,a.onerror=s})}catch(a){console.log("Could not delete IndexedDB:",a)}}alert("All local data has been cleared. The app will now reload."),window.location.reload()}catch(e){console.error("Failed to reset local data:",e),alert("Failed to reset local data: "+e.message)}}),m8(),g8(),p8()}function m8(){const f=document.getElementById("font-type-select"),h=document.getElementById("font-preset-section"),I=document.getElementById("font-google-section"),P=document.getElementById("font-url-section"),R=document.getElementById("font-upload-section"),L=document.getElementById("font-preset-select"),M=document.getElementById("font-google-input"),$=document.getElementById("font-google-apply"),y=document.getElementById("font-url-input"),C=document.getElementById("font-url-name"),N=document.getElementById("font-url-apply"),S=document.getElementById("font-upload-input"),z=document.getElementById("uploaded-fonts-list");if(!f)return;const J=Re.getConfig();function T(B){h.style.display=B==="preset"?"block":"none",I.style.display=B==="google"?"flex":"none",P.style.display=B==="url"?"flex":"none",R.style.display=B==="upload"?"block":"none"}f.value=J.type,T(J.type),J.type==="preset"?L.value=J.family:J.type==="google"?M.value=J.family||"":J.type==="url"&&(y.value=J.url||"",C.value=J.family||""),f.addEventListener("change",B=>{T(B.target.value)}),L.addEventListener("change",B=>{const j=B.target.value;j==="System UI"?Re.loadPresetFont("system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue'","sans-serif"):j==="monospace"?Re.loadPresetFont("monospace","monospace"):j==="Apple Music"?Re.loadAppleMusicFont():Re.loadPresetFont(j,"sans-serif")}),$.addEventListener("click",async()=>{const B=M.value.trim();if(!B)return;let j=B;try{if(new URL(B).hostname==="fonts.google.com"){const Ae=Re.parseGoogleFontsUrl(B);Ae&&(j=Ae)}}catch{}await Re.loadGoogleFont(j)}),N.addEventListener("click",async()=>{const B=y.value.trim(),j=C.value.trim();B&&await Re.loadFontFromUrl(B,j||"CustomFont")}),S.addEventListener("change",async B=>{const j=B.target.files[0];if(j)try{const ve=await Re.saveUploadedFont(j);await Re.loadUploadedFont(ve.id),G(),S.value=""}catch(ve){console.error("Failed to upload font:",ve),alert("Failed to upload font")}});function G(){const B=Re.getUploadedFontList();z.innerHTML="",B.forEach(j=>{const ve=document.createElement("div");ve.className="uploaded-font-item",ve.innerHTML=`
+(Cloud-synced data will not be affected)`)
+            )
+                try {
+                    const e = [];
+                    Object.keys(localStorage).forEach((n) => {
+                        e.includes(n) || localStorage.removeItem(n);
+                    });
+                    try {
+                        const n = [
+                            'favorites_tracks',
+                            'favorites_videos',
+                            'favorites_albums',
+                            'favorites_artists',
+                            'favorites_playlists',
+                            'favorites_mixes',
+                            'history_tracks',
+                            'user_playlists',
+                            'user_folders',
+                            'settings',
+                            'pinned_items',
+                        ];
+                        for (const a of n)
+                            try {
+                                await Xe.performTransaction(a, 'readwrite', (o) => o.clear());
+                            } catch {}
+                    } catch (n) {
+                        console.log('Could not clear IndexedDB stores:', n);
+                        try {
+                            const a = indexedDB.deleteDatabase('MonochromeDB');
+                            await new Promise((o, s) => {
+                                ((a.onsuccess = o), (a.onerror = s));
+                            });
+                        } catch (a) {
+                            console.log('Could not delete IndexedDB:', a);
+                        }
+                    }
+                    (alert('All local data has been cleared. The app will now reload.'), window.location.reload());
+                } catch (e) {
+                    (console.error('Failed to reset local data:', e),
+                        alert('Failed to reset local data: ' + e.message));
+                }
+        }),
+        m8(),
+        g8(),
+        p8());
+}
+function m8() {
+    const f = document.getElementById('font-type-select'),
+        h = document.getElementById('font-preset-section'),
+        I = document.getElementById('font-google-section'),
+        P = document.getElementById('font-url-section'),
+        R = document.getElementById('font-upload-section'),
+        L = document.getElementById('font-preset-select'),
+        M = document.getElementById('font-google-input'),
+        $ = document.getElementById('font-google-apply'),
+        y = document.getElementById('font-url-input'),
+        C = document.getElementById('font-url-name'),
+        N = document.getElementById('font-url-apply'),
+        S = document.getElementById('font-upload-input'),
+        z = document.getElementById('uploaded-fonts-list');
+    if (!f) return;
+    const J = Re.getConfig();
+    function T(B) {
+        ((h.style.display = B === 'preset' ? 'block' : 'none'),
+            (I.style.display = B === 'google' ? 'flex' : 'none'),
+            (P.style.display = B === 'url' ? 'flex' : 'none'),
+            (R.style.display = B === 'upload' ? 'block' : 'none'));
+    }
+    ((f.value = J.type),
+        T(J.type),
+        J.type === 'preset'
+            ? (L.value = J.family)
+            : J.type === 'google'
+              ? (M.value = J.family || '')
+              : J.type === 'url' && ((y.value = J.url || ''), (C.value = J.family || '')),
+        f.addEventListener('change', (B) => {
+            T(B.target.value);
+        }),
+        L.addEventListener('change', (B) => {
+            const j = B.target.value;
+            j === 'System UI'
+                ? Re.loadPresetFont(
+                      "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue'",
+                      'sans-serif'
+                  )
+                : j === 'monospace'
+                  ? Re.loadPresetFont('monospace', 'monospace')
+                  : j === 'Apple Music'
+                    ? Re.loadAppleMusicFont()
+                    : Re.loadPresetFont(j, 'sans-serif');
+        }),
+        $.addEventListener('click', async () => {
+            const B = M.value.trim();
+            if (!B) return;
+            let j = B;
+            try {
+                if (new URL(B).hostname === 'fonts.google.com') {
+                    const Ae = Re.parseGoogleFontsUrl(B);
+                    Ae && (j = Ae);
+                }
+            } catch {}
+            await Re.loadGoogleFont(j);
+        }),
+        N.addEventListener('click', async () => {
+            const B = y.value.trim(),
+                j = C.value.trim();
+            B && (await Re.loadFontFromUrl(B, j || 'CustomFont'));
+        }),
+        S.addEventListener('change', async (B) => {
+            const j = B.target.files[0];
+            if (j)
+                try {
+                    const ve = await Re.saveUploadedFont(j);
+                    (await Re.loadUploadedFont(ve.id), G(), (S.value = ''));
+                } catch (ve) {
+                    (console.error('Failed to upload font:', ve), alert('Failed to upload font'));
+                }
+        }));
+    function G() {
+        const B = Re.getUploadedFontList();
+        ((z.innerHTML = ''),
+            B.forEach((j) => {
+                const ve = document.createElement('div');
+                ((ve.className = 'uploaded-font-item'),
+                    (ve.innerHTML = `
                 <span class="font-name">${j.name}</span>
                 <div class="font-actions">
                     <button class="btn-icon" data-id="${j.id}" data-action="use">Use</button>
                     <button class="btn-icon btn-delete" data-id="${j.id}" data-action="delete">Delete</button>
                 </div>
-            `,z.appendChild(ve)}),z.querySelectorAll(".btn-icon").forEach(j=>{j.addEventListener("click",async ve=>{const Ae=ve.target.dataset.id,Ve=ve.target.dataset.action;Ve==="use"?(await Re.loadUploadedFont(Ae),f.value="upload",T("upload")):Ve==="delete"&&confirm("Delete this font?")&&(Re.deleteUploadedFont(Ae),G())})})}G();const Z=document.getElementById("font-size-slider"),ge=document.getElementById("font-size-input"),Be=document.getElementById("font-size-reset"),De=B=>{const j=Math.max(50,Math.min(200,parseInt(B,10)||100));return Z&&(Z.value=j),ge&&(ge.value=j),j},de=Re.getFontSize();De(de),Z&&Z.addEventListener("input",()=>{const B=parseInt(Z.value,10);ge&&(ge.value=B),Re.setFontSize(B)}),ge&&(ge.addEventListener("change",()=>{let B=parseInt(ge.value,10);B=Math.max(50,Math.min(200,B||100)),De(B),Re.setFontSize(B)}),ge.addEventListener("input",()=>{let B=parseInt(ge.value,10);!isNaN(B)&&B>=50&&B<=200&&(Z&&(Z.value=B),Re.setFontSize(B))})),Be&&Be.addEventListener("click",()=>{const B=Re.resetFontSize();De(B)})}function g8(){const f=document.getElementById("settings-search-input");if(!f)return;const h=f.parentElement.querySelector(".search-clear-btn");h&&h.addEventListener("click",()=>{f.value="",f.dispatchEvent(new Event("input")),f.focus()});const I=()=>{h&&(h.style.display=f.value?"flex":"none")};f.addEventListener("input",()=>{I(),f8(f.value.toLowerCase().trim())}),f.addEventListener("focus",I)}function f8(f){const h=document.getElementById("page-settings");if(!h)return;const I=h.querySelectorAll(".settings-tab-content"),P=h.querySelectorAll(".settings-tab");if(!f){I.forEach(N=>{N.classList.remove("active")}),P.forEach(N=>{N.classList.remove("active")});const L=pi.getActiveTab(),M=document.querySelector(`.settings-tab[data-tab="${L}"]`),$=document.getElementById(`settings-tab-${L}`);M&&$?(M.classList.add("active"),$.classList.add("active")):P[0]&&I[0]&&(P[0].classList.add("active"),I[0].classList.add("active"));const y=h.querySelectorAll(".settings-group"),C=h.querySelectorAll(".setting-item");y.forEach(N=>N.style.display=""),C.forEach(N=>N.style.display="");return}I.forEach(L=>{L.classList.add("active")}),P.forEach(L=>{L.classList.remove("active")}),h.querySelectorAll(".settings-group").forEach(L=>{const M=L.querySelectorAll(".setting-item");let $=!1;M.forEach(y=>{const C=y.querySelector(".label"),N=y.querySelector(".description"),S=C?.textContent?.toLowerCase()||"",z=N?.textContent?.toLowerCase()||"";S.includes(f)||z.includes(f)?(y.style.display="",$=!0):y.style.display="none"}),L.style.display=$?"":"none"})}function p8(){const f=document.getElementById("manage-blocked-btn"),h=document.getElementById("clear-all-blocked-btn"),I=document.getElementById("blocked-content-list"),P=document.getElementById("blocked-artists-list"),R=document.getElementById("blocked-albums-list"),L=document.getElementById("blocked-tracks-list"),M=document.getElementById("blocked-artists-section"),$=document.getElementById("blocked-albums-section"),y=document.getElementById("blocked-tracks-section"),C=document.getElementById("blocked-empty-message");if(!f||!I)return;function N(){const S=Ot.getBlockedArtists(),z=Ot.getBlockedAlbums(),J=Ot.getBlockedTracks(),T=S.length+z.length+J.length;f.textContent=T>0?`Manage (${T})`:"Manage",h&&(h.style.display=T>0?"inline-block":"none"),M.style.display=S.length>0?"block":"none",$.style.display=z.length>0?"block":"none",y.style.display=J.length>0?"block":"none",C.style.display=T===0?"block":"none",P&&(P.innerHTML=S.map(G=>`
+            `),
+                    z.appendChild(ve));
+            }),
+            z.querySelectorAll('.btn-icon').forEach((j) => {
+                j.addEventListener('click', async (ve) => {
+                    const Ae = ve.target.dataset.id,
+                        Ve = ve.target.dataset.action;
+                    Ve === 'use'
+                        ? (await Re.loadUploadedFont(Ae), (f.value = 'upload'), T('upload'))
+                        : Ve === 'delete' && confirm('Delete this font?') && (Re.deleteUploadedFont(Ae), G());
+                });
+            }));
+    }
+    G();
+    const Z = document.getElementById('font-size-slider'),
+        ge = document.getElementById('font-size-input'),
+        Be = document.getElementById('font-size-reset'),
+        De = (B) => {
+            const j = Math.max(50, Math.min(200, parseInt(B, 10) || 100));
+            return (Z && (Z.value = j), ge && (ge.value = j), j);
+        },
+        de = Re.getFontSize();
+    (De(de),
+        Z &&
+            Z.addEventListener('input', () => {
+                const B = parseInt(Z.value, 10);
+                (ge && (ge.value = B), Re.setFontSize(B));
+            }),
+        ge &&
+            (ge.addEventListener('change', () => {
+                let B = parseInt(ge.value, 10);
+                ((B = Math.max(50, Math.min(200, B || 100))), De(B), Re.setFontSize(B));
+            }),
+            ge.addEventListener('input', () => {
+                let B = parseInt(ge.value, 10);
+                !isNaN(B) && B >= 50 && B <= 200 && (Z && (Z.value = B), Re.setFontSize(B));
+            })),
+        Be &&
+            Be.addEventListener('click', () => {
+                const B = Re.resetFontSize();
+                De(B);
+            }));
+}
+function g8() {
+    const f = document.getElementById('settings-search-input');
+    if (!f) return;
+    const h = f.parentElement.querySelector('.search-clear-btn');
+    h &&
+        h.addEventListener('click', () => {
+            ((f.value = ''), f.dispatchEvent(new Event('input')), f.focus());
+        });
+    const I = () => {
+        h && (h.style.display = f.value ? 'flex' : 'none');
+    };
+    (f.addEventListener('input', () => {
+        (I(), f8(f.value.toLowerCase().trim()));
+    }),
+        f.addEventListener('focus', I));
+}
+function f8(f) {
+    const h = document.getElementById('page-settings');
+    if (!h) return;
+    const I = h.querySelectorAll('.settings-tab-content'),
+        P = h.querySelectorAll('.settings-tab');
+    if (!f) {
+        (I.forEach((N) => {
+            N.classList.remove('active');
+        }),
+            P.forEach((N) => {
+                N.classList.remove('active');
+            }));
+        const L = pi.getActiveTab(),
+            M = document.querySelector(`.settings-tab[data-tab="${L}"]`),
+            $ = document.getElementById(`settings-tab-${L}`);
+        M && $
+            ? (M.classList.add('active'), $.classList.add('active'))
+            : P[0] && I[0] && (P[0].classList.add('active'), I[0].classList.add('active'));
+        const y = h.querySelectorAll('.settings-group'),
+            C = h.querySelectorAll('.setting-item');
+        (y.forEach((N) => (N.style.display = '')), C.forEach((N) => (N.style.display = '')));
+        return;
+    }
+    (I.forEach((L) => {
+        L.classList.add('active');
+    }),
+        P.forEach((L) => {
+            L.classList.remove('active');
+        }),
+        h.querySelectorAll('.settings-group').forEach((L) => {
+            const M = L.querySelectorAll('.setting-item');
+            let $ = !1;
+            (M.forEach((y) => {
+                const C = y.querySelector('.label'),
+                    N = y.querySelector('.description'),
+                    S = C?.textContent?.toLowerCase() || '',
+                    z = N?.textContent?.toLowerCase() || '';
+                S.includes(f) || z.includes(f) ? ((y.style.display = ''), ($ = !0)) : (y.style.display = 'none');
+            }),
+                (L.style.display = $ ? '' : 'none'));
+        }));
+}
+function p8() {
+    const f = document.getElementById('manage-blocked-btn'),
+        h = document.getElementById('clear-all-blocked-btn'),
+        I = document.getElementById('blocked-content-list'),
+        P = document.getElementById('blocked-artists-list'),
+        R = document.getElementById('blocked-albums-list'),
+        L = document.getElementById('blocked-tracks-list'),
+        M = document.getElementById('blocked-artists-section'),
+        $ = document.getElementById('blocked-albums-section'),
+        y = document.getElementById('blocked-tracks-section'),
+        C = document.getElementById('blocked-empty-message');
+    if (!f || !I) return;
+    function N() {
+        const S = Ot.getBlockedArtists(),
+            z = Ot.getBlockedAlbums(),
+            J = Ot.getBlockedTracks(),
+            T = S.length + z.length + J.length;
+        ((f.textContent = T > 0 ? `Manage (${T})` : 'Manage'),
+            h && (h.style.display = T > 0 ? 'inline-block' : 'none'),
+            (M.style.display = S.length > 0 ? 'block' : 'none'),
+            ($.style.display = z.length > 0 ? 'block' : 'none'),
+            (y.style.display = J.length > 0 ? 'block' : 'none'),
+            (C.style.display = T === 0 ? 'block' : 'none'),
+            P &&
+                (P.innerHTML = S.map(
+                    (G) => `
                 <li data-id="${G.id}" data-type="artist">
                     <div class="item-info">
                         <div class="item-name">${Gn(G.name)}</div>
@@ -4349,20 +9601,62 @@ Are you sure you want to continue?
                     </div>
                     <button class="unblock-btn" data-id="${G.id}" data-type="artist">Unblock</button>
                 </li>
-            `).join("")),R&&(R.innerHTML=z.map(G=>`
+            `
+                ).join('')),
+            R &&
+                (R.innerHTML = z
+                    .map(
+                        (G) => `
                 <li data-id="${G.id}" data-type="album">
                     <div class="item-info">
                         <div class="item-name">${Gn(G.title)}</div>
-                        <div class="item-meta">${Gn(G.artist||"Unknown Artist")} • ${new Date(G.blockedAt).toLocaleDateString()}</div>
+                        <div class="item-meta">${Gn(G.artist || 'Unknown Artist')} • ${new Date(G.blockedAt).toLocaleDateString()}</div>
                     </div>
                     <button class="unblock-btn" data-id="${G.id}" data-type="album">Unblock</button>
                 </li>
-            `).join("")),L&&(L.innerHTML=J.map(G=>`
+            `
+                    )
+                    .join('')),
+            L &&
+                (L.innerHTML = J.map(
+                    (G) => `
                 <li data-id="${G.id}" data-type="track">
                     <div class="item-info">
                         <div class="item-name">${Gn(G.title)}</div>
-                        <div class="item-meta">${Gn(G.artist||"Unknown Artist")} • ${new Date(G.blockedAt).toLocaleDateString()}</div>
+                        <div class="item-meta">${Gn(G.artist || 'Unknown Artist')} • ${new Date(G.blockedAt).toLocaleDateString()}</div>
                     </div>
                     <button class="unblock-btn" data-id="${G.id}" data-type="track">Unblock</button>
                 </li>
-            `).join("")),I.querySelectorAll(".unblock-btn").forEach(G=>{G.addEventListener("click",Z=>{Z.stopPropagation();const ge=G.dataset.id,Be=G.dataset.type;Be==="artist"?Ot.unblockArtist(ge):Be==="album"?Ot.unblockAlbum(ge):Be==="track"&&Ot.unblockTrack(ge),N()})})}f.addEventListener("click",()=>{const S=I.style.display!=="none";I.style.display=S?"none":"block",S||N()}),h&&h.addEventListener("click",()=>{confirm("Are you sure you want to unblock all artists, albums, and tracks?")&&(Ot.clearAllBlocked(),N())}),N()}function Gn(f){if(!f)return"";const h=document.createElement("div");return h.textContent=f,h.innerHTML}export{E8 as initializeSettings};
+            `
+                ).join('')),
+            I.querySelectorAll('.unblock-btn').forEach((G) => {
+                G.addEventListener('click', (Z) => {
+                    Z.stopPropagation();
+                    const ge = G.dataset.id,
+                        Be = G.dataset.type;
+                    (Be === 'artist'
+                        ? Ot.unblockArtist(ge)
+                        : Be === 'album'
+                          ? Ot.unblockAlbum(ge)
+                          : Be === 'track' && Ot.unblockTrack(ge),
+                        N());
+                });
+            }));
+    }
+    (f.addEventListener('click', () => {
+        const S = I.style.display !== 'none';
+        ((I.style.display = S ? 'none' : 'block'), S || N());
+    }),
+        h &&
+            h.addEventListener('click', () => {
+                confirm('Are you sure you want to unblock all artists, albums, and tracks?') &&
+                    (Ot.clearAllBlocked(), N());
+            }),
+        N());
+}
+function Gn(f) {
+    if (!f) return '';
+    const h = document.createElement('div');
+    return ((h.textContent = f), h.innerHTML);
+}
+export { E8 as initializeSettings };
